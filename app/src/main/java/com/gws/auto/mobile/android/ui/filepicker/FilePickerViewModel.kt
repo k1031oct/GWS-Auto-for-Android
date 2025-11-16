@@ -28,7 +28,9 @@ class FilePickerViewModel @Inject constructor(
     }
 
     init {
-        loadFilesForCurrentFolder()
+        viewModelScope.launch { 
+            loadFilesForCurrentFolder()
+        }
     }
 
     fun onFolderClicked(folderId: String, folderName: String) {
