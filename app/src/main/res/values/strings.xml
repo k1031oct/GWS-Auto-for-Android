@@ -191,4 +191,10 @@
     <string name="placeholder_event_time">9:00 AM - 10:00 AM</string>
     <string name="placeholder_event_title">Event Title</string>
 
+    <!-- Build error fix: Add missing title resources -->
+    <string name="title_schedule">Schedule</string>
+    <string name="title_history">History</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_settings">Settings</string>
+
 </resources>
