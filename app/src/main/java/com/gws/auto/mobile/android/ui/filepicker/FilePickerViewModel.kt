@@ -8,6 +8,7 @@ import com.google.api.services.drive.model.File
 import com.gws.auto.mobile.android.domain.service.DriveApiService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.Stack
 import javax.inject.Inject
 
@@ -53,7 +54,8 @@ class FilePickerViewModel @Inject constructor(
                 val fileList = driveApiService.listFiles(folderId)
                 _files.value = fileList.files
             } catch (e: Exception) {
-                // Handle error, e.g., show a toast
+                Timber.e(e, "Failed to load files for folder: $folderId. This might be due to insufficient permissions. Please ensure the user has granted the required Google Drive scopes.")
+                _files.value = emptyList() // Clear the list on error
             }
         }
     }

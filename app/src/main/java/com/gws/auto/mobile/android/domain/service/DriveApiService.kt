@@ -11,7 +11,7 @@ import javax.inject.Inject
 class DriveApiService @Inject constructor(private val authorizer: GoogleApiAuthorizer) {
 
     private fun getService(): Drive {
-        val credential = authorizer.getCredential(listOf(DriveScopes.DRIVE))
+        val credential = authorizer.getCredential(listOf(DriveScopes.DRIVE)) ?: throw IllegalStateException("User not authenticated or required Drive scope not granted.")
         return Drive.Builder(authorizer.httpTransport, authorizer.jsonFactory, credential)
             .setApplicationName("GWS Auto for Android")
             .build()

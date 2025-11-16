@@ -82,7 +82,7 @@ object AppModule {
             .requestIdToken(context.getString(R.string.default_web_client_id))
             .requestEmail()
             .requestScopes(
-                Scope(DriveScopes.DRIVE_FILE),
+                Scope(DriveScopes.DRIVE),
                 Scope(SheetsScopes.SPREADSHEETS),
                 Scope(GmailScopes.GMAIL_COMPOSE),
                 Scope(CalendarScopes.CALENDAR)
