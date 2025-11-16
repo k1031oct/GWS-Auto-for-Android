@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gws.auto.mobile.android.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -20,11 +21,15 @@ public final class FragmentWorkflowBinding implements ViewBinding {
   private final ConstraintLayout rootView;
 
   @NonNull
+  public final FloatingActionButton fabAddFolder;
+
+  @NonNull
   public final RecyclerView workflowRecyclerView;
 
   private FragmentWorkflowBinding(@NonNull ConstraintLayout rootView,
-      @NonNull RecyclerView workflowRecyclerView) {
+      @NonNull FloatingActionButton fabAddFolder, @NonNull RecyclerView workflowRecyclerView) {
     this.rootView = rootView;
+    this.fabAddFolder = fabAddFolder;
     this.workflowRecyclerView = workflowRecyclerView;
   }
 
@@ -55,13 +60,20 @@ public final class FragmentWorkflowBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.fab_add_folder;
+      FloatingActionButton fabAddFolder = ViewBindings.findChildViewById(rootView, id);
+      if (fabAddFolder == null) {
+        break missingId;
+      }
+
       id = R.id.workflow_recycler_view;
       RecyclerView workflowRecyclerView = ViewBindings.findChildViewById(rootView, id);
       if (workflowRecyclerView == null) {
         break missingId;
       }
 
-      return new FragmentWorkflowBinding((ConstraintLayout) rootView, workflowRecyclerView);
+      return new FragmentWorkflowBinding((ConstraintLayout) rootView, fabAddFolder,
+          workflowRecyclerView);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

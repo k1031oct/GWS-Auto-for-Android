@@ -29,9 +29,6 @@ public final class ListItemWorkflowBinding implements ViewBinding {
   public final ImageButton deleteButton;
 
   @NonNull
-  public final ImageButton editButton;
-
-  @NonNull
   public final CheckBox favoriteButton;
 
   @NonNull
@@ -51,14 +48,12 @@ public final class ListItemWorkflowBinding implements ViewBinding {
 
   private ListItemWorkflowBinding(@NonNull MaterialCardView rootView,
       @NonNull LinearLayout buttonContainer, @NonNull ImageButton deleteButton,
-      @NonNull ImageButton editButton, @NonNull CheckBox favoriteButton,
-      @NonNull ImageButton runButton, @NonNull TextView workflowDescription,
-      @NonNull TextView workflowName, @NonNull TextView workflowStatus,
-      @NonNull TextView workflowTrigger) {
+      @NonNull CheckBox favoriteButton, @NonNull ImageButton runButton,
+      @NonNull TextView workflowDescription, @NonNull TextView workflowName,
+      @NonNull TextView workflowStatus, @NonNull TextView workflowTrigger) {
     this.rootView = rootView;
     this.buttonContainer = buttonContainer;
     this.deleteButton = deleteButton;
-    this.editButton = editButton;
     this.favoriteButton = favoriteButton;
     this.runButton = runButton;
     this.workflowDescription = workflowDescription;
@@ -106,12 +101,6 @@ public final class ListItemWorkflowBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.edit_button;
-      ImageButton editButton = ViewBindings.findChildViewById(rootView, id);
-      if (editButton == null) {
-        break missingId;
-      }
-
       id = R.id.favorite_button;
       CheckBox favoriteButton = ViewBindings.findChildViewById(rootView, id);
       if (favoriteButton == null) {
@@ -149,7 +138,7 @@ public final class ListItemWorkflowBinding implements ViewBinding {
       }
 
       return new ListItemWorkflowBinding((MaterialCardView) rootView, buttonContainer, deleteButton,
-          editButton, favoriteButton, runButton, workflowDescription, workflowName, workflowStatus,
+          favoriteButton, runButton, workflowDescription, workflowName, workflowStatus,
           workflowTrigger);
     }
     String missingId = rootView.getResources().getResourceName(id);
