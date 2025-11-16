@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gws.auto.mobile.android"
-    android:versionCode="317"
-    android:versionName="1.2.317" >
+    android:versionCode="318"
+    android:versionName="1.2.318" >
 
     <uses-sdk
         android:minSdkVersion="24"

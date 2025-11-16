@@ -4206,6 +4206,8 @@ id fitXY
 id fixed
 id flip
 id floating
+id folder_name
+id folder_recycler_view
 id forever
 id fragment_container_view_tag
 id frost
@@ -4306,7 +4308,6 @@ id message
 id middle
 id mini
 id module_error_rate_chart
-id module_library_label
 id module_name
 id module_name_text
 id module_ranking_chart
@@ -4832,6 +4833,7 @@ layout fragment_workflow
 layout image_frame
 layout ime_base_split_test_activity
 layout ime_secondary_split_test_activity
+layout item_folder
 layout item_history
 layout item_history_table
 layout item_module

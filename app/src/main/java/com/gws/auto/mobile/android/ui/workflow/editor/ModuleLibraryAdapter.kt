@@ -8,7 +8,7 @@ import com.gws.auto.mobile.android.databinding.ListItemModuleLibraryBinding
 import com.gws.auto.mobile.android.domain.model.Module
 
 class ModuleLibraryAdapter(
-    private val modules: List<Module>,
+    private var modules: List<Module>,
     private val onModuleLongClickListener: (Module, View) -> Boolean
 ) : RecyclerView.Adapter<ModuleLibraryAdapter.ModuleViewHolder>() {
 
@@ -26,6 +26,11 @@ class ModuleLibraryAdapter(
     }
 
     override fun getItemCount(): Int = modules.size
+
+    fun updateModules(newModules: List<Module>) {
+        this.modules = newModules
+        notifyDataSetChanged()
+    }
 
     class ModuleViewHolder(private val binding: ListItemModuleLibraryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(module: Module) {

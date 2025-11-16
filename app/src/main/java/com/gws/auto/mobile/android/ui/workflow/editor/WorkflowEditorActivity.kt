@@ -30,6 +30,7 @@ class WorkflowEditorActivity : AppCompatActivity() {
     private val viewModel: WorkflowEditorViewModel by viewModels()
     private lateinit var moduleAdapter: ModuleAdapter
     private lateinit var libraryAdapter: ModuleLibraryAdapter
+    private lateinit var folderAdapter: FolderAdapter
     private var isEditingEnabled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +56,7 @@ class WorkflowEditorActivity : AppCompatActivity() {
 
         setupRecyclerView()
         setupLibraryRecyclerView()
+        setupFolderRecyclerView()
         setupDragAndDrop()
         observeViewModel()
 
@@ -111,19 +113,7 @@ class WorkflowEditorActivity : AppCompatActivity() {
     }
 
     private fun setupLibraryRecyclerView() {
-        val libraryModules = listOf(
-            Module(id = "", type = "DEFINE_VARIABLE", parameters = emptyMap()),
-            Module(id = "", type = "GET_RELATIVE_DATE", parameters = emptyMap()),
-            Module(id = "", type = "CREATE_GMAIL_DRAFT", parameters = emptyMap()),
-            Module(id = "", type = "DUPLICATE_SPREADSHEET", parameters = emptyMap()),
-            Module(id = "", type = "COPY_PASTE_SHEET_VALUES", parameters = emptyMap()),
-            Module(id = "", type = "Delay", parameters = emptyMap()),
-            Module(id = "", type = "IfElse", parameters = emptyMap()),
-            Module(id = "", type = "Toast", parameters = emptyMap()),
-            Module(id = "", type = "Log", parameters = emptyMap())
-        )
-
-        libraryAdapter = ModuleLibraryAdapter(libraryModules) { module, view ->
+        libraryAdapter = ModuleLibraryAdapter(emptyList()) { module, view ->
             val item = ClipData.Item(module.type)
             val dragData = ClipData(
                 module.type,
@@ -136,6 +126,39 @@ class WorkflowEditorActivity : AppCompatActivity() {
         }
         binding.libraryRecyclerView.apply {
             adapter = libraryAdapter
+            layoutManager = LinearLayoutManager(this@WorkflowEditorActivity, LinearLayoutManager.HORIZONTAL, false)
+        }
+    }
+
+    private fun setupFolderRecyclerView() {
+        val folders = listOf(
+            "Core", "Gmail", "Sheets", "Custom"
+        )
+
+        folderAdapter = FolderAdapter(folders) { folder ->
+            val modules = when (folder) {
+                "Core" -> listOf(
+                    Module(id = "", type = "DEFINE_VARIABLE", parameters = emptyMap()),
+                    Module(id = "", type = "GET_RELATIVE_DATE", parameters = emptyMap()),
+                    Module(id = "", type = "Delay", parameters = emptyMap()),
+                    Module(id = "", type = "IfElse", parameters = emptyMap()),
+                    Module(id = "", type = "Toast", parameters = emptyMap()),
+                    Module(id = "", type = "Log", parameters = emptyMap())
+                )
+                "Gmail" -> listOf(
+                    Module(id = "", type = "CREATE_GMAIL_DRAFT", parameters = emptyMap())
+                )
+                "Sheets" -> listOf(
+                    Module(id = "", type = "DUPLICATE_SPREADSHEET", parameters = emptyMap()),
+                    Module(id = "", type = "COPY_PASTE_SHEET_VALUES", parameters = emptyMap())
+                )
+                else -> emptyList()
+            }
+            libraryAdapter.updateModules(modules)
+        }
+
+        binding.folderRecyclerView.apply {
+            adapter = folderAdapter
             layoutManager = LinearLayoutManager(this@WorkflowEditorActivity, LinearLayoutManager.HORIZONTAL, false)
         }
     }

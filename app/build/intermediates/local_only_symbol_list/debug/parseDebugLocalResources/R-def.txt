@@ -144,6 +144,8 @@ id execution_status
 id execution_time
 id favorite_button
 id first_day_of_week_spinner
+id folder_name
+id folder_recycler_view
 id highlight_color_spinner
 id history_item_container
 id history_recycler_view
@@ -155,7 +157,6 @@ id light_button
 id log_message
 id manual_button
 id module_error_rate_chart
-id module_library_label
 id module_name
 id module_name_text
 id module_ranking_chart
@@ -275,6 +276,7 @@ layout fragment_wizard_locale
 layout fragment_wizard_theme
 layout fragment_wizard_week_start
 layout fragment_workflow
+layout item_folder
 layout item_history
 layout item_history_table
 layout item_module
