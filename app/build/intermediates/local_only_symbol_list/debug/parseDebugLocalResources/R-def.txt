@@ -94,6 +94,7 @@ drawable ic_dashboard
 drawable ic_delete
 drawable ic_delete_sweep
 drawable ic_edit
+drawable ic_file
 drawable ic_folder
 drawable ic_history
 drawable ic_launcher_background
@@ -151,6 +152,9 @@ id execution_time
 id fab_add_module
 id fab_main
 id favorite_button
+id file_icon
+id file_list
+id file_name
 id first_day_of_week_spinner
 id folder_icon
 id folder_name
@@ -243,6 +247,7 @@ id total_executions_day_change_text
 id total_executions_month_change_text
 id total_executions_text
 id unread_indicator
+id up_button
 id usage_count_text
 id user_avatar
 id user_email
@@ -266,6 +271,7 @@ id workflow_stats_table
 id workflow_stats_title
 id workflow_status
 id workflow_trigger
+layout activity_file_picker
 layout activity_main
 layout activity_settings
 layout activity_sign_in
@@ -302,6 +308,7 @@ layout list_item_add_tag
 layout list_item_add_workflow
 layout list_item_announcement
 layout list_item_calendar_day
+layout list_item_file
 layout list_item_history
 layout list_item_history_header
 layout list_item_history_log

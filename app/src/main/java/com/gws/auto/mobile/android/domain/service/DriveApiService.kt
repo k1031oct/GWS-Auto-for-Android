@@ -3,6 +3,7 @@ package com.gws.auto.mobile.android.domain.service
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
+import com.google.api.services.drive.model.FileList
 import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
@@ -14,6 +15,15 @@ class DriveApiService @Inject constructor(private val authorizer: GoogleApiAutho
         return Drive.Builder(authorizer.httpTransport, authorizer.jsonFactory, credential)
             .setApplicationName("GWS Auto for Android")
             .build()
+    }
+
+    @Throws(IOException::class)
+    suspend fun listFiles(folderId: String): FileList {
+        val service = getService()
+        return service.files().list()
+            .setQ("'$folderId' in parents and trashed = false")
+            .setFields("files(id, name, mimeType)")
+            .execute()
     }
 
     @Throws(IOException::class)
