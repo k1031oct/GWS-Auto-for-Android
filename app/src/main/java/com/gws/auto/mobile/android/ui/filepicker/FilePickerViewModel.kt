@@ -22,11 +22,11 @@ class FilePickerViewModel @Inject constructor(
     private val _currentFolderName = MutableLiveData<String>()
     val currentFolderName: LiveData<String> = _currentFolderName
 
-    private val folderStack = Stack<Pair<String, String>>()
+    private val folderStack = Stack<Pair<String, String>>().apply {
+        push("root" to "My Drive")
+    }
 
     init {
-        // Start at the root
-        folderStack.push("root" to "My Drive")
         loadFilesForCurrentFolder()
     }
 
@@ -35,10 +35,13 @@ class FilePickerViewModel @Inject constructor(
         loadFilesForCurrentFolder()
     }
 
-    fun onUpClicked() {
-        if (folderStack.size > 1) {
+    fun onUpClicked(): Boolean {
+        return if (folderStack.size > 1) {
             folderStack.pop()
             loadFilesForCurrentFolder()
+            true // We handled the up navigation
+        } else {
+            false // We are at the root, let the activity handle it
         }
     }
 
