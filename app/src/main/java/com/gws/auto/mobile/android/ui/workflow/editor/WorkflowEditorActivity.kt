@@ -145,7 +145,7 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleListDialogFragment.Mod
 
     private fun setupFolderRecyclerView() {
         val folders = listOf(
-            "Core", "Gmail", "Sheets", "Custom"
+            "Core", "Gmail", "Drive", "Sheets", "Calendar", "Custom"
         )
 
         folderAdapter = FolderAdapter(folders) { folder ->
@@ -157,11 +157,24 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleListDialogFragment.Mod
                 )
                 "Gmail" -> listOf(
                     Module(id = "", type = "CREATE_GMAIL_DRAFT", parameters = emptyMap()),
+                    Module(id = "", type = "gmail_send_email", parameters = emptyMap()),
                     Module(id = "", type = "chat_post", parameters = emptyMap())
+                )
+                "Drive" -> listOf(
+                    Module(id = "", type = "drive_create_folder", parameters = emptyMap()),
+                    Module(id = "", type = "drive_copy_file", parameters = emptyMap()),
+                    Module(id = "", type = "drive_move_file", parameters = emptyMap())
                 )
                 "Sheets" -> listOf(
                     Module(id = "", type = "DUPLICATE_SPREADSHEET", parameters = emptyMap()),
-                    Module(id = "", type = "COPY_PASTE_SHEET_VALUES", parameters = emptyMap())
+                    Module(id = "", type = "COPY_PASTE_SHEET_VALUES", parameters = emptyMap()),
+                    Module(id = "", type = "sheets_create_new", parameters = emptyMap()),
+                    Module(id = "", type = "sheets_set_value", parameters = emptyMap()),
+                    Module(id = "", type = "sheets_append_row", parameters = emptyMap()),
+                    Module(id = "", type = "sheets_clear_values", parameters = emptyMap())
+                )
+                "Calendar" -> listOf(
+                    Module(id = "", type = "calendar_create_event", parameters = emptyMap())
                 )
                 else -> emptyList()
             }
