@@ -3,13 +3,12 @@ package com.gws.auto.mobile.android.ui.filepicker
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gws.auto.mobile.android.databinding.ActivityFilePickerBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FilePickerActivity : AppCompatActivity() {
@@ -27,11 +26,15 @@ class FilePickerActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         adapter = FileAdapter { file ->
-            val resultIntent = Intent()
-            resultIntent.putExtra("fileId", file.id)
-            resultIntent.putExtra("fileName", file.name)
-            setResult(Activity.RESULT_OK, resultIntent)
-            finish()
+            if (file.mimeType == "application/vnd.google-apps.folder") {
+                viewModel.onFolderClicked(file.id, file.name)
+            } else {
+                val resultIntent = Intent()
+                resultIntent.putExtra("fileId", file.id)
+                resultIntent.putExtra("fileName", file.name)
+                setResult(Activity.RESULT_OK, resultIntent)
+                finish()
+            }
         }
 
         binding.fileList.adapter = adapter
@@ -41,8 +44,18 @@ class FilePickerActivity : AppCompatActivity() {
             adapter.submitList(it)
         }
 
-        binding.upButton.setOnClickListener {
-            viewModel.onUpClicked()
+        viewModel.currentFolderName.observe(this) {
+            supportActionBar?.title = it
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                viewModel.onUpClicked()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

@@ -247,7 +247,6 @@ id total_executions_day_change_text
 id total_executions_month_change_text
 id total_executions_text
 id unread_indicator
-id up_button
 id usage_count_text
 id user_avatar
 id user_email

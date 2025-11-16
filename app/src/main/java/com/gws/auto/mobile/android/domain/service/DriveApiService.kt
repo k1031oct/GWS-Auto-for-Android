@@ -18,6 +18,11 @@ class DriveApiService @Inject constructor(private val authorizer: GoogleApiAutho
     }
 
     @Throws(IOException::class)
+    suspend fun getFileDetails(fileId: String): File? {
+        return getService().files().get(fileId).setFields("id, name, mimeType, parents").execute()
+    }
+
+    @Throws(IOException::class)
     suspend fun listFiles(folderId: String): FileList {
         val service = getService()
         return service.files().list()

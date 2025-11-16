@@ -55,6 +55,11 @@
             android:exported="false"
             android:theme="@style/Theme.GWSAutoForAndroid" />
 
+        <activity
+            android:name=".ui.filepicker.FilePickerActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GWSAutoForAndroid" />
+
     </application>
 
 </manifest>

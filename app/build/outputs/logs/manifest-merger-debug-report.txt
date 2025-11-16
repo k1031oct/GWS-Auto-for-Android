@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:2:1-60:12
-INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:2:1-60:12
-INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:2:1-60:12
-INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:2:1-60:12
+ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:2:1-65:12
+INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:2:1-65:12
+INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:2:1-65:12
+INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:2:1-65:12
 MERGED from [androidx.databinding:viewbinding:8.9.3] C:\Users\k1031\.gradle\caches\8.13\transforms\067b433987edd787b6b20239fa312ccc\transformed\jetified-viewbinding-8.9.3\AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.android.gms:play-services-oss-licenses:17.0.1] C:\Users\k1031\.gradle\caches\8.13\transforms\521ff401663bc6769fe61c5908ca2d95\transformed\jetified-play-services-oss-licenses-17.0.1\AndroidManifest.xml:17:1-29:12
 MERGED from [androidx.hilt:hilt-navigation-compose:1.2.0] C:\Users\k1031\.gradle\caches\8.13\transforms\d1d2dd83ad88204dec222bbc895492a5\transformed\jetified-hilt-navigation-compose-1.2.0\AndroidManifest.xml:2:1-7:12
@@ -205,8 +205,8 @@ MERGED from [com.google.android.datatransport:transport-backend-cct:3.1.9] C:\Us
 	android:name
 		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:5:22-64
 application
-ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:7:5-58:19
-INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:7:5-58:19
+ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:7:5-63:19
+INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:7:5-63:19
 MERGED from [com.google.android.gms:play-services-oss-licenses:17.0.1] C:\Users\k1031\.gradle\caches\8.13\transforms\521ff401663bc6769fe61c5908ca2d95\transformed\jetified-play-services-oss-licenses-17.0.1\AndroidManifest.xml:22:5-27:19
 MERGED from [com.google.android.gms:play-services-oss-licenses:17.0.1] C:\Users\k1031\.gradle\caches\8.13\transforms\521ff401663bc6769fe61c5908ca2d95\transformed\jetified-play-services-oss-licenses-17.0.1\AndroidManifest.xml:22:5-27:19
 MERGED from [com.google.android.material:material:1.13.0] C:\Users\k1031\.gradle\caches\8.13\transforms\08c406252091397e86d59f9467a8641d\transformed\material-1.13.0\AndroidManifest.xml:22:5-20
@@ -381,6 +381,14 @@ ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManif
 		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:56:13-59
 	android:name
 		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:54:13-53
+activity#com.gws.auto.mobile.android.ui.filepicker.FilePickerActivity
+ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:58:9-61:62
+	android:exported
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:60:13-37
+	android:theme
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:61:13-59
+	android:name
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:59:13-61
 uses-sdk
 INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml
