@@ -1,5 +1,6 @@
 package com.gws.auto.mobile.android.domain.engine.modules
 
+import com.google.api.services.sheets.v4.model.ValueRange
 import com.gws.auto.mobile.android.domain.engine.ExecutionContext
 import com.gws.auto.mobile.android.domain.engine.ExecutionResult
 import com.gws.auto.mobile.android.domain.engine.ModuleExecutor
@@ -22,7 +23,8 @@ class SheetsSetValueModule @Inject constructor(
             }
 
             val spreadsheetId = extractFileId(targetUrl)
-            sheetsApiService.updateValues(spreadsheetId, "'$targetSheet'!$targetCell", listOf(listOf(valueToSet)))
+            val valueRange = ValueRange().setValues(listOf(listOf(valueToSet)))
+            sheetsApiService.updateValues(spreadsheetId, "'$targetSheet'!$targetCell", valueRange)
 
             ExecutionResult(true, "Successfully set value in cell $targetCell")
         } catch (e: Exception) {
