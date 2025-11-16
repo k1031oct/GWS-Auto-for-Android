@@ -27,30 +27,41 @@ class WorkflowViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
-
     private val _isFavoriteFilterActive = MutableStateFlow(false)
+    private val _expandedFolderIds = MutableStateFlow<Set<String>>(emptySet())
+
     val isFavoriteFilterActive: StateFlow<Boolean> = _isFavoriteFilterActive
 
     val filteredItems: StateFlow<List<WorkflowListItem>> = combine(
         workflowRepository.getAllWorkflows(),
         workflowFolderRepository.getAllWorkflowFolders(),
         _searchQuery,
-        _isFavoriteFilterActive
-    ) { workflows, folders, query, isFavoriteFilterActive ->
+        _isFavoriteFilterActive,
+        _expandedFolderIds
+    ) { workflows, folders, query, isFavoriteFilterActive, expandedIds ->
 
+        val workflowMap = workflows.associateBy { it.id }
         val allWorkflowIdsInFolders = folders.flatMap { it.workflowIds }.toSet()
 
         val topLevelWorkflows = workflows.filter { it.id !in allWorkflowIdsInFolders }
 
-        val filteredWorkflows = topLevelWorkflows.filter { 
+        val filteredWorkflows = topLevelWorkflows.filter {
             (query.isBlank() || it.name.contains(query, ignoreCase = true)) &&
             (!isFavoriteFilterActive || it.isFavorite)
         }
 
-        val workflowItems = filteredWorkflows.map { WorkflowListItem.WorkflowItem(it) }
-        val folderItems = folders.map { WorkflowListItem.FolderItem(it) }
+        val result = mutableListOf<WorkflowListItem>()
+        folders.forEach { folder ->
+            result.add(WorkflowListItem.FolderItem(folder))
+            if (folder.id in expandedIds) {
+                val workflowsInFolder = folder.workflowIds.mapNotNull { workflowMap[it] }
+                result.addAll(workflowsInFolder.map { WorkflowListItem.WorkflowItem(it, isIndented = true) })
+            }
+        }
 
-        (folderItems + workflowItems + WorkflowListItem.AddItem)
+        result.addAll(filteredWorkflows.map { WorkflowListItem.WorkflowItem(it) })
+        result.add(WorkflowListItem.AddItem)
+        result
 
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
@@ -83,7 +94,17 @@ class WorkflowViewModel @Inject constructor(
         )
         workflowFolderRepository.insertWorkflowFolder(newFolder)
     }
-    
+
+    fun toggleFolderExpansion(folderId: String) {
+        val currentExpanded = _expandedFolderIds.value.toMutableSet()
+        if (folderId in currentExpanded) {
+            currentExpanded.remove(folderId)
+        } else {
+            currentExpanded.add(folderId)
+        }
+        _expandedFolderIds.value = currentExpanded
+    }
+
     fun moveWorkflowToFolder(workflowId: String, folderId: String) = viewModelScope.launch {
         val allFolders = workflowFolderRepository.getAllWorkflowFolders().first()
 

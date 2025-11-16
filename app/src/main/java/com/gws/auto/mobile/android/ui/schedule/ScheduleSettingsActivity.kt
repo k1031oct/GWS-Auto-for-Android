@@ -52,9 +52,12 @@ class ScheduleSettingsActivity : ComponentActivity() {
 @Composable
 fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel) {
     val uiState by viewModel.uiState.collectAsState()
+    val workflows by viewModel.workflows.collectAsState()
     val scheduleTypes = listOf("時間毎", "日毎", "週毎", "月毎", "年毎")
-    var expanded by remember { mutableStateOf(false) }
+    var scheduleTypeExpanded by remember { mutableStateOf(false) }
+    var workflowExpanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val selectedWorkflow = workflows.find { it.id == uiState.selectedWorkflowId }
 
     Scaffold(
         topBar = {
@@ -66,28 +69,61 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel) {
                 .padding(padding)
                 .padding(16.dp)
         ) {
+            // Workflow Selector
+            if (workflows.isNotEmpty()) {
+                ExposedDropdownMenuBox(
+                    expanded = workflowExpanded,
+                    onExpandedChange = { workflowExpanded = !workflowExpanded }
+                ) {
+                    TextField(
+                        value = selectedWorkflow?.name ?: "",
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("対象のワークフロー") },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = workflowExpanded) },
+                        modifier = Modifier.menuAnchor().fillMaxWidth()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = workflowExpanded,
+                        onDismissRequest = { workflowExpanded = false }
+                    ) {
+                        workflows.forEach { workflow ->
+                            DropdownMenuItem(
+                                text = { Text(workflow.name) },
+                                onClick = {
+                                    viewModel.onWorkflowSelected(workflow.id)
+                                    workflowExpanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            // Schedule Type Selector
             ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded }
+                expanded = scheduleTypeExpanded,
+                onExpandedChange = { scheduleTypeExpanded = !scheduleTypeExpanded }
             ) {
                 TextField(
                     value = uiState.scheduleType,
                     onValueChange = {},
                     readOnly = true,
                     label = { Text("繰り返し") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = scheduleTypeExpanded) },
                     modifier = Modifier.menuAnchor().fillMaxWidth()
                 )
                 ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
+                    expanded = scheduleTypeExpanded,
+                    onDismissRequest = { scheduleTypeExpanded = false }
                 ) {
                     scheduleTypes.forEach { type ->
                         DropdownMenuItem(
                             text = { Text(type) },
                             onClick = {
                                 viewModel.onScheduleTypeChange(type)
-                                expanded = false
+                                scheduleTypeExpanded = false
                             }
                         )
                     }
@@ -145,7 +181,8 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel) {
                         viewModel.saveSchedule()
                         (context as? Activity)?.finish()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    enabled = uiState.selectedWorkflowId.isNotEmpty()
                 ) {
                     Text("保存")
                 }

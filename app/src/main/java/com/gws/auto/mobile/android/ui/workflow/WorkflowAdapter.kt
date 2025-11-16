@@ -3,6 +3,7 @@ package com.gws.auto.mobile.android.ui.workflow
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -54,7 +55,7 @@ class WorkflowAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = getItem(position)) {
-            is WorkflowListItem.WorkflowItem -> (holder as WorkflowViewHolder).bind(item.workflow)
+            is WorkflowListItem.WorkflowItem -> (holder as WorkflowViewHolder).bind(item.workflow, item.isIndented)
             is WorkflowListItem.FolderItem -> (holder as FolderViewHolder).bind(item.folder)
             is WorkflowListItem.AddItem -> {}
         }
@@ -67,7 +68,7 @@ class WorkflowAdapter(
         private val onDeleteClicked: (Workflow) -> Unit,
         private val onFavoriteClicked: (Workflow) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(workflow: Workflow) {
+        fun bind(workflow: Workflow, isIndented: Boolean) {
             binding.workflowName.text = workflow.name
             binding.workflowDescription.text = workflow.description
             binding.workflowStatus.text = workflow.status
@@ -78,6 +79,9 @@ class WorkflowAdapter(
             binding.runButton.setOnClickListener { onRunClicked(workflow) }
             binding.deleteButton.setOnClickListener { onDeleteClicked(workflow) }
             binding.favoriteButton.setOnClickListener { onFavoriteClicked(workflow) }
+
+            val indentation = if (isIndented) 64 else 0 // 64dp for indentation
+            binding.root.updatePadding(left = indentation)
         }
     }
 

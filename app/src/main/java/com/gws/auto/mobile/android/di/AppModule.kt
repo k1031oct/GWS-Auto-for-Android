@@ -5,6 +5,11 @@ import androidx.room.Room
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.Scope
+import com.google.api.services.calendar.CalendarScopes
+import com.google.api.services.drive.DriveScopes
+import com.google.api.services.gmail.GmailScopes
+import com.google.api.services.sheets.v4.SheetsScopes
 import com.google.firebase.auth.FirebaseAuth
 import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.data.local.db.AppDatabase
@@ -15,6 +20,7 @@ import com.gws.auto.mobile.android.data.local.db.WorkflowDao
 import com.gws.auto.mobile.android.data.local.db.WorkflowFolderDao
 import com.gws.auto.mobile.android.data.repository.ScheduleRepository
 import com.gws.auto.mobile.android.data.repository.ScheduleRepositoryImpl
+import com.gws.auto.mobile.android.domain.service.GoogleApiAuthorizer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -73,13 +79,19 @@ object AppModule {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(context.getString(R.string.default_web_client_id))
             .requestEmail()
+            .requestScopes(
+                Scope(DriveScopes.DRIVE_FILE),
+                Scope(SheetsScopes.SPREADSHEETS),
+                Scope(GmailScopes.GMAIL_COMPOSE),
+                Scope(CalendarScopes.CALENDAR_READONLY)
+            )
             .build()
         return GoogleSignIn.getClient(context, gso)
     }
 
     @Provides
     @Singleton
-    fun provideScheduleRepository(): ScheduleRepository {
-        return ScheduleRepositoryImpl()
+    fun provideScheduleRepository(apiAuthorizer: GoogleApiAuthorizer): ScheduleRepository {
+        return ScheduleRepositoryImpl(apiAuthorizer)
     }
 }

@@ -41,6 +41,7 @@ class WorkflowFragment : Fragment() {
     lateinit var workflowEngine: WorkflowEngine
 
     private lateinit var workflowAdapter: WorkflowAdapter
+    private var dropTargetFolder: WorkflowListItem.FolderItem? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -86,8 +87,7 @@ class WorkflowFragment : Fragment() {
                 viewModel.toggleFavorite(workflow)
             },
             onFolderClicked = { folder ->
-                // TODO: Implement folder opening/closing logic
-                Timber.d("Folder clicked: ${folder.name}")
+                viewModel.toggleFolderExpansion(folder.id)
             }
         )
         binding.workflowRecyclerView.layoutManager = LinearLayoutManager(context)
@@ -141,7 +141,20 @@ class WorkflowFragment : Fragment() {
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
-                return false // We are not reordering
+                val targetPosition = target.adapterPosition
+                if (targetPosition != RecyclerView.NO_POSITION) {
+                    val item = workflowAdapter.currentList.getOrNull(targetPosition)
+                    if (item is WorkflowListItem.FolderItem) {
+                        dropTargetFolder = item
+                        // Optional: Add visual feedback, like changing folder background
+                        target.itemView.setBackgroundResource(R.color.md_theme_light_primaryContainer)
+                    } else {
+                        dropTargetFolder = null
+                        // Optional: Clear visual feedback
+                        target.itemView.background = null
+                    }
+                }
+                return true // Return true to indicate the move was handled
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
@@ -150,6 +163,11 @@ class WorkflowFragment : Fragment() {
                 super.onSelectedChanged(viewHolder, actionState)
                 if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
                     viewHolder?.itemView?.alpha = 0.5f
+                } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
+                    // Clear background of all views when drag is finished
+                    for (i in 0 until binding.workflowRecyclerView.childCount) {
+                        binding.workflowRecyclerView.getChildAt(i).background = null
+                    }
                 }
             }
 
@@ -157,25 +175,14 @@ class WorkflowFragment : Fragment() {
                 super.clearView(recyclerView, viewHolder)
                 viewHolder.itemView.alpha = 1.0f
 
-                // Find the view under the center of the dragged item
-                val dropTargetView = recyclerView.findChildViewUnder(
-                    viewHolder.itemView.x + viewHolder.itemView.width / 2,
-                    viewHolder.itemView.y + viewHolder.itemView.height / 2
-                )
-
-                if (dropTargetView != null) {
-                    val targetPosition = recyclerView.getChildAdapterPosition(dropTargetView)
-                    val sourcePosition = viewHolder.adapterPosition
-
-                    if (targetPosition != RecyclerView.NO_POSITION && sourcePosition != RecyclerView.NO_POSITION) {
-                        val sourceItem = workflowAdapter.currentList[sourcePosition]
-                        val targetItem = workflowAdapter.currentList[targetPosition]
-
-                        if (sourceItem is WorkflowListItem.WorkflowItem && targetItem is WorkflowListItem.FolderItem) {
-                            viewModel.moveWorkflowToFolder(sourceItem.workflow.id, targetItem.folder.id)
-                        }
+                val sourcePosition = viewHolder.adapterPosition
+                if (sourcePosition != RecyclerView.NO_POSITION && dropTargetFolder != null) {
+                    val sourceItem = workflowAdapter.currentList.getOrNull(sourcePosition)
+                    if (sourceItem is WorkflowListItem.WorkflowItem) {
+                        viewModel.moveWorkflowToFolder(sourceItem.workflow.id, dropTargetFolder!!.folder.id)
                     }
                 }
+                dropTargetFolder = null // Reset the drop target
             }
         }
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(binding.workflowRecyclerView)
