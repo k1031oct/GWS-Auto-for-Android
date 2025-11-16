@@ -97,6 +97,7 @@ drawable ic_launcher_foreground
 drawable ic_launcher_monochrome
 drawable ic_menu
 drawable ic_menu_hamburger
+drawable ic_module
 drawable ic_more_vert
 drawable ic_notification
 drawable ic_play_arrow

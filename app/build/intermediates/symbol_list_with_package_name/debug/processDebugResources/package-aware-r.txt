@@ -3850,6 +3850,7 @@ drawable ic_m3_chip_checked_circle
 drawable ic_m3_chip_close
 drawable ic_menu
 drawable ic_menu_hamburger
+drawable ic_module
 drawable ic_more_vert
 drawable ic_mtrl_arrow_circle
 drawable ic_mtrl_checked_circle
