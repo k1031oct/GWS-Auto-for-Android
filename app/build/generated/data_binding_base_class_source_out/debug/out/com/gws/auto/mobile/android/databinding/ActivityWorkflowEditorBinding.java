@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +12,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.gws.auto.mobile.android.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -41,16 +42,24 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
   public final Button saveButton;
 
   @NonNull
-  public final EditText workflowDescriptionEditor;
+  public final TextInputEditText workflowDescriptionEditor;
 
   @NonNull
-  public final EditText workflowNameEditor;
+  public final TextInputLayout workflowDescriptionLayout;
+
+  @NonNull
+  public final TextInputEditText workflowNameEditor;
+
+  @NonNull
+  public final TextInputLayout workflowNameLayout;
 
   private ActivityWorkflowEditorBinding(@NonNull ConstraintLayout rootView,
       @NonNull LinearLayout buttonBar, @NonNull Button cancelButton,
       @NonNull RecyclerView folderRecyclerView, @NonNull RecyclerView libraryRecyclerView,
       @NonNull RecyclerView moduleRecyclerView, @NonNull Button saveButton,
-      @NonNull EditText workflowDescriptionEditor, @NonNull EditText workflowNameEditor) {
+      @NonNull TextInputEditText workflowDescriptionEditor,
+      @NonNull TextInputLayout workflowDescriptionLayout,
+      @NonNull TextInputEditText workflowNameEditor, @NonNull TextInputLayout workflowNameLayout) {
     this.rootView = rootView;
     this.buttonBar = buttonBar;
     this.cancelButton = cancelButton;
@@ -59,7 +68,9 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
     this.moduleRecyclerView = moduleRecyclerView;
     this.saveButton = saveButton;
     this.workflowDescriptionEditor = workflowDescriptionEditor;
+    this.workflowDescriptionLayout = workflowDescriptionLayout;
     this.workflowNameEditor = workflowNameEditor;
+    this.workflowNameLayout = workflowNameLayout;
   }
 
   @Override
@@ -126,20 +137,33 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
       }
 
       id = R.id.workflow_description_editor;
-      EditText workflowDescriptionEditor = ViewBindings.findChildViewById(rootView, id);
+      TextInputEditText workflowDescriptionEditor = ViewBindings.findChildViewById(rootView, id);
       if (workflowDescriptionEditor == null) {
         break missingId;
       }
 
+      id = R.id.workflow_description_layout;
+      TextInputLayout workflowDescriptionLayout = ViewBindings.findChildViewById(rootView, id);
+      if (workflowDescriptionLayout == null) {
+        break missingId;
+      }
+
       id = R.id.workflow_name_editor;
-      EditText workflowNameEditor = ViewBindings.findChildViewById(rootView, id);
+      TextInputEditText workflowNameEditor = ViewBindings.findChildViewById(rootView, id);
       if (workflowNameEditor == null) {
+        break missingId;
+      }
+
+      id = R.id.workflow_name_layout;
+      TextInputLayout workflowNameLayout = ViewBindings.findChildViewById(rootView, id);
+      if (workflowNameLayout == null) {
         break missingId;
       }
 
       return new ActivityWorkflowEditorBinding((ConstraintLayout) rootView, buttonBar, cancelButton,
           folderRecyclerView, libraryRecyclerView, moduleRecyclerView, saveButton,
-          workflowDescriptionEditor, workflowNameEditor);
+          workflowDescriptionEditor, workflowDescriptionLayout, workflowNameEditor,
+          workflowNameLayout);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

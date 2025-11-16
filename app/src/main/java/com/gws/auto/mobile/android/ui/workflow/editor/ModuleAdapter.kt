@@ -2,6 +2,7 @@ package com.gws.auto.mobile.android.ui.workflow.editor
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -24,6 +25,18 @@ class ModuleAdapter(
         holder.bind(module)
         holder.itemView.setOnClickListener { onEditClicked(module) }
         holder.binding.deleteButton.setOnClickListener { onRemoveClicked(module) }
+
+        if (position == 0) {
+            holder.binding.lineTop.visibility = View.INVISIBLE
+        } else {
+            holder.binding.lineTop.visibility = View.VISIBLE
+        }
+
+        if (position == itemCount - 1) {
+            holder.binding.lineBottom.visibility = View.INVISIBLE
+        } else {
+            holder.binding.lineBottom.visibility = View.VISIBLE
+        }
     }
 
     inner class ModuleViewHolder(val binding: ListItemModuleBinding) : RecyclerView.ViewHolder(binding.root) {

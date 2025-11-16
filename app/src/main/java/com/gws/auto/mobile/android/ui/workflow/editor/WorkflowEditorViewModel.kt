@@ -18,15 +18,17 @@ class WorkflowEditorViewModel @Inject constructor(
     private val workflowRepository: WorkflowRepository
 ) : ViewModel() {
 
-    private val _workflowId = MutableStateFlow<String?>(null)
+    private val _workflow = MutableStateFlow<Workflow?>(null)
+    val workflow: StateFlow<Workflow?> = _workflow.asStateFlow()
+
     private val _modules = MutableStateFlow<List<Module>>(emptyList())
     val modules: StateFlow<List<Module>> = _modules.asStateFlow()
 
     fun loadWorkflow(workflowId: String) {
-        _workflowId.value = workflowId
         viewModelScope.launch {
             val workflow = workflowRepository.getWorkflowById(workflowId)
-            workflow?.let { 
+            _workflow.value = workflow
+            workflow?.let {
                 _modules.value = it.modules
             }
         }
@@ -50,13 +52,22 @@ class WorkflowEditorViewModel @Inject constructor(
         }
     }
 
-    suspend fun saveNewWorkflow(name: String, description: String) {
-        val workflow = Workflow(
-            id = _workflowId.value ?: UUID.randomUUID().toString(),
-            name = name,
-            description = description,
-            modules = _modules.value
-        )
+    suspend fun saveWorkflow(name: String, description: String) {
+        val currentWorkflow = _workflow.value
+        val workflow = if (currentWorkflow != null) {
+            currentWorkflow.copy(
+                name = name,
+                description = description,
+                modules = _modules.value
+            )
+        } else {
+            Workflow(
+                id = UUID.randomUUID().toString(),
+                name = name,
+                description = description,
+                modules = _modules.value
+            )
+        }
         workflowRepository.saveWorkflow(workflow)
     }
 }

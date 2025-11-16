@@ -179,6 +179,14 @@ class WorkflowEditorActivity : AppCompatActivity() {
 
     private fun observeViewModel() {
         lifecycleScope.launch {
+            viewModel.workflow.collectLatest { workflow ->
+                if (workflow != null) {
+                    binding.workflowNameEditor.setText(workflow.name)
+                    binding.workflowDescriptionEditor.setText(workflow.description)
+                }
+            }
+        }
+        lifecycleScope.launch {
             viewModel.modules.collectLatest { modules ->
                 moduleAdapter.submitList(modules)
             }
@@ -196,7 +204,7 @@ class WorkflowEditorActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                viewModel.saveNewWorkflow(name, description)
+                viewModel.saveWorkflow(name, description)
                 Timber.i("Workflow '$name' saved successfully.")
                 finish() // Close the editor on successful save
             } catch (e: Exception) {
