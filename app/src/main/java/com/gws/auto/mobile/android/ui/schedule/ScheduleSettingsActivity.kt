@@ -15,7 +15,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.ui.theme.GWSAutoForAndroidTheme
 import com.gws.auto.mobile.android.ui.theme.ThemeViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -70,7 +73,14 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel) {
                 .padding(16.dp)
         ) {
             // Workflow Selector
-            if (workflows.isNotEmpty()) {
+            if (workflows.isEmpty()) {
+                Text(
+                    text = "スケジューリングするワークフローがありません。先にワークフローを作成してください。",
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp)
+                )
+            } else {
                 ExposedDropdownMenuBox(
                     expanded = workflowExpanded,
                     onExpandedChange = { workflowExpanded = !workflowExpanded }
