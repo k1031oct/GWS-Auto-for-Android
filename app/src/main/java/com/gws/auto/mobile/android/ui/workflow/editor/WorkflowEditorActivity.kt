@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.databinding.ActivityWorkflowEditorBinding
@@ -105,7 +104,7 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleListDialogFragment.Mod
         binding.workflowNameEditor.isFocusableInTouchMode = isEditingEnabled
         binding.workflowDescriptionEditor.isFocusable = isEditingEnabled
         binding.workflowDescriptionEditor.isFocusableInTouchMode = isEditingEnabled
-        if(isEditingEnabled) {
+        if (isEditingEnabled) {
             binding.workflowNameEditor.requestFocus()
         }
     }
@@ -124,8 +123,6 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleListDialogFragment.Mod
             adapter = moduleAdapter
             layoutManager = LinearLayoutManager(this@WorkflowEditorActivity)
         }
-
-        // The drag and drop functionality will be handled by a different helper class
     }
 
     private fun setupLibraryRecyclerView() {
@@ -182,7 +179,9 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleListDialogFragment.Mod
                 DragEvent.ACTION_DROP -> {
                     val item: ClipData.Item = event.clipData.getItemAt(0)
                     val moduleType = item.text.toString()
-                    viewModel.addModule(Module(id = UUID.randomUUID().toString(), type = moduleType, parameters = emptyMap()))
+                    val dialog = ModuleParameterDialogFragment.newInstance(moduleType)
+                    dialog.listener = this
+                    dialog.show(supportFragmentManager, "ModuleParameterDialog")
                     true
                 }
                 else -> true
