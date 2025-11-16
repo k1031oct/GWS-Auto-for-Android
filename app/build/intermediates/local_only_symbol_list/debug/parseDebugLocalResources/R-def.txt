@@ -410,6 +410,10 @@ string navigation_drawer_open
 string new_announcement_notification
 string next_month
 string no
+string placeholder_event_time
+string placeholder_event_title
+string placeholder_time
+string placeholder_workflow_name
 string please_log_in
 string previous_month
 string profile_image_description
@@ -464,6 +468,7 @@ string title_account_connections
 string title_announcement
 string title_app_settings
 string title_user_info
+string title_workflow
 string unread_announcement_popup_message
 string unread_announcement_popup_title
 string user_email_placeholder

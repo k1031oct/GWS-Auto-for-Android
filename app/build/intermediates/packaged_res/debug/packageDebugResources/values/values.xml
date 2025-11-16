@@ -133,6 +133,10 @@
     <string name="new_announcement_notification">You have a new announcement.</string>
     <string name="next_month">></string>
     <string name="no">No</string>
+    <string name="placeholder_event_time">9:00 AM - 10:00 AM</string>
+    <string name="placeholder_event_title">Event Title</string>
+    <string name="placeholder_time">8:00 AM</string>
+    <string name="placeholder_workflow_name">Workflow Name</string>
     <string name="please_log_in">Please log in to see your workflows.</string>
     <string name="previous_month">&lt;</string>
     <string name="profile_image_description">Profile Image</string>
@@ -187,6 +191,7 @@
     <string name="title_announcement">Announcements</string>
     <string name="title_app_settings">Application Settings</string>
     <string name="title_user_info">User Info</string>
+    <string name="title_workflow">Workflow</string>
     <string name="unread_announcement_popup_message">You have new announcements. View them now?</string>
     <string name="unread_announcement_popup_title">Unread Announcements</string>
     <string name="user_email_placeholder">user@example.com</string>
