@@ -62,6 +62,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/search_fragment_container"
         android:name="com.gws.auto.mobile.android.ui.search.SearchFragment"

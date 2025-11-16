@@ -38,12 +38,23 @@ class ScheduleSettingsViewModel @Inject constructor(
             val firstDay = settingsRepository.firstDayOfWeek.first()
             _uiState.update { it.copy(firstDayOfWeek = firstDay) }
         }
-        workflowRepository.getAllWorkflows().onEach { workflows ->
-            _workflows.value = workflows
-            if (workflows.isNotEmpty()) {
-                _uiState.update { state -> state.copy(selectedWorkflowId = workflows.first().id) }
+        
+        // Start observing real workflows
+        workflowRepository.getAllWorkflows().onEach { realWorkflows ->
+            val dummyWorkflows = createDummyWorkflows()
+            val allWorkflows = dummyWorkflows + realWorkflows
+            _workflows.value = allWorkflows
+            if (allWorkflows.isNotEmpty() && _uiState.value.selectedWorkflowId.isEmpty()) {
+                _uiState.update { state -> state.copy(selectedWorkflowId = allWorkflows.first().id) }
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun createDummyWorkflows(): List<Workflow> {
+        return listOf(
+            Workflow(id = "dummy-1", name = "Dummy Workflow 1", modules = emptyList()),
+            Workflow(id = "dummy-2", name = "Dummy Workflow 2", modules = emptyList())
+        )
     }
 
     fun onScheduleTypeChange(type: String) {

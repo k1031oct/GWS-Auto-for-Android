@@ -44,8 +44,15 @@ class ScheduleRepositoryImpl @Inject constructor(
                 .setApplicationName("GWS-Auto for Android")
                 .build()
 
-            // Calendar ID for public holidays in a specific country (e.g., en.usa#holiday@group.v.calendar.google.com)
-            val calendarId = "en.${country.lowercase()}#holiday@group.v.calendar.google.com"
+            val holidayId = when (country.uppercase()) {
+                "JP" -> "ja.japanese"
+                "US" -> "en.usa"
+                "GB" -> "en.uk"
+                "CA" -> "en.canadian"
+                "AU" -> "en.australian"
+                else -> "en.${country.lowercase()}"
+            }
+            val calendarId = "${holidayId}#holiday@group.v.calendar.google.com"
             
             val timeMin = "${year}-${String.format("%02d", month)}-01T00:00:00-00:00"
             val timeMax = "${year}-${String.format("%02d", month)}-${LocalDate.of(year, month, 1).lengthOfMonth()}T23:59:59-00:00"

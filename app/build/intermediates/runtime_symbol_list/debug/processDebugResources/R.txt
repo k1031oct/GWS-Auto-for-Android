@@ -4190,7 +4190,7 @@ int id execution_time 0x7f0900ea
 int id exitUntilCollapsed 0x7f0900eb
 int id expand_activities_button 0x7f0900ec
 int id expanded_menu 0x7f0900ed
-int id fab_add_folder 0x7f0900ee
+int id fab_main 0x7f0900ee
 int id fade 0x7f0900ef
 int id favorite_button 0x7f0900f0
 int id fill 0x7f0900f1

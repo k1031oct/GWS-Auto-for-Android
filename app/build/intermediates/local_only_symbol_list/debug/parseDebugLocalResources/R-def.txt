@@ -146,7 +146,7 @@ id event_title
 id execution_count_text
 id execution_status
 id execution_time
-id fab_add_folder
+id fab_main
 id favorite_button
 id first_day_of_week_spinner
 id folder_icon

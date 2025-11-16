@@ -1,8 +1,12 @@
 package com.gws.auto.mobile.android.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class MainSharedViewModel : ViewModel() {
 
@@ -15,6 +19,9 @@ class MainSharedViewModel : ViewModel() {
     private val _isSignedIn = MutableStateFlow(false)
     val isSignedIn: StateFlow<Boolean> = _isSignedIn
 
+    private val _fabClick = MutableSharedFlow<Unit>()
+    val fabClick = _fabClick.asSharedFlow()
+
     fun setSearchQuery(query: String) {
         _searchQuery.value = query
     }
@@ -25,5 +32,11 @@ class MainSharedViewModel : ViewModel() {
 
     fun setSignedInStatus(isSignedIn: Boolean) {
         _isSignedIn.value = isSignedIn
+    }
+
+    fun onFabClick() {
+        viewModelScope.launch {
+            _fabClick.emit(Unit)
+        }
     }
 }

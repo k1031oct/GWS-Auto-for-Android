@@ -30,6 +30,7 @@ import com.gws.auto.mobile.android.ui.MainFragmentStateAdapter
 import com.gws.auto.mobile.android.ui.MainSharedViewModel
 import com.gws.auto.mobile.android.ui.announcement.AnnouncementViewModel
 import com.gws.auto.mobile.android.ui.history.HistoryViewModel
+import com.gws.auto.mobile.android.ui.schedule.ScheduleSettingsActivity
 import com.gws.auto.mobile.android.ui.settings.SettingsActivity
 import com.gws.auto.mobile.android.ui.workflow.WorkflowViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -157,6 +158,7 @@ Step 2 failed due to an error""",
                 if (mainSharedViewModel.isSignedIn.value || position == 0) {
                     binding.bottomNav.menu.getItem(position).isChecked = true
                     mainSharedViewModel.setCurrentPage(position)
+                    updateFab(position)
                 } else {
                     binding.viewPager.currentItem = 0
                     Toast.makeText(this@MainActivity, R.string.sign_in_required, Toast.LENGTH_SHORT).show()
@@ -204,6 +206,26 @@ Step 2 failed due to an error""",
 
         binding.searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
             binding.searchFragmentContainer.visibility = if (hasFocus) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun updateFab(position: Int) {
+        when (position) {
+            0 -> { // Workflow
+                binding.fabMain.setImageResource(R.drawable.ic_create_new_folder)
+                binding.fabMain.setOnClickListener { mainSharedViewModel.onFabClick() }
+                binding.fabMain.show()
+            }
+            1 -> { // Schedule
+                binding.fabMain.setImageResource(R.drawable.ic_add)
+                binding.fabMain.setOnClickListener { 
+                    startActivity(Intent(this, ScheduleSettingsActivity::class.java))
+                }
+                binding.fabMain.show()
+            }
+            else -> {
+                binding.fabMain.hide()
+            }
         }
     }
 

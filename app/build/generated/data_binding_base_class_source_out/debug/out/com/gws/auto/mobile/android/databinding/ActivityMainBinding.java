@@ -15,6 +15,7 @@ import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gws.auto.mobile.android.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -31,6 +32,9 @@ public final class ActivityMainBinding implements ViewBinding {
   public final BottomNavigationView bottomNav;
 
   @NonNull
+  public final FloatingActionButton fabMain;
+
+  @NonNull
   public final FragmentContainerView searchFragmentContainer;
 
   @NonNull
@@ -43,12 +47,13 @@ public final class ActivityMainBinding implements ViewBinding {
   public final ViewPager2 viewPager;
 
   private ActivityMainBinding(@NonNull ConstraintLayout rootView, @NonNull ImageView actionSettings,
-      @NonNull BottomNavigationView bottomNav,
+      @NonNull BottomNavigationView bottomNav, @NonNull FloatingActionButton fabMain,
       @NonNull FragmentContainerView searchFragmentContainer, @NonNull SearchView searchView,
       @NonNull Toolbar toolbar, @NonNull ViewPager2 viewPager) {
     this.rootView = rootView;
     this.actionSettings = actionSettings;
     this.bottomNav = bottomNav;
+    this.fabMain = fabMain;
     this.searchFragmentContainer = searchFragmentContainer;
     this.searchView = searchView;
     this.toolbar = toolbar;
@@ -94,6 +99,12 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.fab_main;
+      FloatingActionButton fabMain = ViewBindings.findChildViewById(rootView, id);
+      if (fabMain == null) {
+        break missingId;
+      }
+
       id = R.id.search_fragment_container;
       FragmentContainerView searchFragmentContainer = ViewBindings.findChildViewById(rootView, id);
       if (searchFragmentContainer == null) {
@@ -119,7 +130,7 @@ public final class ActivityMainBinding implements ViewBinding {
       }
 
       return new ActivityMainBinding((ConstraintLayout) rootView, actionSettings, bottomNav,
-          searchFragmentContainer, searchView, toolbar, viewPager);
+          fabMain, searchFragmentContainer, searchView, toolbar, viewPager);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

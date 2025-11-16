@@ -76,15 +76,8 @@ fun CalendarScreen(
     val scaffoldState = rememberBottomSheetScaffoldState()
     val scope = rememberCoroutineScope()
 
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = {
-                context.startActivity(Intent(context, ScheduleSettingsActivity::class.java))
-            }) {
-                Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.add_schedule))
-            }
-        }
-    ) { paddingValues ->
+    Scaffold {
+ paddingValues ->
         BottomSheetScaffold(
             scaffoldState = scaffoldState,
             sheetPeekHeight = 32.dp, // Provide a peek height for the handle area

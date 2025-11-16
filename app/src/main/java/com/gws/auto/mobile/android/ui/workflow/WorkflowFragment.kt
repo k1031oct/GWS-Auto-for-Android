@@ -57,7 +57,6 @@ class WorkflowFragment : Fragment() {
         Timber.d("onViewCreated called")
         setupRecyclerView()
         observeViewModels()
-        setupFab()
         setupDragAndDrop()
     }
 
@@ -92,12 +91,6 @@ class WorkflowFragment : Fragment() {
         )
         binding.workflowRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.workflowRecyclerView.adapter = workflowAdapter
-    }
-
-    private fun setupFab() {
-        binding.fabAddFolder.setOnClickListener {
-            showCreateFolderDialog()
-        }
     }
 
     private fun showCreateFolderDialog() {
@@ -202,6 +195,11 @@ class WorkflowFragment : Fragment() {
             .onEach { query ->
                 viewModel.onQueryChanged(query)
             }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
+
+        mainSharedViewModel.fabClick
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { showCreateFolderDialog() }
             .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 

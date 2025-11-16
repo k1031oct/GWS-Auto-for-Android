@@ -3790,6 +3790,7 @@ com.gws.auto.mobile.android:macro/m3_comp_icon_button_medium_container_shape_squ
 com.gws.auto.mobile.android:color/m3_timepicker_button_text_color = 0x7f0602be
 com.gws.auto.mobile.android:attr/preserveIconSpacing = 0x7f04042e
 com.gws.auto.mobile.android:dimen/compat_control_corner_material = 0x7f07005c
+com.gws.auto.mobile.android:id/fab_main = 0x7f0900ee
 com.gws.auto.mobile.android:dimen/m3_comp_search_bar_avatar_size = 0x7f0701ef
 com.gws.auto.mobile.android:color/primary_text_default_material_dark = 0x7f0603eb
 com.gws.auto.mobile.android:macro/m3_comp_time_picker_period_selector_selected_label_text_color = 0x7f0d01be
@@ -7447,7 +7448,6 @@ com.gws.auto.mobile.android:attr/collapsedTitleGravity = 0x7f0400fe
 com.gws.auto.mobile.android:string/default_error_msg = 0x7f130081
 com.gws.auto.mobile.android:attr/startIconContentDescription = 0x7f0404ac
 com.gws.auto.mobile.android:array/crypto_fingerprint_fallback_prefixes = 0x7f030003
-com.gws.auto.mobile.android:id/fab_add_folder = 0x7f0900ee
 com.gws.auto.mobile.android:attr/viewTransitionOnNegativeCross = 0x7f0405bc
 com.gws.auto.mobile.android:attr/thumbElevation = 0x7f040555
 com.gws.auto.mobile.android:attr/materialAlertDialogTitleTextStyle = 0x7f040356
