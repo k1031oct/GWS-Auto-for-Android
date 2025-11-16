@@ -1,19 +1,24 @@
 package com.gws.auto.mobile.android.ui.workflow
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.databinding.FragmentWorkflowBinding
 import com.gws.auto.mobile.android.domain.engine.WorkflowEngine
-import com.gws.auto.mobile.android.domain.model.Workflow
+import com.gws.auto.mobile.android.domain.model.WorkflowListItem
 import com.gws.auto.mobile.android.ui.MainSharedViewModel
 import com.gws.auto.mobile.android.ui.workflow.editor.WorkflowEditorActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,6 +56,8 @@ class WorkflowFragment : Fragment() {
         Timber.d("onViewCreated called")
         setupRecyclerView()
         observeViewModels()
+        setupFab()
+        setupDragAndDrop()
     }
 
     private fun setupRecyclerView() {
@@ -77,23 +84,112 @@ class WorkflowFragment : Fragment() {
             },
             onFavoriteClicked = { workflow ->
                 viewModel.toggleFavorite(workflow)
+            },
+            onFolderClicked = { folder ->
+                // TODO: Implement folder opening/closing logic
+                Timber.d("Folder clicked: ${folder.name}")
             }
         )
         binding.workflowRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.workflowRecyclerView.adapter = workflowAdapter
     }
 
+    private fun setupFab() {
+        binding.fabAddFolder.setOnClickListener {
+            showCreateFolderDialog()
+        }
+    }
+
+    private fun showCreateFolderDialog() {
+        val editText = EditText(context).apply {
+            hint = getString(R.string.folder_name_hint)
+        }
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.create_folder_dialog_title)
+            .setView(editText)
+            .setPositiveButton(R.string.create) { dialog, _ ->
+                val folderName = editText.text.toString()
+                if (folderName.isNotBlank()) {
+                    viewModel.createFolder(folderName)
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.cancel()
+            }
+            .show()
+    }
+
+    private fun setupDragAndDrop() {
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0
+        ) {
+            override fun getMovementFlags(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ): Int {
+                val dragFlags = if (viewHolder is WorkflowAdapter.WorkflowViewHolder) {
+                    ItemTouchHelper.UP or ItemTouchHelper.DOWN
+                } else {
+                    0
+                }
+                return makeMovementFlags(dragFlags, 0)
+            }
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false // We are not reordering
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
+
+            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                super.onSelectedChanged(viewHolder, actionState)
+                if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                    viewHolder?.itemView?.alpha = 0.5f
+                }
+            }
+
+            override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+                super.clearView(recyclerView, viewHolder)
+                viewHolder.itemView.alpha = 1.0f
+
+                // Find the view under the center of the dragged item
+                val dropTargetView = recyclerView.findChildViewUnder(
+                    viewHolder.itemView.x + viewHolder.itemView.width / 2,
+                    viewHolder.itemView.y + viewHolder.itemView.height / 2
+                )
+
+                if (dropTargetView != null) {
+                    val targetPosition = recyclerView.getChildAdapterPosition(dropTargetView)
+                    val sourcePosition = viewHolder.adapterPosition
+
+                    if (targetPosition != RecyclerView.NO_POSITION && sourcePosition != RecyclerView.NO_POSITION) {
+                        val sourceItem = workflowAdapter.currentList[sourcePosition]
+                        val targetItem = workflowAdapter.currentList[targetPosition]
+
+                        if (sourceItem is WorkflowListItem.WorkflowItem && targetItem is WorkflowListItem.FolderItem) {
+                            viewModel.moveWorkflowToFolder(sourceItem.workflow.id, targetItem.folder.id)
+                        }
+                    }
+                }
+            }
+        }
+        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(binding.workflowRecyclerView)
+    }
+
     private fun observeViewModels() {
-        // Observe workflows list from the feature ViewModel
-        viewModel.filteredWorkflows
+        viewModel.filteredItems
             .flowWithLifecycle(viewLifecycleOwner.lifecycle)
-            .onEach { workflows ->
-                Timber.d("Updating UI with ${workflows.size} workflows.")
-                workflowAdapter.submitList(workflows)
+            .onEach { items ->
+                Timber.d("Updating UI with ${items.size} items.")
+                workflowAdapter.submitList(items)
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
 
-        // Observe search query from the shared ViewModel
         mainSharedViewModel.searchQuery
             .flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { query ->

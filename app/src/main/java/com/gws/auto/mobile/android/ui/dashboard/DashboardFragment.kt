@@ -131,14 +131,19 @@ class DashboardFragment : Fragment() {
             PieEntry(errors.toFloat(), getString(R.string.execution_status_failure))
         )
 
+        val typedValue = TypedValue()
+        requireContext().theme.resolveAttribute(com.google.android.material.R.attr.colorPrimary, typedValue, true)
+        val colorPrimary = typedValue.data
+        requireContext().theme.resolveAttribute(com.google.android.material.R.attr.colorError, typedValue, true)
+        val colorError = typedValue.data
+
         val dataSet = PieDataSet(entries, "").apply {
-            colors = listOf(ContextCompat.getColor(requireContext(), R.color.chart_green), ContextCompat.getColor(requireContext(), R.color.chart_red))
+            colors = listOf(colorPrimary, colorError)
             setDrawValues(true)
             valueTextColor = Color.WHITE
             valueTextSize = 12f
         }
 
-        val typedValue = TypedValue()
         requireContext().theme.resolveAttribute(com.google.android.material.R.attr.colorSurface, typedValue, true)
         val holeColor = typedValue.data
         requireContext().theme.resolveAttribute(com.google.android.material.R.attr.colorOnSurface, typedValue, true)

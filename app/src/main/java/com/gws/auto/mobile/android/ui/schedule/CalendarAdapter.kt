@@ -1,8 +1,8 @@
 package com.gws.auto.mobile.android.ui.schedule
 
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +19,7 @@ class CalendarAdapter(
 
     fun updateHolidays(newHolidays: List<Holiday>) {
         holidays = newHolidays
-        notifyDataSetChanged() // Holidays are not part of the diff, so a full redraw is ok for now.
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
@@ -41,7 +41,10 @@ class CalendarAdapter(
 
             // Reset styles
             binding.dayText.background = null
-            binding.dayText.setTextAppearance(android.R.style.TextAppearance_Material_Body1)
+
+            val typedValue = TypedValue()
+            itemView.context.theme.resolveAttribute(android.R.attr.textColorPrimary, typedValue, true)
+            binding.dayText.setTextColor(typedValue.data)
 
             if (item.date != null) {
                 itemView.setOnClickListener { onDateClick(item.date) }
@@ -53,7 +56,9 @@ class CalendarAdapter(
                 val holiday = holidays.find { it.date == item.date }
                 if (holiday != null) {
                     binding.dayText.text = "${item.day}\n${holiday.name}"
-                    binding.dayText.setTextColor(ContextCompat.getColor(itemView.context, R.color.holiday_color))
+                    val holidayTypedValue = TypedValue()
+                    itemView.context.theme.resolveAttribute(com.google.android.material.R.attr.colorError, holidayTypedValue, true)
+                    binding.dayText.setTextColor(holidayTypedValue.data)
                 }
             } else {
                 itemView.setOnClickListener(null)

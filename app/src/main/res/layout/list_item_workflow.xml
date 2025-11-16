@@ -43,7 +43,7 @@
             android:layout_marginTop="4dp"
             android:textAppearance="?attr/textAppearanceBody2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/workflow_name"
+            app:layout_constraintTop_toBottomOf="@+id/workflow_name"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="This is a description of the workflow." />
 
@@ -54,7 +54,7 @@
             android:layout_marginTop="8dp"
             android:textAppearance="?attr/textAppearanceCaption"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/workflow_description"
+            app:layout_constraintTop_toBottomOf="@+id/workflow_description"
             tools:text="Status: Active" />
 
         <TextView
@@ -84,15 +84,6 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Run Workflow"
                 android:src="@drawable/ic_play_arrow" />
-
-            <ImageButton
-                android:id="@+id/edit_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Edit Workflow"
-                android:src="@drawable/ic_edit" />
 
             <ImageButton
                 android:id="@+id/delete_button"

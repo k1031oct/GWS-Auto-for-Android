@@ -3,20 +3,26 @@ package com.gws.auto.mobile.android.ui.workflow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gws.auto.mobile.android.data.repository.SearchHistoryRepository
+import com.gws.auto.mobile.android.data.repository.WorkflowFolderRepository
 import com.gws.auto.mobile.android.data.repository.WorkflowRepository
 import com.gws.auto.mobile.android.domain.model.Workflow
+import com.gws.auto.mobile.android.domain.model.WorkflowFolder
+import com.gws.auto.mobile.android.domain.model.WorkflowListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class WorkflowViewModel @Inject constructor(
     private val workflowRepository: WorkflowRepository,
+    private val workflowFolderRepository: WorkflowFolderRepository,
     private val searchHistoryRepository: SearchHistoryRepository
 ) : ViewModel() {
 
@@ -25,21 +31,27 @@ class WorkflowViewModel @Inject constructor(
     private val _isFavoriteFilterActive = MutableStateFlow(false)
     val isFavoriteFilterActive: StateFlow<Boolean> = _isFavoriteFilterActive
 
-    val filteredWorkflows: StateFlow<List<Workflow>> = combine(
+    val filteredItems: StateFlow<List<WorkflowListItem>> = combine(
         workflowRepository.getAllWorkflows(),
+        workflowFolderRepository.getAllWorkflowFolders(),
         _searchQuery,
         _isFavoriteFilterActive
-    ) { workflows, query, isFavoriteFilterActive ->
-        val filtered = if (query.isBlank()) {
-            workflows
-        } else {
-            workflows.filter { it.name.contains(query, ignoreCase = true) }
+    ) { workflows, folders, query, isFavoriteFilterActive ->
+
+        val allWorkflowIdsInFolders = folders.flatMap { it.workflowIds }.toSet()
+
+        val topLevelWorkflows = workflows.filter { it.id !in allWorkflowIdsInFolders }
+
+        val filteredWorkflows = topLevelWorkflows.filter { 
+            (query.isBlank() || it.name.contains(query, ignoreCase = true)) &&
+            (!isFavoriteFilterActive || it.isFavorite)
         }
-        if (isFavoriteFilterActive) {
-            filtered.filter { it.isFavorite }
-        } else {
-            filtered
-        }
+
+        val workflowItems = filteredWorkflows.map { WorkflowListItem.WorkflowItem(it) }
+        val folderItems = folders.map { WorkflowListItem.FolderItem(it) }
+
+        (folderItems + workflowItems + WorkflowListItem.AddItem)
+
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun onQueryChanged(query: String) {
@@ -61,5 +73,36 @@ class WorkflowViewModel @Inject constructor(
 
     fun toggleFavoriteFilter() {
         _isFavoriteFilterActive.value = !_isFavoriteFilterActive.value
+    }
+
+    fun createFolder(name: String) = viewModelScope.launch {
+        val newFolder = WorkflowFolder(
+            id = UUID.randomUUID().toString(),
+            name = name,
+            workflowIds = emptyList()
+        )
+        workflowFolderRepository.insertWorkflowFolder(newFolder)
+    }
+    
+    fun moveWorkflowToFolder(workflowId: String, folderId: String) = viewModelScope.launch {
+        val allFolders = workflowFolderRepository.getAllWorkflowFolders().first()
+
+        val sourceFolder = allFolders.find { it.workflowIds.contains(workflowId) }
+        val targetFolder = allFolders.find { it.id == folderId }
+
+        // If target folder doesn't exist, or it's the same as the source, do nothing.
+        if (targetFolder == null || sourceFolder?.id == targetFolder.id) {
+            return@launch
+        }
+
+        // Remove from source folder
+        if (sourceFolder != null) {
+            val updatedSourceIds = sourceFolder.workflowIds.toMutableList().also { it.remove(workflowId) }
+            workflowFolderRepository.updateWorkflowFolder(sourceFolder.copy(workflowIds = updatedSourceIds))
+        }
+
+        // Add to target folder
+        val updatedTargetIds = targetFolder.workflowIds.toMutableList().also { it.add(workflowId) }
+        workflowFolderRepository.updateWorkflowFolder(targetFolder.copy(workflowIds = updatedTargetIds))
     }
 }
