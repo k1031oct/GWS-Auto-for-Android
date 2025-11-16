@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.gws.auto.mobile.android.R;
@@ -28,6 +29,9 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
 
   @NonNull
   public final Button cancelButton;
+
+  @NonNull
+  public final FloatingActionButton fabAddModule;
 
   @NonNull
   public final RecyclerView folderRecyclerView;
@@ -55,14 +59,15 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
 
   private ActivityWorkflowEditorBinding(@NonNull ConstraintLayout rootView,
       @NonNull LinearLayout buttonBar, @NonNull Button cancelButton,
-      @NonNull RecyclerView folderRecyclerView, @NonNull RecyclerView libraryRecyclerView,
-      @NonNull RecyclerView moduleRecyclerView, @NonNull Button saveButton,
-      @NonNull TextInputEditText workflowDescriptionEditor,
+      @NonNull FloatingActionButton fabAddModule, @NonNull RecyclerView folderRecyclerView,
+      @NonNull RecyclerView libraryRecyclerView, @NonNull RecyclerView moduleRecyclerView,
+      @NonNull Button saveButton, @NonNull TextInputEditText workflowDescriptionEditor,
       @NonNull TextInputLayout workflowDescriptionLayout,
       @NonNull TextInputEditText workflowNameEditor, @NonNull TextInputLayout workflowNameLayout) {
     this.rootView = rootView;
     this.buttonBar = buttonBar;
     this.cancelButton = cancelButton;
+    this.fabAddModule = fabAddModule;
     this.folderRecyclerView = folderRecyclerView;
     this.libraryRecyclerView = libraryRecyclerView;
     this.moduleRecyclerView = moduleRecyclerView;
@@ -109,6 +114,12 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
       id = R.id.cancel_button;
       Button cancelButton = ViewBindings.findChildViewById(rootView, id);
       if (cancelButton == null) {
+        break missingId;
+      }
+
+      id = R.id.fab_add_module;
+      FloatingActionButton fabAddModule = ViewBindings.findChildViewById(rootView, id);
+      if (fabAddModule == null) {
         break missingId;
       }
 
@@ -161,7 +172,7 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
       }
 
       return new ActivityWorkflowEditorBinding((ConstraintLayout) rootView, buttonBar, cancelButton,
-          folderRecyclerView, libraryRecyclerView, moduleRecyclerView, saveButton,
+          fabAddModule, folderRecyclerView, libraryRecyclerView, moduleRecyclerView, saveButton,
           workflowDescriptionEditor, workflowDescriptionLayout, workflowNameEditor,
           workflowNameLayout);
     }

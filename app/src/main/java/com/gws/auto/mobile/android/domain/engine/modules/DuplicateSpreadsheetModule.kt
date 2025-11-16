@@ -30,7 +30,8 @@ class DuplicateSpreadsheetModule @Inject constructor(
                 context.setVariable(outputVar, newFile.id)
                 Timber.d("New spreadsheet ID ${newFile.id} saved to variable '$outputVar'")
             }
-            
+
+            Timber.d("Successfully duplicated spreadsheet with new ID: ${newFile.id}")
             ExecutionResult(true)
         } catch (e: Exception) {
             Timber.e(e, "Failed to duplicate spreadsheet")

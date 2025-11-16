@@ -105,6 +105,8 @@ int array highlight_color_values 0x7f03000b
 int array language_entries 0x7f03000c
 int array language_values 0x7f03000d
 int array language_values_from_countries 0x7f03000e
+int array module_display_names 0x7f030011
+int array module_keys 0x7f030012
 int array theme_entries 0x7f03000f
 int array theme_values 0x7f030010
 int attr SharedValue 0x7f040000
@@ -4190,6 +4192,7 @@ int id execution_time 0x7f0900ea
 int id exitUntilCollapsed 0x7f0900eb
 int id expand_activities_button 0x7f0900ec
 int id expanded_menu 0x7f0900ed
+int id fab_add_module 0x7f0902d1
 int id fab_main 0x7f0900ee
 int id fade 0x7f0900ef
 int id favorite_button 0x7f0900f0

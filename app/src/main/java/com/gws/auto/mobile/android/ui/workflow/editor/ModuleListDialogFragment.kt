@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.gws.auto.mobile.android.R
 
 class ModuleListDialogFragment : DialogFragment() {
 
@@ -14,12 +15,13 @@ class ModuleListDialogFragment : DialogFragment() {
     var listener: ModuleListListener? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val moduleTypes = arrayOf("LOG_MESSAGE", "SHOW_TOAST", "CREATE_PDF_FROM_SHEET", "CONVERT_EXCEL_TO_SHEET")
+        val moduleDisplayNames = resources.getStringArray(R.array.module_display_names)
+        val moduleKeys = resources.getStringArray(R.array.module_keys)
 
         return AlertDialog.Builder(requireContext())
             .setTitle("Select a module")
-            .setItems(moduleTypes) { _, which ->
-                listener?.onModuleSelected(moduleTypes[which])
+            .setItems(moduleDisplayNames) { _, which ->
+                listener?.onModuleSelected(moduleKeys[which])
             }
             .create()
     }

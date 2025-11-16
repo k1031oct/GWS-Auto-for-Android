@@ -10,6 +10,8 @@ array highlight_color_values
 array language_entries
 array language_values
 array language_values_from_countries
+array module_display_names
+array module_keys
 array theme_entries
 array theme_values
 attr highlightColor
@@ -146,6 +148,7 @@ id event_title
 id execution_count_text
 id execution_status
 id execution_time
+id fab_add_module
 id fab_main
 id favorite_button
 id first_day_of_week_spinner

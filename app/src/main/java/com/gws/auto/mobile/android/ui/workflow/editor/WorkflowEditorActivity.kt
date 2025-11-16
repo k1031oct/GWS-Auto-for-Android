@@ -24,7 +24,7 @@ import timber.log.Timber
 import java.util.UUID
 
 @AndroidEntryPoint
-class WorkflowEditorActivity : AppCompatActivity() {
+class WorkflowEditorActivity : AppCompatActivity(), ModuleListDialogFragment.ModuleListListener, ModuleParameterDialogFragment.ModuleParameterListener {
 
     private lateinit var binding: ActivityWorkflowEditorBinding
     private val viewModel: WorkflowEditorViewModel by viewModels()
@@ -60,6 +60,12 @@ class WorkflowEditorActivity : AppCompatActivity() {
         setupDragAndDrop()
         observeViewModel()
 
+        binding.fabAddModule.setOnClickListener {
+            val dialog = ModuleListDialogFragment()
+            dialog.listener = this
+            dialog.show(supportFragmentManager, "ModuleListDialog")
+        }
+
         binding.cancelButton.setOnClickListener { finish() }
         binding.saveButton.setOnClickListener { saveWorkflow() }
     }
@@ -82,6 +88,16 @@ class WorkflowEditorActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onModuleSelected(moduleType: String) {
+        val dialog = ModuleParameterDialogFragment.newInstance(moduleType)
+        dialog.listener = this
+        dialog.show(supportFragmentManager, "ModuleParameterDialog")
+    }
+
+    override fun onModuleParametersSet(module: Module) {
+        viewModel.addModule(module.copy(id = UUID.randomUUID().toString()))
     }
 
     private fun updateEditState() {
@@ -140,10 +156,7 @@ class WorkflowEditorActivity : AppCompatActivity() {
                 "Core" -> listOf(
                     Module(id = "", type = "DEFINE_VARIABLE", parameters = emptyMap()),
                     Module(id = "", type = "GET_RELATIVE_DATE", parameters = emptyMap()),
-                    Module(id = "", type = "Delay", parameters = emptyMap()),
-                    Module(id = "", type = "IfElse", parameters = emptyMap()),
-                    Module(id = "", type = "Toast", parameters = emptyMap()),
-                    Module(id = "", type = "Log", parameters = emptyMap())
+                    Module(id = "", type = "LOG_MESSAGE", parameters = emptyMap())
                 )
                 "Gmail" -> listOf(
                     Module(id = "", type = "CREATE_GMAIL_DRAFT", parameters = emptyMap())

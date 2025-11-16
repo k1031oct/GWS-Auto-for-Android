@@ -6,6 +6,7 @@ import com.gws.auto.mobile.android.domain.engine.modules.CreateGmailDraftModule
 import com.gws.auto.mobile.android.domain.engine.modules.DefineVariableModule
 import com.gws.auto.mobile.android.domain.engine.modules.DuplicateSpreadsheetModule
 import com.gws.auto.mobile.android.domain.engine.modules.GetRelativeDateModule
+import com.gws.auto.mobile.android.domain.engine.modules.LogMessageModule
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,5 +43,8 @@ object WorkflowModule {
     @StringKey("COPY_PASTE_SHEET_VALUES")
     fun provideCopyPasteSheetValuesModule(module: CopyPasteSheetValuesModule): ModuleExecutor = module
 
-    // Add other module providers here
+    @Provides
+    @IntoMap
+    @StringKey("LOG_MESSAGE")
+    fun provideLogMessageModule(module: LogMessageModule): ModuleExecutor = module
 }
