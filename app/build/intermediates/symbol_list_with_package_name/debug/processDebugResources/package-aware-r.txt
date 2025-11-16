@@ -3787,6 +3787,7 @@ drawable btn_radio_off_mtrl
 drawable btn_radio_off_to_on_mtrl_animation
 drawable btn_radio_on_mtrl
 drawable btn_radio_on_to_off_mtrl_animation
+drawable circle_background
 drawable common_full_open_on_phone
 drawable common_google_signin_btn_icon_dark
 drawable common_google_signin_btn_icon_dark_focused
@@ -4101,6 +4102,7 @@ id clockwise
 id closest
 id coil_request_manager
 id collapseActionView
+id color_indicator
 id compose_prefetch_scheduler
 id compose_view
 id compose_view_saveable_id_tag
@@ -4610,7 +4612,6 @@ id transition_position
 id transition_scene_layoutid_cache
 id transition_transform
 id triangle
-id trigger
 id unchecked
 id uniform
 id unlabeled

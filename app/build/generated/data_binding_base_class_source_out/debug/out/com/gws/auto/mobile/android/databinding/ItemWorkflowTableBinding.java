@@ -4,10 +4,11 @@ package com.gws.auto.mobile.android.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.gws.auto.mobile.android.R;
@@ -17,28 +18,42 @@ import java.lang.String;
 
 public final class ItemWorkflowTableBinding implements ViewBinding {
   @NonNull
-  private final LinearLayout rootView;
+  private final ConstraintLayout rootView;
 
   @NonNull
-  public final TextView status;
+  public final ImageButton deleteButton;
 
   @NonNull
-  public final TextView trigger;
+  public final ImageButton editButton;
+
+  @NonNull
+  public final ImageButton favoriteButton;
+
+  @NonNull
+  public final ImageButton runButton;
+
+  @NonNull
+  public final TextView workflowDescription;
 
   @NonNull
   public final TextView workflowName;
 
-  private ItemWorkflowTableBinding(@NonNull LinearLayout rootView, @NonNull TextView status,
-      @NonNull TextView trigger, @NonNull TextView workflowName) {
+  private ItemWorkflowTableBinding(@NonNull ConstraintLayout rootView,
+      @NonNull ImageButton deleteButton, @NonNull ImageButton editButton,
+      @NonNull ImageButton favoriteButton, @NonNull ImageButton runButton,
+      @NonNull TextView workflowDescription, @NonNull TextView workflowName) {
     this.rootView = rootView;
-    this.status = status;
-    this.trigger = trigger;
+    this.deleteButton = deleteButton;
+    this.editButton = editButton;
+    this.favoriteButton = favoriteButton;
+    this.runButton = runButton;
+    this.workflowDescription = workflowDescription;
     this.workflowName = workflowName;
   }
 
   @Override
   @NonNull
-  public LinearLayout getRoot() {
+  public ConstraintLayout getRoot() {
     return rootView;
   }
 
@@ -63,15 +78,33 @@ public final class ItemWorkflowTableBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.status;
-      TextView status = ViewBindings.findChildViewById(rootView, id);
-      if (status == null) {
+      id = R.id.delete_button;
+      ImageButton deleteButton = ViewBindings.findChildViewById(rootView, id);
+      if (deleteButton == null) {
         break missingId;
       }
 
-      id = R.id.trigger;
-      TextView trigger = ViewBindings.findChildViewById(rootView, id);
-      if (trigger == null) {
+      id = R.id.edit_button;
+      ImageButton editButton = ViewBindings.findChildViewById(rootView, id);
+      if (editButton == null) {
+        break missingId;
+      }
+
+      id = R.id.favorite_button;
+      ImageButton favoriteButton = ViewBindings.findChildViewById(rootView, id);
+      if (favoriteButton == null) {
+        break missingId;
+      }
+
+      id = R.id.run_button;
+      ImageButton runButton = ViewBindings.findChildViewById(rootView, id);
+      if (runButton == null) {
+        break missingId;
+      }
+
+      id = R.id.workflow_description;
+      TextView workflowDescription = ViewBindings.findChildViewById(rootView, id);
+      if (workflowDescription == null) {
         break missingId;
       }
 
@@ -81,7 +114,8 @@ public final class ItemWorkflowTableBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ItemWorkflowTableBinding((LinearLayout) rootView, status, trigger, workflowName);
+      return new ItemWorkflowTableBinding((ConstraintLayout) rootView, deleteButton, editButton,
+          favoriteButton, runButton, workflowDescription, workflowName);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

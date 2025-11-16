@@ -222,15 +222,20 @@ fun WeeklySettings(
                 FilterChip(
                     selected = day in selectedDays,
                     onClick = { onDayToggle(day) },
-                    label = { Text(day) }
+                    label = { Text(day) },
+                    colors = FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = MaterialTheme.colorScheme.primary,
+                        selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 )
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        DailySettings(time, onTimeChange) // Reuse DailySettings for time picking
+        DailySettings(time, onTimeChange)
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MonthlySettings(
     selectedDays: Set<Int>,
@@ -253,7 +258,11 @@ fun MonthlySettings(
                 FilterChip(
                     selected = day in selectedDays,
                     onClick = { onDayToggle(day) },
-                    label = { Text(day.toString()) }
+                    label = { Text(day.toString()) },
+                    colors = FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = MaterialTheme.colorScheme.primary,
+                        selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 )
             }
         }
@@ -274,7 +283,7 @@ fun YearlySettings(
 ) {
     val months = Month.entries.map { it.getDisplayName(TextStyle.FULL, Locale.getDefault()) }
     var monthExpanded by remember { mutableStateOf(false) }
-    val daysInMonth = YearMonth.of(2024, selectedMonth).lengthOfMonth() // Use a leap year for Feb
+    val daysInMonth = YearMonth.of(2024, selectedMonth).lengthOfMonth()
 
     Column(modifier = Modifier.fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
         ExposedDropdownMenuBox(
@@ -318,7 +327,11 @@ fun YearlySettings(
                 FilterChip(
                     selected = day == selectedDay,
                     onClick = { onDayChange(day) },
-                    label = { Text(day.toString()) }
+                    label = { Text(day.toString()) },
+                    colors = FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = MaterialTheme.colorScheme.primary,
+                        selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 )
             }
         }

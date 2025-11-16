@@ -67,18 +67,26 @@ val md_theme_dark_scrim = Color(0xFF000000)
 // Forest Light Theme Colors
 val forest_theme_light_primary = Color(0xFF386A1F)
 val forest_theme_light_onPrimary = Color(0xFFFFFFFF)
+val forest_theme_light_primaryContainer = Color(0xFFB9F3A3)
+val forest_theme_light_onPrimaryContainer = Color(0xFF042100)
 
 // Forest Dark Theme Colors
 val forest_theme_dark_primary = Color(0xFF9DCD83)
 val forest_theme_dark_onPrimary = Color(0xFF083900)
+val forest_theme_dark_primaryContainer = Color(0xFF1F5104)
+val forest_theme_dark_onPrimaryContainer = Color(0xFFB9F3A3)
 
 // Ocean Light Theme Colors
 val ocean_theme_light_primary = Color(0xFF00696F)
 val ocean_theme_light_onPrimary = Color(0xFFFFFFFF)
+val ocean_theme_light_primaryContainer = Color(0xFF9CF1F8)
+val ocean_theme_light_onPrimaryContainer = Color(0xFF002022)
 
 // Ocean Dark Theme Colors
 val ocean_theme_dark_primary = Color(0xFF4DD9E2)
 val ocean_theme_dark_onPrimary = Color(0xFF00373A)
+val ocean_theme_dark_primaryContainer = Color(0xFF004F54)
+val ocean_theme_dark_onPrimaryContainer = Color(0xFF9CF1F8)
 
 // Sakura Light Theme Colors
 val sakura_theme_light_primary = Color(0xFFB14E69)

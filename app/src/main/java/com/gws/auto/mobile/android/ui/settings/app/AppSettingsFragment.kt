@@ -1,5 +1,6 @@
 package com.gws.auto.mobile.android.ui.settings.app
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.core.graphics.toColorInt
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.gws.auto.mobile.android.R
@@ -145,14 +147,26 @@ class AppSettingsFragment : Fragment() {
             val currentHighlightColor = settingsRepository.highlightColor.first()
             val highlightColorPosition = highlightColorValues.indexOf(currentHighlightColor)
             binding.highlightColorSpinner.setSelection(if (highlightColorPosition != -1) highlightColorPosition else 0)
+            updateColorIndicator(currentHighlightColor)
         }
         binding.highlightColorSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selection = highlightColorValues[position]
                 lifecycleScope.launch { settingsRepository.saveHighlightColor(selection) }
+                updateColorIndicator(selection)
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
+    }
+
+    private fun updateColorIndicator(colorName: String) {
+        val color = when(colorName) {
+            "forest" -> "#386A1F"
+            "ocean" -> "#00696F"
+            "sakura" -> "#B14E69"
+            else -> "#6750A4" // default
+        }
+        binding.colorIndicator.setBackgroundColor(Color.parseColor(color))
     }
 
     override fun onDestroyView() {

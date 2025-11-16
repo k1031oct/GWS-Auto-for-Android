@@ -80,6 +80,7 @@ color md_theme_light_tertiary
 color md_theme_light_tertiaryContainer
 drawable badge_dot
 drawable bg_today
+drawable circle_background
 drawable ic_add
 drawable ic_announcement
 drawable ic_badge
@@ -123,6 +124,7 @@ id button_bar
 id button_container
 id cancel_button
 id clear_history_button
+id color_indicator
 id compose_view
 id contact_button
 id country_spinner
@@ -226,7 +228,6 @@ id total_duration_text
 id total_executions_day_change_text
 id total_executions_month_change_text
 id total_executions_text
-id trigger
 id unread_indicator
 id usage_count_text
 id user_avatar

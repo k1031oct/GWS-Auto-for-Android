@@ -21,6 +21,9 @@ public final class FragmentAppSettingsBinding implements ViewBinding {
   private final ScrollView rootView;
 
   @NonNull
+  public final View colorIndicator;
+
+  @NonNull
   public final Spinner countrySpinner;
 
   @NonNull
@@ -41,11 +44,13 @@ public final class FragmentAppSettingsBinding implements ViewBinding {
   @NonNull
   public final TextView userInfoButton;
 
-  private FragmentAppSettingsBinding(@NonNull ScrollView rootView, @NonNull Spinner countrySpinner,
-      @NonNull Spinner firstDayOfWeekSpinner, @NonNull Spinner highlightColorSpinner,
-      @NonNull Spinner languageSpinner, @NonNull TextView tagManagementButton,
-      @NonNull Spinner themeSpinner, @NonNull TextView userInfoButton) {
+  private FragmentAppSettingsBinding(@NonNull ScrollView rootView, @NonNull View colorIndicator,
+      @NonNull Spinner countrySpinner, @NonNull Spinner firstDayOfWeekSpinner,
+      @NonNull Spinner highlightColorSpinner, @NonNull Spinner languageSpinner,
+      @NonNull TextView tagManagementButton, @NonNull Spinner themeSpinner,
+      @NonNull TextView userInfoButton) {
     this.rootView = rootView;
+    this.colorIndicator = colorIndicator;
     this.countrySpinner = countrySpinner;
     this.firstDayOfWeekSpinner = firstDayOfWeekSpinner;
     this.highlightColorSpinner = highlightColorSpinner;
@@ -82,6 +87,12 @@ public final class FragmentAppSettingsBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.color_indicator;
+      View colorIndicator = ViewBindings.findChildViewById(rootView, id);
+      if (colorIndicator == null) {
+        break missingId;
+      }
+
       id = R.id.country_spinner;
       Spinner countrySpinner = ViewBindings.findChildViewById(rootView, id);
       if (countrySpinner == null) {
@@ -124,7 +135,7 @@ public final class FragmentAppSettingsBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentAppSettingsBinding((ScrollView) rootView, countrySpinner,
+      return new FragmentAppSettingsBinding((ScrollView) rootView, colorIndicator, countrySpinner,
           firstDayOfWeekSpinner, highlightColorSpinner, languageSpinner, tagManagementButton,
           themeSpinner, userInfoButton);
     }

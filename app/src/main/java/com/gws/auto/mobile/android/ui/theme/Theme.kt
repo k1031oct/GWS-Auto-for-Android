@@ -95,8 +95,18 @@ fun GWSAutoForAndroidTheme(
         }
 
         darkTheme -> when (highlightColor) {
-            "forest" -> DarkColorScheme.copy(primary = forest_theme_dark_primary, onPrimary = forest_theme_dark_onPrimary)
-            "ocean" -> DarkColorScheme.copy(primary = ocean_theme_dark_primary, onPrimary = ocean_theme_dark_onPrimary)
+            "forest" -> DarkColorScheme.copy(
+                primary = forest_theme_dark_primary,
+                onPrimary = forest_theme_dark_onPrimary,
+                primaryContainer = forest_theme_dark_primaryContainer,
+                onPrimaryContainer = forest_theme_dark_onPrimaryContainer
+            )
+            "ocean" -> DarkColorScheme.copy(
+                primary = ocean_theme_dark_primary,
+                onPrimary = ocean_theme_dark_onPrimary,
+                primaryContainer = ocean_theme_dark_primaryContainer,
+                onPrimaryContainer = ocean_theme_dark_onPrimaryContainer
+            )
             "sakura" -> DarkColorScheme.copy(
                 primary = sakura_theme_dark_primary,
                 onPrimary = sakura_theme_dark_onPrimary,
@@ -107,8 +117,18 @@ fun GWSAutoForAndroidTheme(
         }
 
         else -> when (highlightColor) {
-            "forest" -> LightColorScheme.copy(primary = forest_theme_light_primary, onPrimary = forest_theme_light_onPrimary)
-            "ocean" -> LightColorScheme.copy(primary = ocean_theme_light_primary, onPrimary = ocean_theme_light_onPrimary)
+            "forest" -> LightColorScheme.copy(
+                primary = forest_theme_light_primary,
+                onPrimary = forest_theme_light_onPrimary,
+                primaryContainer = forest_theme_light_primaryContainer,
+                onPrimaryContainer = forest_theme_light_onPrimaryContainer
+            )
+            "ocean" -> LightColorScheme.copy(
+                primary = ocean_theme_light_primary,
+                onPrimary = ocean_theme_light_onPrimary,
+                primaryContainer = ocean_theme_light_primaryContainer,
+                onPrimaryContainer = ocean_theme_light_onPrimaryContainer
+            )
             "sakura" -> LightColorScheme.copy(
                 primary = sakura_theme_light_primary,
                 onPrimary = sakura_theme_light_onPrimary,
