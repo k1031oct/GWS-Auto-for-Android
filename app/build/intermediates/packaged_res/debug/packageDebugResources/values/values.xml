@@ -62,6 +62,7 @@
         <item>Create Gmail Draft</item>
         <item>Duplicate Spreadsheet</item>
         <item>Copy/Paste Sheet Values</item>
+        <item>Post to Google Chat</item>
     </string-array>
     <string-array name="module_keys">
         <item>LOG_MESSAGE</item>
@@ -70,6 +71,7 @@
         <item>CREATE_GMAIL_DRAFT</item>
         <item>DUPLICATE_SPREADSHEET</item>
         <item>COPY_PASTE_SHEET_VALUES</item>
+        <item>chat_post</item>
     </string-array>
     <string-array name="theme_entries">
         <item>System Default</item>

@@ -156,7 +156,8 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleListDialogFragment.Mod
                     Module(id = "", type = "LOG_MESSAGE", parameters = emptyMap())
                 )
                 "Gmail" -> listOf(
-                    Module(id = "", type = "CREATE_GMAIL_DRAFT", parameters = emptyMap())
+                    Module(id = "", type = "CREATE_GMAIL_DRAFT", parameters = emptyMap()),
+                    Module(id = "", type = "chat_post", parameters = emptyMap())
                 )
                 "Sheets" -> listOf(
                     Module(id = "", type = "DUPLICATE_SPREADSHEET", parameters = emptyMap()),

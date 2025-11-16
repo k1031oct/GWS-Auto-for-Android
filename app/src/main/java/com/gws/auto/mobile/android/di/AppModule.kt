@@ -20,12 +20,14 @@ import com.gws.auto.mobile.android.data.local.db.WorkflowDao
 import com.gws.auto.mobile.android.data.local.db.WorkflowFolderDao
 import com.gws.auto.mobile.android.data.repository.ScheduleRepository
 import com.gws.auto.mobile.android.data.repository.ScheduleRepositoryImpl
+import com.gws.auto.mobile.android.domain.service.CalendarApiService
 import com.gws.auto.mobile.android.domain.service.GoogleApiAuthorizer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import javax.inject.Singleton
 
 @Module
@@ -91,7 +93,19 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideOkHttpClient(): OkHttpClient {
+        return OkHttpClient()
+    }
+
+    @Provides
+    @Singleton
     fun provideScheduleRepository(apiAuthorizer: GoogleApiAuthorizer): ScheduleRepository {
         return ScheduleRepositoryImpl(apiAuthorizer)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCalendarApiService(authorizer: GoogleApiAuthorizer): CalendarApiService {
+        return CalendarApiService(authorizer)
     }
 }
