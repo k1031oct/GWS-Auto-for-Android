@@ -13,6 +13,7 @@ array theme_entries
 array theme_values
 attr highlightColor
 color black
+color chart_red
 color chip_default_color
 color chip_failure_color
 color chip_success_color

@@ -62,6 +62,7 @@
     </string-array>
     <attr format="color" name="highlightColor"/>
     <color name="black">#FF000000</color>
+    <color name="chart_red">#F44336</color>
     <color name="grey_400">#BDBDBD</color>
     <color name="md_theme_light_background">#FFFBFE</color>
     <color name="md_theme_light_error">#B3261E</color>
