@@ -85,7 +85,7 @@ object AppModule {
                 Scope(DriveScopes.DRIVE_FILE),
                 Scope(SheetsScopes.SPREADSHEETS),
                 Scope(GmailScopes.GMAIL_COMPOSE),
-                Scope(CalendarScopes.CALENDAR_READONLY)
+                Scope(CalendarScopes.CALENDAR)
             )
             .build()
         return GoogleSignIn.getClient(context, gso)
