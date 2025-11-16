@@ -48,6 +48,13 @@
         <item>en</item>
         <item>ja</item>
     </string-array>
+    <string-array name="language_values_from_countries">
+        <item>en</item> 
+        <item>ja</item> 
+        <item>en</item> 
+        <item>en</item> 
+        <item>en</item> 
+    </string-array>
     <string-array name="theme_entries">
         <item>System Default</item>
         <item>Light</item>
@@ -129,6 +136,7 @@
     <string name="clear_search_history_confirmation">Clear search history?</string>
     <string name="com.google.firebase.crashlytics.mapping_file_id" ns1:ignore="UnusedResources,TypographyDashes" translatable="false">00000000000000000000000000000000</string>
     <string name="com.google.firebase.crashlytics.version_control_info">""</string>
+    <string name="country">Country</string>
     <string name="country_for_holidays">Country for Holiday Calendar</string>
     <string name="create">Create</string>
     <string name="create_folder_dialog_title">Create New Folder</string>

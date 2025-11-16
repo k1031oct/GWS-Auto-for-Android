@@ -24,6 +24,7 @@
     <string name="clear_history_confirmation_message">本当にすべての実行履歴を消去しますか？</string>
     <string name="clear_history_confirmation_title">履歴の消去</string>
     <string name="clear_search_history_confirmation">検索履歴を消去しますか？</string>
+    <string name="country">国</string>
     <string name="country_for_holidays">祝日カレンダーの国</string>
     <string name="dashboard_errors">エラー</string>
     <string name="dashboard_executions">実行</string>

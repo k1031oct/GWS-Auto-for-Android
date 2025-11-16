@@ -22,14 +22,10 @@ public final class FragmentWizardLocaleBinding implements ViewBinding {
   @NonNull
   public final Spinner countrySpinner;
 
-  @NonNull
-  public final Spinner languageSpinner;
-
   private FragmentWizardLocaleBinding(@NonNull LinearLayout rootView,
-      @NonNull Spinner countrySpinner, @NonNull Spinner languageSpinner) {
+      @NonNull Spinner countrySpinner) {
     this.rootView = rootView;
     this.countrySpinner = countrySpinner;
-    this.languageSpinner = languageSpinner;
   }
 
   @Override
@@ -65,14 +61,7 @@ public final class FragmentWizardLocaleBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.language_spinner;
-      Spinner languageSpinner = ViewBindings.findChildViewById(rootView, id);
-      if (languageSpinner == null) {
-        break missingId;
-      }
-
-      return new FragmentWizardLocaleBinding((LinearLayout) rootView, countrySpinner,
-          languageSpinner);
+      return new FragmentWizardLocaleBinding((LinearLayout) rootView, countrySpinner);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

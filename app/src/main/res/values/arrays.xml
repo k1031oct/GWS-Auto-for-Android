@@ -31,6 +31,15 @@
         <item>ja</item>
     </string-array>
 
+    <!-- Language values mapped from country_entries -->
+    <string-array name="language_values_from_countries">
+        <item>en</item> <!-- United States -->
+        <item>ja</item> <!-- Japan -->
+        <item>en</item> <!-- United Kingdom -->
+        <item>en</item> <!-- Canada -->
+        <item>en</item> <!-- Australia -->
+    </string-array>
+
     <string-array name="theme_entries">
         <item>System Default</item>
         <item>Light</item>

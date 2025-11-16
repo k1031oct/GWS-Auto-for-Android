@@ -34,7 +34,7 @@ class ScheduleRepositoryImpl @Inject constructor(
 
     override suspend fun getHolidays(country: String, year: Int, month: Int): List<Holiday> = withContext(Dispatchers.IO) {
         try {
-            val credential = apiAuthorizer.getCredential()
+            val credential = apiAuthorizer.getCredential(scopes = listOf("https://www.googleapis.com/auth/calendar.readonly"))
             if (credential == null) {
                 Timber.w("User not authenticated, cannot fetch holidays.")
                 return@withContext emptyList()

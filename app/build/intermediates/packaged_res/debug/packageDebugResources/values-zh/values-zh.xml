@@ -24,6 +24,7 @@
     <string name="clear_history_confirmation_message">您确定要清除所有执行历史记录吗？</string>
     <string name="clear_history_confirmation_title">清除历史记录</string>
     <string name="clear_search_history_confirmation">要清除搜索历史记录吗？</string>
+    <string name="country">国家</string>
     <string name="country_for_holidays">节假日日历的国家</string>
     <string name="dashboard_errors">错误</string>
     <string name="dashboard_executions">执行</string>

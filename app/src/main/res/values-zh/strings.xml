@@ -102,6 +102,7 @@
     <string name="settings_category_account">帐户设置</string>
     <string name="settings_category_app">应用设置</string>
     <string name="settings_category_other">其他</string>
+    <string name="country">国家</string>
 
     <!-- Schedule & Calendar -->
     <string name="previous_month">&lt;</string>

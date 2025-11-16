@@ -39,12 +39,12 @@ class ScheduleViewModel @Inject constructor(
     val firstDayOfWeek = settingsRepository.firstDayOfWeek
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "Sunday")
 
-    private val country = settingsRepository.country
+    private val holidayCountry = settingsRepository.holidayCountry
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "US")
 
     init {
         // React to changes in country or the current date
-        combine(country, currentDate) { _, _ ->
+        combine(holidayCountry, currentDate) { _, _ ->
             Unit // We don't need the result, just the trigger.
         }.onEach {
             loadHolidaysForCurrentMonth()
@@ -71,7 +71,7 @@ class ScheduleViewModel @Inject constructor(
 
         viewModelScope.launch {
             val yearMonth = YearMonth.from(_currentDate.value)
-            val currentCountry = country.value
+            val currentCountry = holidayCountry.value
             _holidays.value = scheduleRepository.getHolidays(currentCountry, yearMonth.year, yearMonth.monthValue)
         }
     }

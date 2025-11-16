@@ -24,21 +24,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="@string/country_for_holidays" />
+        android:text="@string/country" />
 
     <Spinner
         android:id="@+id/country_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/language" />
-
-    <Spinner
-        android:id="@+id/language_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

@@ -85,24 +85,24 @@ class AppSettingsFragment : Fragment() {
         }
         val countryValues = resources.getStringArray(R.array.country_values)
         lifecycleScope.launch {
-            val currentCountry = settingsRepository.country.first()
+            val currentCountry = settingsRepository.holidayCountry.first()
             val countryPosition = countryValues.indexOf(currentCountry)
             binding.countrySpinner.setSelection(if (countryPosition != -1) countryPosition else 0)
         }
         binding.countrySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selection = countryValues[position]
-                lifecycleScope.launch { settingsRepository.saveCountry(selection) }
+                lifecycleScope.launch { settingsRepository.saveHolidayCountry(selection) }
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
         // Language
-        val languageAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.language_entries, R.layout.spinner_item_right_aligned).also {
+        val languageAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.country_entries, R.layout.spinner_item_right_aligned).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.languageSpinner.adapter = it
         }
-        val languageValues = resources.getStringArray(R.array.language_values)
+        val languageValues = resources.getStringArray(R.array.language_values_from_countries)
         lifecycleScope.launch {
             val currentLanguageTag = settingsRepository.language.first()
             val langPosition = languageValues.indexOf(currentLanguageTag)

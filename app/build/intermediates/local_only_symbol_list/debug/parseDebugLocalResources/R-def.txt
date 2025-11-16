@@ -9,6 +9,7 @@ array highlight_color_entries
 array highlight_color_values
 array language_entries
 array language_values
+array language_values_from_countries
 array theme_entries
 array theme_values
 attr highlightColor
@@ -359,6 +360,7 @@ string clear_history_confirmation_title
 string clear_search_history_confirmation
 string com.google.firebase.crashlytics.mapping_file_id
 string com.google.firebase.crashlytics.version_control_info
+string country
 string country_for_holidays
 string create
 string create_folder_dialog_title

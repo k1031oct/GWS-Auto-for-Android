@@ -21,15 +21,11 @@ class WizardViewModel @Inject constructor(
     val highlightColor: StateFlow<String> = settingsRepository.highlightColor
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "default")
 
-    fun setLanguage(language: String) {
+    fun setCountryAndLanguage(countryCode: String) {
         viewModelScope.launch {
-            settingsRepository.saveLanguage(language)
-        }
-    }
-
-    fun setCountry(countryCode: String) {
-        viewModelScope.launch {
-            settingsRepository.saveCountry(countryCode)
+            settingsRepository.saveHolidayCountry(countryCode)
+            // For now, assume language code is the same as the country code in lower case
+            settingsRepository.saveLanguage(countryCode.lowercase())
         }
     }
 

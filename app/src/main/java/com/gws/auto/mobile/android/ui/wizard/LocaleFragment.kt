@@ -37,19 +37,7 @@ class LocaleFragment : Fragment() {
         binding.countrySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val countryValues = resources.getStringArray(R.array.country_values)
-                viewModel.setCountry(countryValues[position])
-            }
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
-
-        // Language Spinner
-        val languageAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.language_entries, android.R.layout.simple_spinner_item)
-        languageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.languageSpinner.adapter = languageAdapter
-        binding.languageSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selectedLanguage = parent.getItemAtPosition(position).toString()
-                viewModel.setLanguage(selectedLanguage)
+                viewModel.setCountryAndLanguage(countryValues[position])
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }

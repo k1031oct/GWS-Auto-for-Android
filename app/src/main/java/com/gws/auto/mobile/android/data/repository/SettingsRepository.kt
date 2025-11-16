@@ -20,7 +20,7 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
 
     private object PreferencesKeys {
         val FIRST_DAY_OF_WEEK = stringPreferencesKey("first_day_of_week")
-        val COUNTRY = stringPreferencesKey("country")
+        val HOLIDAY_COUNTRY = stringPreferencesKey("holiday_country")
         val THEME = stringPreferencesKey("theme")
         val HIGHLIGHT_COLOR = stringPreferencesKey("highlight_color")
         val LANGUAGE = stringPreferencesKey("language")
@@ -28,18 +28,18 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
     }
 
     val firstDayOfWeek: Flow<String> = context.dataStore.data.map { it[PreferencesKeys.FIRST_DAY_OF_WEEK] ?: "Sunday" }
-    val country: Flow<String> = context.dataStore.data.map { it[PreferencesKeys.COUNTRY] ?: "US" }
+    val holidayCountry: Flow<String> = context.dataStore.data.map { it[PreferencesKeys.HOLIDAY_COUNTRY] ?: "US" }
     val theme: Flow<String> = context.dataStore.data.map { it[PreferencesKeys.THEME] ?: "System" }
     val highlightColor: Flow<String> = context.dataStore.data.map { it[PreferencesKeys.HIGHLIGHT_COLOR] ?: "default" }
-    val language: Flow<String> = context.dataStore.data.map { it[PreferencesKeys.LANGUAGE] ?: "English" }
+    val language: Flow<String> = context.dataStore.data.map { it[PreferencesKeys.LANGUAGE] ?: "en" }
     val isWizardCompleted: Flow<Boolean> = context.dataStore.data.map { it[PreferencesKeys.WIZARD_COMPLETED] ?: false }
 
     suspend fun saveFirstDayOfWeek(firstDayOfWeek: String) {
         context.dataStore.edit { it[PreferencesKeys.FIRST_DAY_OF_WEEK] = firstDayOfWeek }
     }
 
-    suspend fun saveCountry(country: String) {
-        context.dataStore.edit { it[PreferencesKeys.COUNTRY] = country }
+    suspend fun saveHolidayCountry(country: String) {
+        context.dataStore.edit { it[PreferencesKeys.HOLIDAY_COUNTRY] = country }
     }
 
     suspend fun saveTheme(theme: String) {
