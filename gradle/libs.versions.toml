@@ -43,6 +43,7 @@ coil = "2.7.0"
 timber = "5.0.1"
 mpandroidchart = "v3.1.0"
 comSunMail = "1.6.7"
+gson = "2.10.1"
 
 # Testing
 junit = "4.13.2"
@@ -98,6 +99,7 @@ hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-com
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
 # Third Party
+google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 com-sun-mail-android-mail = { group = "com.sun.mail", name = "android-mail", version.ref = "comSunMail" }
 com-sun-mail-android-activation = { group = "com.sun.mail", name = "android-activation", version.ref = "comSunMail" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }

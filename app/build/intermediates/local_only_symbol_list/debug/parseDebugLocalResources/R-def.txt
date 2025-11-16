@@ -1,5 +1,14 @@
 R_DEF: Internal format may change without notice
 local
+array country_entries
+array country_values
+array first_day_of_week_entries
+array highlight_color_entries
+array highlight_color_values
+array language_entries
+array language_values
+array theme_entries
+array theme_values
 attr highlightColor
 color black
 color chart_red
@@ -446,6 +455,7 @@ string settings_theme_dialog_title
 string settings_theme_title
 string settings_title
 string sign_in
+string sign_in_required
 string sign_in_with_google
 string sign_in_with_google_to_sync
 string sign_out
@@ -467,6 +477,10 @@ string title_about_app
 string title_account_connections
 string title_announcement
 string title_app_settings
+string title_dashboard
+string title_history
+string title_schedule
+string title_settings
 string title_user_info
 string title_workflow
 string unread_announcement_popup_message

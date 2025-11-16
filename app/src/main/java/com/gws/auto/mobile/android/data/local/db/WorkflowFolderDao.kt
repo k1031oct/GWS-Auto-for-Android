@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface WorkflowFolderDao {
 
-    @Query("SELECT * FROM workflowfolder")
+    @Query("SELECT * FROM workflow_folders")
     fun getAllWorkflowFolders(): Flow<List<WorkflowFolder>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -20,6 +20,6 @@ interface WorkflowFolderDao {
     @Update
     suspend fun updateWorkflowFolder(folder: WorkflowFolder)
 
-    @Query("DELETE FROM workflowfolder WHERE id = :folderId")
+    @Query("DELETE FROM workflow_folders WHERE id = :folderId")
     suspend fun deleteWorkflowFolder(folderId: String)
 }

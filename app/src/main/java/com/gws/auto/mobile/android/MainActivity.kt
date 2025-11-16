@@ -124,7 +124,8 @@ class MainActivity : AppCompatActivity() {
                 workflowName = "Failure Case",
                 executedAt = Date(System.currentTimeMillis() - 18000000), // 5 hours ago
                 status = "Failure",
-                logs = "Step 1 completed\nStep 2 failed due to an error",
+                logs = "Step 1 completed
+Step 2 failed due to an error",
                 isBookmarked = false
             ),
             History(
