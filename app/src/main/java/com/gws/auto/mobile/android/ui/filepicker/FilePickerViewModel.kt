@@ -19,49 +19,35 @@ class FilePickerViewModel @Inject constructor(
     private val _files = MutableLiveData<List<File>>()
     val files: LiveData<List<File>> = _files
 
-    private val _currentFolderName = MutableLiveData("My Drive")
+    private val _currentFolderName = MutableLiveData<String>()
     val currentFolderName: LiveData<String> = _currentFolderName
 
-    private var currentFolderId: String = "root"
+    private val folderStack = Stack<Pair<String, String>>()
 
     init {
+        // Start at the root
+        folderStack.push("root" to "My Drive")
         loadFilesForCurrentFolder()
     }
 
     fun onFolderClicked(folderId: String, folderName: String) {
-        currentFolderId = folderId
-        _currentFolderName.value = folderName
+        folderStack.push(folderId to folderName)
         loadFilesForCurrentFolder()
     }
 
     fun onUpClicked() {
-        viewModelScope.launch {
-            if (currentFolderId != "root") {
-                try {
-                    val currentFolder = driveApiService.getFileDetails(currentFolderId)
-                    val parentId = currentFolder?.parents?.firstOrNull()
-                    if (parentId != null) {
-                        val parentFolder = driveApiService.getFileDetails(parentId)
-                        currentFolderId = parentId
-                        _currentFolderName.value = parentFolder?.name ?: "Unknown Folder"
-                        loadFilesForCurrentFolder()
-                    } else {
-                        // No parent, assume root
-                        currentFolderId = "root"
-                        _currentFolderName.value = "My Drive"
-                        loadFilesForCurrentFolder()
-                    }
-                } catch (e: Exception) {
-                    // Handle error, e.g., show a toast
-                }
-            }
+        if (folderStack.size > 1) {
+            folderStack.pop()
+            loadFilesForCurrentFolder()
         }
     }
 
     private fun loadFilesForCurrentFolder() {
+        val (folderId, folderName) = folderStack.peek()
+        _currentFolderName.value = folderName
         viewModelScope.launch {
             try {
-                val fileList = driveApiService.listFiles(currentFolderId)
+                val fileList = driveApiService.listFiles(folderId)
                 _files.value = fileList.files
             } catch (e: Exception) {
                 // Handle error, e.g., show a toast
