@@ -2,6 +2,8 @@ R_DEF: Internal format may change without notice
 local
 array country_entries
 array country_values
+array date_directions
+array date_units
 array first_day_of_week_entries
 array highlight_color_entries
 array highlight_color_values

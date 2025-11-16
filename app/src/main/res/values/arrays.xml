@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="first_day_of_week_entries">
+        <item>Sunday</item>
+        <item>Monday</item>
+    </string-array>
+
+    <string-array name="country_entries">
+        <item>United States</item>
+        <item>Japan</item>
+        <item>United Kingdom</item>
+        <item>Canada</item>
+        <item>Australia</item>
+    </string-array>
+
+    <string-array name="country_values">
+        <item>US</item>
+        <item>JP</item>
+        <item>GB</item>
+        <item>CA</item>
+        <item>AU</item>
+    </string-array>
+
+    <string-array name="language_entries">
+        <item>English</item>
+        <item>Japanese</item>
+    </string-array>
+
+    <string-array name="language_values">
+        <item>en</item>
+        <item>ja</item>
+    </string-array>
+
+    <string-array name="theme_entries">
+        <item>System Default</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+
+    <string-array name="theme_values">
+        <item>System</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+
+    <string-array name="highlight_color_entries">
+        <item>Default</item>
+        <item>Forest</item>
+        <item>Ocean</item>
+        <item>Sakura</item>
+    </string-array>
+
+    <string-array name="highlight_color_values">
+        <item>default</item>
+        <item>forest</item>
+        <item>ocean</item>
+        <item>sakura</item>
+    </string-array>
+
+    <string-array name="date_units">
+        <item>Days</item>
+        <item>Weeks</item>
+        <item>Months</item>
+        <item>Years</item>
+    </string-array>
+
+    <string-array name="date_directions">
+        <item>Ago</item>
+        <item>From now</item>
+    </string-array>
+</resources>

@@ -1,6 +1,5 @@
 package com.gws.auto.mobile.android.ui.dashboard
 
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
@@ -131,11 +130,8 @@ class DashboardFragment : Fragment() {
             PieEntry(errors.toFloat(), getString(R.string.execution_status_failure))
         )
 
-        val typedValue = TypedValue()
-        requireContext().theme.resolveAttribute(com.google.android.material.R.attr.colorPrimary, typedValue, true)
-        val colorPrimary = typedValue.data
-        requireContext().theme.resolveAttribute(com.google.android.material.R.attr.colorError, typedValue, true)
-        val colorError = typedValue.data
+        val colorPrimary = ContextCompat.getColor(requireContext(), R.color.md_theme_light_primary)
+        val colorError = ContextCompat.getColor(requireContext(), R.color.md_theme_light_error)
 
         val dataSet = PieDataSet(entries, "").apply {
             colors = listOf(colorPrimary, colorError)
@@ -144,6 +140,7 @@ class DashboardFragment : Fragment() {
             valueTextSize = 12f
         }
 
+        val typedValue = TypedValue()
         requireContext().theme.resolveAttribute(com.google.android.material.R.attr.colorSurface, typedValue, true)
         val holeColor = typedValue.data
         requireContext().theme.resolveAttribute(com.google.android.material.R.attr.colorOnSurface, typedValue, true)

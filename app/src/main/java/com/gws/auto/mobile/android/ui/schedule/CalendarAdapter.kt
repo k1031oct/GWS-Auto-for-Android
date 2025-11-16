@@ -3,6 +3,7 @@ package com.gws.auto.mobile.android.ui.schedule
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -56,9 +57,8 @@ class CalendarAdapter(
                 val holiday = holidays.find { it.date == item.date }
                 if (holiday != null) {
                     binding.dayText.text = "${item.day}\n${holiday.name}"
-                    val holidayTypedValue = TypedValue()
-                    itemView.context.theme.resolveAttribute(com.google.android.material.R.attr.colorError, holidayTypedValue, true)
-                    binding.dayText.setTextColor(holidayTypedValue.data)
+                    val colorError = ContextCompat.getColor(itemView.context, R.color.md_theme_light_error)
+                    binding.dayText.setTextColor(colorError)
                 }
             } else {
                 itemView.setOnClickListener(null)
