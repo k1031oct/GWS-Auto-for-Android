@@ -33,27 +33,68 @@ class ModuleParameterDialogFragment : DialogFragment() {
 
         val layout = LinearLayout(requireContext()).apply {
             orientation = LinearLayout.VERTICAL
+            setPadding(48, 24, 48, 24)
         }
 
         val parameters = mutableMapOf<String, EditText>()
 
         when (moduleType) {
-            "LOG_MESSAGE", "SHOW_TOAST" -> {
-                val messageField = EditText(requireContext()).apply { hint = "Message" }
-                parameters["message"] = messageField
-                layout.addView(messageField)
+            "LOG_MESSAGE" -> {
+                parameters["message"] = EditText(requireContext()).apply { hint = "Message" }
             }
-            "CREATE_PDF_FROM_SHEET" -> {
-                val sheetIdField = EditText(requireContext()).apply { hint = "Spreadsheet ID" }
-                parameters["sheet_id"] = sheetIdField
-                layout.addView(sheetIdField)
+            "chat_post" -> {
+                parameters["webhookUrl"] = EditText(requireContext()).apply { hint = "Webhook URL" }
+                parameters["message"] = EditText(requireContext()).apply { hint = "Message" }
             }
-            "CONVERT_EXCEL_TO_SHEET" -> {
-                val excelFileIdField = EditText(requireContext()).apply { hint = "Excel File ID" }
-                parameters["excel_file_id"] = excelFileIdField
-                layout.addView(excelFileIdField)
+            "drive_create_folder" -> {
+                parameters["parentFolderId"] = EditText(requireContext()).apply { hint = "Parent Folder ID (Optional)" }
+                parameters["newFolderName"] = EditText(requireContext()).apply { hint = "New Folder Name" }
+            }
+            "drive_copy_file" -> {
+                parameters["sourceFileId"] = EditText(requireContext()).apply { hint = "Source File ID" }
+                parameters["destFolderId"] = EditText(requireContext()).apply { hint = "Destination Folder ID" }
+                parameters["newFileName"] = EditText(requireContext()).apply { hint = "New File Name" }
+            }
+            "drive_move_file" -> {
+                parameters["sourceFileUrl"] = EditText(requireContext()).apply { hint = "Source File URL" }
+                parameters["destinationFolderUrl"] = EditText(requireContext()).apply { hint = "Destination Folder URL" }
+            }
+            "gmail_send_email" -> {
+                parameters["to"] = EditText(requireContext()).apply { hint = "To" }
+                parameters["subject"] = EditText(requireContext()).apply { hint = "Subject" }
+                parameters["body"] = EditText(requireContext()).apply { hint = "Body" }
+                parameters["cc"] = EditText(requireContext()).apply { hint = "CC (Optional)" }
+                parameters["bcc"] = EditText(requireContext()).apply { hint = "BCC (Optional)" }
+            }
+            "sheets_create_new" -> {
+                parameters["newFileName"] = EditText(requireContext()).apply { hint = "New File Name" }
+                parameters["destFolderId"] = EditText(requireContext()).apply { hint = "Destination Folder ID (Optional)" }
+            }
+            "sheets_set_value" -> {
+                parameters["targetUrl"] = EditText(requireContext()).apply { hint = "Spreadsheet URL" }
+                parameters["targetSheet"] = EditText(requireContext()).apply { hint = "Sheet Name" }
+                parameters["targetCell"] = EditText(requireContext()).apply { hint = "Cell (e.g., A1)" }
+                parameters["valueToSet"] = EditText(requireContext()).apply { hint = "Value or Formula" }
+            }
+            "sheets_append_row" -> {
+                parameters["spreadsheetUrl"] = EditText(requireContext()).apply { hint = "Spreadsheet URL" }
+                parameters["sheetName"] = EditText(requireContext()).apply { hint = "Sheet Name (Optional)" }
+                parameters["rowData"] = EditText(requireContext()).apply { hint = "Row Data (comma-separated)" }
+            }
+            "sheets_clear_values" -> {
+                parameters["targetUrl"] = EditText(requireContext()).apply { hint = "Spreadsheet URL" }
+                parameters["targetSheet"] = EditText(requireContext()).apply { hint = "Sheet Name" }
+                parameters["targetRange"] = EditText(requireContext()).apply { hint = "Range (e.g., A1:C5)" }
+            }
+            "calendar_create_event" -> {
+                parameters["calendarId"] = EditText(requireContext()).apply { hint = "Calendar ID (Optional, default: primary)" }
+                parameters["title"] = EditText(requireContext()).apply { hint = "Title" }
+                parameters["startTime"] = EditText(requireContext()).apply { hint = "Start Time (yyyy/MM/dd HH:mm)" }
+                parameters["endTime"] = EditText(requireContext()).apply { hint = "End Time (yyyy/MM/dd HH:mm)" }
             }
         }
+
+        parameters.values.forEach { layout.addView(it) }
 
         return AlertDialog.Builder(requireContext())
             .setTitle("Set parameters for $moduleType")
