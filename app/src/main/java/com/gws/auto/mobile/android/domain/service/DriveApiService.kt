@@ -17,6 +17,37 @@ class DriveApiService @Inject constructor(private val authorizer: GoogleApiAutho
     }
 
     @Throws(IOException::class)
+    suspend fun copyFile(sourceFileId: String, destFolderId: String, newFileName: String): File {
+        val driveService = getService()
+        val newFileMetadata = File().setName(newFileName).setParents(listOf(destFolderId))
+        return driveService.files().copy(sourceFileId, newFileMetadata).execute()
+    }
+
+    @Throws(IOException::class)
+    suspend fun createFolder(folderName: String, parentFolderId: String?): File {
+        val driveService = getService()
+        val folderMetadata = File()
+            .setName(folderName)
+            .setMimeType("application/vnd.google-apps.folder")
+        if (!parentFolderId.isNullOrBlank()) {
+            folderMetadata.parents = listOf(parentFolderId)
+        }
+        return driveService.files().create(folderMetadata).setFields("id").execute()
+    }
+
+    @Throws(IOException::class)
+    suspend fun moveFile(fileId: String, toFolderId: String): File {
+        val driveService = getService()
+        val file = driveService.files().get(fileId).setFields("parents").execute()
+        val previousParents = file.parents.joinToString(",")
+        return driveService.files().update(fileId, null)
+            .setAddParents(toFolderId)
+            .setRemoveParents(previousParents)
+            .setFields("id, parents")
+            .execute()
+    }
+
+    @Throws(IOException::class)
     suspend fun duplicateAndMoveFile(sourceFileId: String, newFileName: String, targetFolderId: String?): File {
         val driveService = getService()
 

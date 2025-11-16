@@ -22,18 +22,30 @@ class GmailApiService @Inject constructor(private val authorizer: GoogleApiAutho
     }
 
     suspend fun createDraft(to: String, subject: String, body: String): Draft {
-        val mimeMessage = createMimeMessage(to, subject, body)
+        val mimeMessage = createMimeMessage(to, null, null, subject, body)
         val rawMessage = createRawMessage(mimeMessage)
         val draft = Draft().setMessage(rawMessage)
         return getService().users().drafts().create("me", draft).execute()
     }
 
-    private fun createMimeMessage(to: String, subject: String, body: String): MimeMessage {
+    suspend fun sendEmail(to: String, cc: String?, bcc: String?, subject: String, body: String): Message {
+        val mimeMessage = createMimeMessage(to, cc, bcc, subject, body)
+        val rawMessage = createRawMessage(mimeMessage)
+        return getService().users().messages().send("me", rawMessage).execute()
+    }
+
+    private fun createMimeMessage(to: String, cc: String?, bcc: String?, subject: String, body: String): MimeMessage {
         val props = Properties()
         val session = Session.getDefaultInstance(props, null)
         val email = MimeMessage(session)
         email.setFrom(InternetAddress("me"))
         email.addRecipient(javax.mail.Message.RecipientType.TO, InternetAddress(to))
+        if (!cc.isNullOrBlank()) {
+            email.addRecipients(javax.mail.Message.RecipientType.CC, InternetAddress.parse(cc))
+        }
+        if (!bcc.isNullOrBlank()) {
+            email.addRecipients(javax.mail.Message.RecipientType.BCC, InternetAddress.parse(bcc))
+        }
         email.subject = subject
         email.setText(body)
         return email
