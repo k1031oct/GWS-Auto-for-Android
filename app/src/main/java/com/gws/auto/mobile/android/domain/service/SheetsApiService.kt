@@ -4,6 +4,8 @@ import com.google.api.services.sheets.v4.Sheets
 import com.google.api.services.sheets.v4.SheetsScopes
 import com.google.api.services.sheets.v4.model.Spreadsheet
 import com.google.api.services.sheets.v4.model.ValueRange
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
@@ -18,41 +20,36 @@ class SheetsApiService @Inject constructor(private val authorizer: GoogleApiAuth
     }
 
     @Throws(IOException::class)
-    suspend fun createSpreadsheet(title: String, parentFolderId: String?): Spreadsheet {
-        val service = getService()
+    suspend fun createSpreadsheet(title: String, parentFolderId: String?): Spreadsheet = withContext(Dispatchers.IO) {
         val spreadsheet = Spreadsheet().setProperties(com.google.api.services.sheets.v4.model.SpreadsheetProperties().setTitle(title))
-        return service.spreadsheets().create(spreadsheet).execute()
+        getService().spreadsheets().create(spreadsheet).execute()
     }
 
     @Throws(IOException::class)
-    suspend fun getValues(spreadsheetId: String, range: String): ValueRange {
-        val service = getService()
+    suspend fun getValues(spreadsheetId: String, range: String): ValueRange = withContext(Dispatchers.IO) {
         Timber.d("Getting values from spreadsheet: $spreadsheetId, range: $range")
-        return service.spreadsheets().values().get(spreadsheetId, range).execute()
+        getService().spreadsheets().values().get(spreadsheetId, range).execute()
     }
 
     @Throws(IOException::class)
-    suspend fun updateValues(spreadsheetId: String, range: String, values: ValueRange) {
-        val service = getService()
+    suspend fun updateValues(spreadsheetId: String, range: String, values: ValueRange) = withContext(Dispatchers.IO) {
         Timber.d("Updating values to spreadsheet: $spreadsheetId, range: $range")
-        service.spreadsheets().values().update(spreadsheetId, range, values)
+        getService().spreadsheets().values().update(spreadsheetId, range, values)
             .setValueInputOption("USER_ENTERED")
             .execute()
     }
 
     @Throws(IOException::class)
-    suspend fun appendRow(spreadsheetId: String, sheetName: String, values: List<Any>) {
-        val service = getService()
+    suspend fun appendRow(spreadsheetId: String, sheetName: String, values: List<Any>) = withContext(Dispatchers.IO) {
         val valueRange = ValueRange().setValues(listOf(values))
-        service.spreadsheets().values().append(spreadsheetId, sheetName, valueRange)
+        getService().spreadsheets().values().append(spreadsheetId, sheetName, valueRange)
             .setValueInputOption("USER_ENTERED")
             .setInsertDataOption("INSERT_ROWS")
             .execute()
     }
 
     @Throws(IOException::class)
-    suspend fun clearValues(spreadsheetId: String, range: String) {
-        val service = getService()
-        service.spreadsheets().values().clear(spreadsheetId, range, com.google.api.services.sheets.v4.model.ClearValuesRequest()).execute()
+    suspend fun clearValues(spreadsheetId: String, range: String) = withContext(Dispatchers.IO) {
+        getService().spreadsheets().values().clear(spreadsheetId, range, com.google.api.services.sheets.v4.model.ClearValuesRequest()).execute()
     }
 }

@@ -5,6 +5,8 @@ import com.google.api.services.calendar.Calendar
 import com.google.api.services.calendar.CalendarScopes
 import com.google.api.services.calendar.model.Event
 import com.google.api.services.calendar.model.EventDateTime
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,12 +22,12 @@ class CalendarApiService @Inject constructor(
             .build()
     }
 
-    suspend fun createEvent(calendarId: String, title: String, startTime: DateTime, endTime: DateTime): Event {
+    suspend fun createEvent(calendarId: String, title: String, startTime: DateTime, endTime: DateTime): Event = withContext(Dispatchers.IO) {
         val event = Event().apply {
             summary = title
             start = EventDateTime().setDateTime(startTime)
             end = EventDateTime().setDateTime(endTime)
         }
-        return getService().events().insert(calendarId, event).execute()
+        getService().events().insert(calendarId, event).execute()
     }
 }

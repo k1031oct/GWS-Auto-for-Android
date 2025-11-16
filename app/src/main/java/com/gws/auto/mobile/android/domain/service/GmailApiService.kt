@@ -4,6 +4,8 @@ import com.google.api.services.gmail.Gmail
 import com.google.api.services.gmail.GmailScopes
 import com.google.api.services.gmail.model.Draft
 import com.google.api.services.gmail.model.Message
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.util.Properties
 import javax.inject.Inject
@@ -20,17 +22,17 @@ class GmailApiService @Inject constructor(private val authorizer: GoogleApiAutho
             .build()
     }
 
-    suspend fun createDraft(to: String, subject: String, body: String): Draft {
+    suspend fun createDraft(to: String, subject: String, body: String): Draft = withContext(Dispatchers.IO) {
         val mimeMessage = createMimeMessage(to, null, null, subject, body)
         val rawMessage = createRawMessage(mimeMessage)
         val draft = Draft().setMessage(rawMessage)
-        return getService().users().drafts().create("me", draft).execute()
+        getService().users().drafts().create("me", draft).execute()
     }
 
-    suspend fun sendEmail(to: String, cc: String?, bcc: String?, subject: String, body: String): Message {
+    suspend fun sendEmail(to: String, cc: String?, bcc: String?, subject: String, body: String): Message = withContext(Dispatchers.IO) {
         val mimeMessage = createMimeMessage(to, cc, bcc, subject, body)
         val rawMessage = createRawMessage(mimeMessage)
-        return getService().users().messages().send("me", rawMessage).execute()
+        getService().users().messages().send("me", rawMessage).execute()
     }
 
     private fun createMimeMessage(to: String, cc: String?, bcc: String?, subject: String, body: String): MimeMessage {

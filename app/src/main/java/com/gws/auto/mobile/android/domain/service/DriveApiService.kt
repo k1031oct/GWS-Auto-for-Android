@@ -4,6 +4,8 @@ import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
 import com.google.api.services.drive.model.FileList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
@@ -18,44 +20,40 @@ class DriveApiService @Inject constructor(private val authorizer: GoogleApiAutho
     }
 
     @Throws(IOException::class)
-    suspend fun getFileDetails(fileId: String): File? {
-        return getService().files().get(fileId).setFields("id, name, mimeType, parents").execute()
+    suspend fun getFileDetails(fileId: String): File? = withContext(Dispatchers.IO) {
+        getService().files().get(fileId).setFields("id, name, mimeType, parents").execute()
     }
 
     @Throws(IOException::class)
-    suspend fun listFiles(folderId: String): FileList {
-        val service = getService()
-        return service.files().list()
+    suspend fun listFiles(folderId: String): FileList = withContext(Dispatchers.IO) {
+        getService().files().list()
             .setQ("'$folderId' in parents and trashed = false")
             .setFields("files(id, name, mimeType)")
             .execute()
     }
 
     @Throws(IOException::class)
-    suspend fun copyFile(sourceFileId: String, destFolderId: String, newFileName: String): File {
-        val driveService = getService()
+    suspend fun copyFile(sourceFileId: String, destFolderId: String, newFileName: String): File = withContext(Dispatchers.IO) {
         val newFileMetadata = File().setName(newFileName).setParents(listOf(destFolderId))
-        return driveService.files().copy(sourceFileId, newFileMetadata).execute()
+        getService().files().copy(sourceFileId, newFileMetadata).execute()
     }
 
     @Throws(IOException::class)
-    suspend fun createFolder(folderName: String, parentFolderId: String?): File {
-        val driveService = getService()
+    suspend fun createFolder(folderName: String, parentFolderId: String?): File = withContext(Dispatchers.IO) {
         val folderMetadata = File()
             .setName(folderName)
             .setMimeType("application/vnd.google-apps.folder")
         if (!parentFolderId.isNullOrBlank()) {
             folderMetadata.parents = listOf(parentFolderId)
         }
-        return driveService.files().create(folderMetadata).setFields("id").execute()
+        getService().files().create(folderMetadata).setFields("id").execute()
     }
 
     @Throws(IOException::class)
-    suspend fun moveFile(fileId: String, toFolderId: String): File {
-        val driveService = getService()
-        val file = driveService.files().get(fileId).setFields("parents").execute()
+    suspend fun moveFile(fileId: String, toFolderId: String): File = withContext(Dispatchers.IO) {
+        val file = getService().files().get(fileId).setFields("parents").execute()
         val previousParents = file.parents.joinToString(",")
-        return driveService.files().update(fileId, null)
+        getService().files().update(fileId, null)
             .setAddParents(toFolderId)
             .setRemoveParents(previousParents)
             .setFields("id, parents")
@@ -63,7 +61,7 @@ class DriveApiService @Inject constructor(private val authorizer: GoogleApiAutho
     }
 
     @Throws(IOException::class)
-    suspend fun duplicateAndMoveFile(sourceFileId: String, newFileName: String, targetFolderId: String?): File {
+    suspend fun duplicateAndMoveFile(sourceFileId: String, newFileName: String, targetFolderId: String?): File = withContext(Dispatchers.IO) {
         val driveService = getService()
 
         // 1. Create a copy of the file
@@ -84,6 +82,6 @@ class DriveApiService @Inject constructor(private val authorizer: GoogleApiAutho
             Timber.d("File ${copiedFile.id} moved to folder $targetFolderId")
         }
         
-        return copiedFile
+        copiedFile
     }
 }
