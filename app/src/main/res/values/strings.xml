@@ -85,6 +85,7 @@
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <string name="theme_system">System Default</string>
+    <string name="title_workflow">Workflow</string>
     <string name="title_announcement">Announcements</string>
     <string name="all_schedules_title">All Schedules</string>
     <string name="title_user_info">User Info</string>
@@ -183,4 +184,11 @@
     <string name="dashboard_workflow_stats_title">Workflow Stats</string>
     <string name="dashboard_module_stats_title">Module Stats</string>
     <string name="version_number_placeholder">1.0.0</string>
+
+    <!-- Placeholders for timeline -->
+    <string name="placeholder_time">8:00 AM</string>
+    <string name="placeholder_workflow_name">Workflow Name</string>
+    <string name="placeholder_event_time">9:00 AM - 10:00 AM</string>
+    <string name="placeholder_event_title">Event Title</string>
+
 </resources>
