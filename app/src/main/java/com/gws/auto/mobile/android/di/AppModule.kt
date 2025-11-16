@@ -79,7 +79,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideScheduleRepository(workflowDao: WorkflowDao): ScheduleRepository {
-        return ScheduleRepositoryImpl(workflowDao)
+    fun provideScheduleRepository(): ScheduleRepository {
+        return ScheduleRepositoryImpl()
     }
 }
