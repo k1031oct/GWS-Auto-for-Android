@@ -1,6 +1,5 @@
 package com.gws.auto.mobile.android.domain.service
 
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.services.gmail.Gmail
 import com.google.api.services.gmail.GmailScopes
 import com.google.api.services.gmail.model.Draft
@@ -14,7 +13,7 @@ import javax.mail.internet.MimeMessage
 
 class GmailApiService @Inject constructor(private val authorizer: GoogleApiAuthorizer) {
 
-    private fun getService(): Gmail {
+    private suspend fun getService(): Gmail {
         val credential = authorizer.getCredential(listOf(GmailScopes.GMAIL_COMPOSE))
         return Gmail.Builder(authorizer.httpTransport, authorizer.jsonFactory, credential)
             .setApplicationName("GWS Auto for Android")

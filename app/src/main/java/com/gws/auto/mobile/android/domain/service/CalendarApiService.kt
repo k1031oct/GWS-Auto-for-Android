@@ -13,7 +13,7 @@ class CalendarApiService @Inject constructor(
     private val authorizer: GoogleApiAuthorizer
 ) {
 
-    private fun getService(): Calendar {
+    private suspend fun getService(): Calendar {
         val credential = authorizer.getCredential(listOf(CalendarScopes.CALENDAR)) ?: throw IllegalStateException("User not authenticated")
         return Calendar.Builder(authorizer.httpTransport, authorizer.jsonFactory, credential)
             .setApplicationName("GWS Automater")

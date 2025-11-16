@@ -10,6 +10,8 @@ import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.JsonFactory
 import com.google.api.client.json.gson.GsonFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,9 +29,9 @@ class GoogleApiAuthorizer @Inject constructor(@ApplicationContext private val co
         return getLastSignedInAccount() != null
     }
 
-    fun getCredential(scopes: List<String>): GoogleAccountCredential {
+    suspend fun getCredential(scopes: List<String>): GoogleAccountCredential = withContext(Dispatchers.IO) {
         val account = getLastSignedInAccount() ?: throw IllegalStateException("User not signed in")
-        return GoogleAccountCredential.usingOAuth2(context, scopes).apply {
+        GoogleAccountCredential.usingOAuth2(context, scopes).apply {
             selectedAccount = account.account
         }
     }

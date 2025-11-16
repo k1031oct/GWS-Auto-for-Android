@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class SheetsApiService @Inject constructor(private val authorizer: GoogleApiAuthorizer) {
 
-    private fun getService(): Sheets {
+    private suspend fun getService(): Sheets {
         val credential = authorizer.getCredential(listOf(SheetsScopes.SPREADSHEETS))
         return Sheets.Builder(authorizer.httpTransport, authorizer.jsonFactory, credential)
             .setApplicationName("GWS Auto for Android")
