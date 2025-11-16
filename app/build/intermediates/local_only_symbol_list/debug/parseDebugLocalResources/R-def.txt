@@ -90,6 +90,7 @@ drawable ic_dashboard
 drawable ic_delete
 drawable ic_delete_sweep
 drawable ic_edit
+drawable ic_folder
 drawable ic_history
 drawable ic_launcher_background
 drawable ic_launcher_foreground

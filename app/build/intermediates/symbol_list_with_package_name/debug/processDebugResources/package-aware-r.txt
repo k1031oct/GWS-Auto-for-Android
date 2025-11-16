@@ -3839,6 +3839,7 @@ drawable ic_delete_sweep
 drawable ic_edit
 drawable ic_expand_less_22px
 drawable ic_expand_more_22px
+drawable ic_folder
 drawable ic_history
 drawable ic_keyboard_black_24dp
 drawable ic_launcher_background
