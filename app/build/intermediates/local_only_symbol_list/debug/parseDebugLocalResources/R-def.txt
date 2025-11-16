@@ -13,11 +13,13 @@ array theme_entries
 array theme_values
 attr highlightColor
 color black
+color chart_green
 color chart_red
 color chip_default_color
 color chip_failure_color
 color chip_success_color
 color grey_400
+color holiday_color
 color md_theme_dark_background
 color md_theme_dark_error
 color md_theme_dark_errorContainer
