@@ -39,7 +39,11 @@ class CalendarApiService @Inject constructor(
     }
 
     private fun getHolidayCalendarId(countryCode: String): String {
-        val lang = Locale.forLanguageTag(countryCode).language
+        val lang = when (countryCode.uppercase()) {
+            "US" -> "en"
+            "JP" -> "ja"
+            else -> Locale.forLanguageTag(countryCode).language
+        }
         val country = when (countryCode.uppercase()) {
             "US" -> "usa"
             "JP" -> "japanese"

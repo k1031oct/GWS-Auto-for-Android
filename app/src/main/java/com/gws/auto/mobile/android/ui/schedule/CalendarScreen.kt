@@ -179,19 +179,20 @@ fun CalendarContent(
                 daysOfWeek = daysOfWeek
             )
         }
+        // Add the debug view here
+        DebugAllSchedulesView(allSchedules = allSchedules)
     }
 }
 
 @Composable
 fun DayTimelineSheet(date: LocalDate, schedules: List<Schedule>) {
-    val schedulesWithTime = schedules.mapNotNull { schedule ->
-        schedule.time?.let { timeStr ->
-            try {
-                LocalTime.parse(timeStr) to schedule.workflowName
-            } catch (e: Exception) {
-                null
-            }
+    val schedulesWithTime = schedules.map { schedule ->
+        val time = try {
+            schedule.time?.let { LocalTime.parse(it) } ?: LocalTime.MIDNIGHT
+        } catch (e: Exception) {
+            LocalTime.MIDNIGHT
         }
+        time to schedule.workflowName
     }
 
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
@@ -284,11 +285,12 @@ fun MonthView(
             DayCell(
                 date = date,
                 schedules = schedules.filter { schedule ->
-                    when (schedule.scheduleType.name) {
-                        ScheduleType.DAILY.name -> true
-                        ScheduleType.WEEKLY.name -> schedule.weeklyDays?.any { day -> day.equals(date.dayOfWeek.name, ignoreCase = true) } == true
-                        ScheduleType.MONTHLY.name -> schedule.monthlyDays?.contains(date.dayOfMonth) == true
-                        ScheduleType.YEARLY.name -> schedule.yearlyMonth == date.monthValue && schedule.yearlyDayOfMonth == date.dayOfMonth
+                    when (schedule.scheduleType) {
+                        ScheduleType.HOURLY -> true
+                        ScheduleType.DAILY -> true
+                        ScheduleType.WEEKLY -> schedule.weeklyDays?.any { it.trim().equals(date.dayOfWeek.name, ignoreCase = true) } == true
+                        ScheduleType.MONTHLY -> schedule.monthlyDays?.contains(date.dayOfMonth) == true
+                        ScheduleType.YEARLY -> schedule.yearlyMonth == date.monthValue && schedule.yearlyDayOfMonth == date.dayOfMonth
                         else -> false
                     }
                 },
@@ -343,4 +345,16 @@ fun ScheduleItemText(text: String) {
         maxLines = 1,
         overflow = TextOverflow.Ellipsis
     )
+}
+
+@Composable
+fun DebugAllSchedulesView(allSchedules: List<Schedule>) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text("Debug: All Schedules", style = MaterialTheme.typography.titleMedium)
+        LazyColumn {
+            items(allSchedules) { schedule ->
+                Text("Name: ${schedule.workflowName}, ID: ${schedule.id}")
+            }
+        }
+    }
 }

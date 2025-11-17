@@ -13,7 +13,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -33,19 +35,20 @@ class ScheduleViewModel @Inject constructor(
     val currentDate: StateFlow<LocalDate> = _currentDate
 
     val allSchedules: StateFlow<List<Schedule>> = scheduleRepository.getSchedulesFlow()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     val schedulesForSelectedDate: StateFlow<List<Schedule>> = combine(_currentDate, allSchedules) { date, schedules ->
         schedules.filter { schedule ->
             when (schedule.scheduleType) {
+                ScheduleType.HOURLY -> true
                 ScheduleType.DAILY -> true
-                ScheduleType.WEEKLY -> schedule.weeklyDays?.any { it.equals(date.dayOfWeek.name, ignoreCase = true) } == true
+                ScheduleType.WEEKLY -> schedule.weeklyDays?.any { it.trim().equals(date.dayOfWeek.name, ignoreCase = true) } == true
                 ScheduleType.MONTHLY -> schedule.monthlyDays?.contains(date.dayOfMonth) == true
                 ScheduleType.YEARLY -> schedule.yearlyMonth == date.monthValue && schedule.yearlyDayOfMonth == date.dayOfMonth
                 else -> false
             }
         }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     private val _holidays = MutableStateFlow<List<Holiday>>(emptyList())
     val holidays: StateFlow<List<Holiday>> = _holidays
@@ -56,16 +59,26 @@ class ScheduleViewModel @Inject constructor(
     private val holidayCountry = settingsRepository.holidayCountry
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "US")
 
+    // This flow emits a new value only when the month or year of the current date changes.
+    private val currentYearMonth = _currentDate.map { YearMonth.from(it) }.distinctUntilChanged()
+
     init {
-        combine(holidayCountry, currentDate) { _, _ ->
-            Unit
-        }.onEach {
-            loadHolidaysForCurrentMonth()
+        // Relaunch the holiday loading coroutine whenever the country or the month changes.
+        combine(holidayCountry, currentYearMonth) { country, yearMonth ->
+            country to yearMonth
+        }.onEach { (country, yearMonth) ->
+            loadHolidaysForMonth(yearMonth, country)
         }.launchIn(viewModelScope)
     }
 
     fun setCurrentDate(date: LocalDate) {
         _currentDate.value = date
+    }
+
+    fun createSchedule(schedule: Schedule) {
+        viewModelScope.launch {
+            scheduleRepository.createSchedule(schedule)
+        }
     }
 
     fun moveToNextMonth() {
@@ -76,25 +89,23 @@ class ScheduleViewModel @Inject constructor(
         _currentDate.value = _currentDate.value.minusMonths(1)
     }
 
-    fun loadHolidaysForCurrentMonth() {
+    private suspend fun loadHolidaysForMonth(yearMonth: YearMonth, country: String) {
         if (!googleApiAuthorizer.isSignedIn()) {
             Timber.d("Not signed in, clearing holidays.")
             _holidays.value = emptyList()
             return
         }
 
-        viewModelScope.launch {
-            val yearMonth = YearMonth.from(_currentDate.value)
-            val currentCountry = holidayCountry.value
-            Timber.d("Loading holidays for $yearMonth, country: $currentCountry")
-            try {
-                val holidayList = scheduleRepository.getHolidays(currentCountry, yearMonth.year, yearMonth.monthValue)
-                _holidays.value = holidayList
-                Timber.d("Loaded ${holidayList.size} holidays.")
-            } catch (e: Exception) {
-                Timber.e(e, "Failed to load holidays.")
-                _holidays.value = emptyList()
-            }
+        Timber.d("Loading holidays for $yearMonth, country: $country")
+        try {
+            // The actual repository call is on a background thread (Dispatchers.IO)
+            val holidayList = scheduleRepository.getHolidays(country, yearMonth.year, yearMonth.monthValue)
+            // Updating the state flow on the main thread
+            _holidays.value = holidayList
+            Timber.d("Loaded ${holidayList.size} holidays.")
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to load holidays.")
+            _holidays.value = emptyList()
         }
     }
 }
