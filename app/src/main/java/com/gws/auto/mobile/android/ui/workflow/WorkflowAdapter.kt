@@ -20,7 +20,8 @@ class WorkflowAdapter(
     private val onDeleteClicked: (Workflow) -> Unit,
     private val onAddClicked: () -> Unit,
     private val onFavoriteClicked: (Workflow) -> Unit,
-    private val onFolderClicked: (WorkflowFolder) -> Unit
+    private val onFolderClicked: (WorkflowFolder) -> Unit,
+    private val onFolderDeleteClicked: (WorkflowFolder) -> Unit
 ) : ListAdapter<WorkflowListItem, RecyclerView.ViewHolder>(WorkflowListItemDiffCallback()) {
 
     private val VIEW_TYPE_WORKFLOW = 1
@@ -43,7 +44,7 @@ class WorkflowAdapter(
             }
             VIEW_TYPE_FOLDER -> {
                 val binding = ItemWorkflowFolderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                FolderViewHolder(binding, onFolderClicked)
+                FolderViewHolder(binding, onFolderClicked, onFolderDeleteClicked)
             }
             VIEW_TYPE_ADD -> {
                 val binding = ListItemAddWorkflowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -87,11 +88,13 @@ class WorkflowAdapter(
 
     class FolderViewHolder(
         private val binding: ItemWorkflowFolderBinding,
-        private val onFolderClicked: (WorkflowFolder) -> Unit
+        private val onFolderClicked: (WorkflowFolder) -> Unit,
+        private val onFolderDeleteClicked: (WorkflowFolder) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(folder: WorkflowFolder) {
             binding.folderName.text = folder.name
             itemView.setOnClickListener { onFolderClicked(folder) }
+            binding.deleteFolderButton.setOnClickListener { onFolderDeleteClicked(folder) }
         }
     }
 

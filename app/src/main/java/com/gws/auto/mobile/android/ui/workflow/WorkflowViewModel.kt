@@ -77,6 +77,10 @@ class WorkflowViewModel @Inject constructor(
         workflowRepository.deleteWorkflow(workflow)
     }
 
+    fun deleteWorkflowFolder(folderId: String) = viewModelScope.launch {
+        workflowFolderRepository.deleteWorkflowFolder(folderId)
+    }
+
     fun toggleFavorite(workflow: Workflow) = viewModelScope.launch {
         val updatedWorkflow = workflow.copy(isFavorite = !workflow.isFavorite)
         workflowRepository.saveWorkflow(updatedWorkflow)
