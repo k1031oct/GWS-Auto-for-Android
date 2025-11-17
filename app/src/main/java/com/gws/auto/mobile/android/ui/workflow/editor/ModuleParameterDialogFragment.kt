@@ -26,7 +26,7 @@ class ModuleParameterDialogFragment : DialogFragment() {
     private var nextRequestCode = 100
 
     companion object {
-        private const val ARG_MODULE_TYPE = "module_type"
+        const val ARG_MODULE_TYPE = "module_type"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

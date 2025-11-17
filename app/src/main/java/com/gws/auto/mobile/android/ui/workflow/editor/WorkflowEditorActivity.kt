@@ -90,8 +90,12 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleListDialogFragment.Mod
     }
 
     override fun onModuleSelected(moduleType: String) {
-        val dialog = ModuleParameterDialogFragment.newInstance(moduleType)
-        dialog.listener = this
+        val dialog = ModuleParameterDialogFragment().apply {
+            arguments = Bundle().apply {
+                putString(ModuleParameterDialogFragment.ARG_MODULE_TYPE, moduleType)
+            }
+            listener = this@WorkflowEditorActivity
+        }
         dialog.show(supportFragmentManager, "ModuleParameterDialog")
     }
 
@@ -152,8 +156,7 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleListDialogFragment.Mod
             val modules = when (folder) {
                 "Core" -> listOf(
                     Module(id = "", type = "DEFINE_VARIABLE", parameters = emptyMap()),
-                    Module(id = "", type = "GET_RELATIVE_DATE", parameters = emptyMap()),
-                    Module(id = "", type = "LOG_MESSAGE", parameters = emptyMap())
+                    Module(id = "", type = "GET_RELATIVE_DATE", parameters = emptyMap())
                 )
                 "Gmail" -> listOf(
                     Module(id = "", type = "CREATE_GMAIL_DRAFT", parameters = emptyMap()),
@@ -193,8 +196,12 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleListDialogFragment.Mod
                 DragEvent.ACTION_DROP -> {
                     val item: ClipData.Item = event.clipData.getItemAt(0)
                     val moduleType = item.text.toString()
-                    val dialog = ModuleParameterDialogFragment.newInstance(moduleType)
-                    dialog.listener = this
+                    val dialog = ModuleParameterDialogFragment().apply {
+                        arguments = Bundle().apply {
+                            putString(ModuleParameterDialogFragment.ARG_MODULE_TYPE, moduleType)
+                        }
+                        listener = this@WorkflowEditorActivity
+                    }
                     dialog.show(supportFragmentManager, "ModuleParameterDialog")
                     true
                 }
