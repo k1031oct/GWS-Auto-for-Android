@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.api.services.drive.model.File
 import com.gws.auto.mobile.android.domain.service.DriveApiService
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.Stack
@@ -23,14 +24,15 @@ class FilePickerViewModel @Inject constructor(
     private val _currentFolderName = MutableLiveData<String>()
     val currentFolderName: LiveData<String> = _currentFolderName
 
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> = _error
+
     private val folderStack = Stack<Pair<String, String>>().apply {
         push("root" to "My Drive")
     }
 
     init {
-        viewModelScope.launch { 
-            loadFilesForCurrentFolder()
-        }
+        loadFilesForCurrentFolder()
     }
 
     fun onFolderClicked(folderId: String, folderName: String) {
@@ -51,14 +53,19 @@ class FilePickerViewModel @Inject constructor(
     private fun loadFilesForCurrentFolder() {
         val (folderId, folderName) = folderStack.peek()
         _currentFolderName.value = folderName
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val fileList = driveApiService.listFiles(folderId)
-                _files.value = fileList.files
+                _files.postValue(fileList.files)
             } catch (e: Exception) {
-                Timber.e(e, "Failed to load files for folder: $folderId. This might be due to insufficient permissions. Please ensure the user has granted the required Google Drive scopes.")
-                _files.value = emptyList() // Clear the list on error
+                Timber.e(e, "Failed to load files for folder: $folderId.")
+                _error.postValue("Failed to load files. Please re-login and grant permissions.")
+                _files.postValue(emptyList()) // Clear the list on error
             }
         }
+    }
+
+    fun onErrorShown() {
+        _error.value = null
     }
 }

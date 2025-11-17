@@ -26,7 +26,8 @@ class DriveApiService @Inject constructor(private val authorizer: GoogleApiAutho
 
     @Throws(IOException::class)
     suspend fun listFiles(folderId: String): FileList = withContext(Dispatchers.IO) {
-        getService().files().list()
+        val service = getService()
+        service.files().list()
             .setQ("'$folderId' in parents and trashed = false")
             .setFields("files(id, name, mimeType)")
             .execute()
