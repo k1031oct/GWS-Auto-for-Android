@@ -42,7 +42,7 @@ class ScheduleViewModel @Inject constructor(
             when (schedule.scheduleType) {
                 ScheduleType.HOURLY -> true
                 ScheduleType.DAILY -> true
-                ScheduleType.WEEKLY -> schedule.weeklyDays?.any { it.trim().equals(date.dayOfWeek.name, ignoreCase = true) } == true
+                ScheduleType.WEEKLY -> schedule.weeklyDays?.any { day -> day.equals(date.dayOfWeek.name, ignoreCase = true) } == true
                 ScheduleType.MONTHLY -> schedule.monthlyDays?.contains(date.dayOfMonth) == true
                 ScheduleType.YEARLY -> schedule.yearlyMonth == date.monthValue && schedule.yearlyDayOfMonth == date.dayOfMonth
                 else -> false
@@ -78,6 +78,12 @@ class ScheduleViewModel @Inject constructor(
     fun createSchedule(schedule: Schedule) {
         viewModelScope.launch {
             scheduleRepository.createSchedule(schedule)
+        }
+    }
+
+    fun deleteSchedule(scheduleId: String) {
+        viewModelScope.launch {
+            scheduleRepository.deleteSchedule(scheduleId)
         }
     }
 

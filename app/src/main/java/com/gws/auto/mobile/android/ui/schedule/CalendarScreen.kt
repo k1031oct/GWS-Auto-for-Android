@@ -27,7 +27,9 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
@@ -35,20 +37,23 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -78,23 +83,38 @@ fun CalendarScreen(
     val scope = rememberCoroutineScope()
     val schedulesForSelectedDate by viewModel.schedulesForSelectedDate.collectAsState()
     val currentDate by viewModel.currentDate.collectAsState()
+    var selectedSchedule by remember { mutableStateOf<Schedule?>(null) }
+
+    selectedSchedule?.let {
+        ScheduleActionsDialog(
+            schedule = it,
+            onDismiss = { selectedSchedule = null },
+            onEdit = { /* TODO: Implement edit */ },
+            onDelete = {
+                viewModel.deleteSchedule(it.id)
+                selectedSchedule = null
+            }
+        )
+    }
 
     Scaffold {
  paddingValues ->
         BottomSheetScaffold(
             scaffoldState = scaffoldState,
             sheetPeekHeight = 32.dp, // Provide a peek height for the handle area
-            sheetContent = { DayTimelineSheet(date = currentDate, schedules = schedulesForSelectedDate) },
+            sheetContent = { DayTimelineSheet(date = currentDate, schedules = schedulesForSelectedDate, onScheduleClick = { selectedSchedule = it }) },
             sheetContainerColor = MaterialTheme.colorScheme.surfaceContainer, // Use a lighter surface color
             containerColor = MaterialTheme.colorScheme.background // Ensure calendar has the correct background
         ) {
             CalendarContent(
                 viewModel = viewModel,
-                modifier = Modifier.padding(paddingValues)
-            ) {
-                viewModel.setCurrentDate(it)
-                scope.launch { scaffoldState.bottomSheetState.expand() }
-            }
+                modifier = Modifier.padding(paddingValues),
+                onDateClick = {
+                    viewModel.setCurrentDate(it)
+                    scope.launch { scaffoldState.bottomSheetState.expand() }
+                },
+                onScheduleClick = { selectedSchedule = it }
+            )
         }
     }
 }
@@ -104,7 +124,8 @@ fun CalendarScreen(
 fun CalendarContent(
     viewModel: ScheduleViewModel, 
     modifier: Modifier = Modifier,
-    onDateClick: (LocalDate) -> Unit
+    onDateClick: (LocalDate) -> Unit,
+    onScheduleClick: (Schedule) -> Unit
 ) {
     val pagerState = rememberPagerState(
         initialPage = Int.MAX_VALUE / 2,
@@ -176,23 +197,28 @@ fun CalendarContent(
                 holidays = holidays,
                 schedules = allSchedules,
                 onDateClick = onDateClick,
+                onScheduleClick = onScheduleClick,
                 daysOfWeek = daysOfWeek
             )
         }
-        // Add the debug view here
-        DebugAllSchedulesView(allSchedules = allSchedules)
     }
 }
 
 @Composable
-fun DayTimelineSheet(date: LocalDate, schedules: List<Schedule>) {
-    val schedulesWithTime = schedules.map { schedule ->
-        val time = try {
-            schedule.time?.let { LocalTime.parse(it) } ?: LocalTime.MIDNIGHT
+fun DayTimelineSheet(
+    date: LocalDate, 
+    schedules: List<Schedule>,
+    onScheduleClick: (Schedule) -> Unit
+) {
+    val (timedSchedules, allDaySchedules) = schedules.partition { it.time != null }
+
+    val schedulesWithTime = timedSchedules.mapNotNull { schedule ->
+        try {
+            val time = LocalTime.parse(schedule.time)
+            Triple(time, schedule.workflowName, schedule)
         } catch (e: Exception) {
-            LocalTime.MIDNIGHT
+            null
         }
-        time to schedule.workflowName
     }
 
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
@@ -204,16 +230,36 @@ fun DayTimelineSheet(date: LocalDate, schedules: List<Schedule>) {
                 .padding(bottom = 16.dp, top = 16.dp)
         )
 
+        if (allDaySchedules.isNotEmpty()) {
+            Text(stringResource(R.string.all_day), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            allDaySchedules.forEach {
+                ScheduleItemText(it.workflowName, modifier = Modifier.clickable { onScheduleClick(it) })
+            }
+            Divider(modifier = Modifier.padding(vertical = 8.dp))
+        }
+        
         LazyColumn {
             item {
-                HourTimeline(schedules = schedulesWithTime, timelineHourHeight = 64.dp, hourTextWidth = 60.dp, eventColor = MaterialTheme.colorScheme.primary)
+                HourTimeline(
+                    schedules = schedulesWithTime, 
+                    timelineHourHeight = 64.dp, 
+                    hourTextWidth = 60.dp, 
+                    eventColor = MaterialTheme.colorScheme.primary, 
+                    onScheduleClick = onScheduleClick
+                )
             }
         }
     }
 }
 
 @Composable
-private fun HourTimeline(schedules: List<Pair<LocalTime, String>>, timelineHourHeight: androidx.compose.ui.unit.Dp, hourTextWidth: androidx.compose.ui.unit.Dp, eventColor: Color) {
+private fun HourTimeline(
+    schedules: List<Triple<LocalTime, String, Schedule>>,
+    timelineHourHeight: androidx.compose.ui.unit.Dp,
+    hourTextWidth: androidx.compose.ui.unit.Dp,
+    eventColor: Color,
+    onScheduleClick: (Schedule) -> Unit
+) {
     val timelineColor = MaterialTheme.colorScheme.outlineVariant
 
     BoxWithConstraints(modifier = Modifier
@@ -238,14 +284,13 @@ private fun HourTimeline(schedules: List<Pair<LocalTime, String>>, timelineHourH
             }
         }
 
-        schedules.forEach { (time, name) ->
-            val yOffset = with(LocalDensity.current) {
-                (time.hour * timelineHourHeight.toPx()) + (time.minute / 60f * timelineHourHeight.toPx())
-            }
+        schedules.forEach { (time, name, schedule) ->
+            val yOffset = (time.hour * timelineHourHeight.value) + (time.minute / 60f * timelineHourHeight.value)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .offset(y = yOffset.dp, x = hourTextWidth),
+                    .offset(y = yOffset.dp, x = hourTextWidth)
+                    .clickable { onScheduleClick(schedule) },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(modifier = Modifier
@@ -264,6 +309,7 @@ fun MonthView(
     holidays: List<Holiday>,
     schedules: List<Schedule>,
     onDateClick: (LocalDate) -> Unit,
+    onScheduleClick: (Schedule) -> Unit,
     daysOfWeek: List<DayOfWeek>
 ) {
     val firstDayOfMonth = yearMonth.atDay(1)
@@ -288,13 +334,14 @@ fun MonthView(
                     when (schedule.scheduleType) {
                         ScheduleType.HOURLY -> true
                         ScheduleType.DAILY -> true
-                        ScheduleType.WEEKLY -> schedule.weeklyDays?.any { it.trim().equals(date.dayOfWeek.name, ignoreCase = true) } == true
+                        ScheduleType.WEEKLY -> schedule.weeklyDays?.any { day -> day.equals(date.dayOfWeek.name, ignoreCase = true) } == true
                         ScheduleType.MONTHLY -> schedule.monthlyDays?.contains(date.dayOfMonth) == true
                         ScheduleType.YEARLY -> schedule.yearlyMonth == date.monthValue && schedule.yearlyDayOfMonth == date.dayOfMonth
                         else -> false
                     }
                 },
                 holidays = holidays.filter { it.date == date },
+                onScheduleClick = onScheduleClick,
                 modifier = Modifier.clickable { onDateClick(date) }
             )
         }
@@ -306,6 +353,7 @@ fun DayCell(
     date: LocalDate,
     schedules: List<Schedule>,
     holidays: List<Holiday>,
+    onScheduleClick: (Schedule) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val isToday = date == LocalDate.now()
@@ -333,28 +381,42 @@ fun DayCell(
         Spacer(modifier = Modifier.height(4.dp))
 
         holidays.forEach { ScheduleItemText(it.name) }
-        schedules.forEach { ScheduleItemText(it.workflowName) }
+        schedules.forEach { schedule ->
+            ScheduleItemText(schedule.workflowName, modifier = Modifier.clickable { onScheduleClick(schedule) })
+        }
     }
 }
 
 @Composable
-fun ScheduleItemText(text: String) {
+fun ScheduleItemText(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
         style = MaterialTheme.typography.labelSmall,
         maxLines = 1,
-        overflow = TextOverflow.Ellipsis
+        overflow = TextOverflow.Ellipsis,
+        modifier = modifier
     )
 }
 
 @Composable
-fun DebugAllSchedulesView(allSchedules: List<Schedule>) {
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text("Debug: All Schedules", style = MaterialTheme.typography.titleMedium)
-        LazyColumn {
-            items(allSchedules) { schedule ->
-                Text("Name: ${schedule.workflowName}, ID: ${schedule.id}")
+fun ScheduleActionsDialog(
+    schedule: Schedule,
+    onDismiss: () -> Unit,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(schedule.workflowName) },
+        text = { Text("What would you like to do with this schedule?") },
+        confirmButton = {
+            Row {
+                TextButton(onClick = onEdit) { Text("Edit") }
+                TextButton(onClick = onDelete) { Text("Delete") }
             }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Cancel") }
         }
-    }
+    )
 }

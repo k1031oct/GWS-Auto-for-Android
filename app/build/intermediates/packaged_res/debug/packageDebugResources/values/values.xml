@@ -144,6 +144,7 @@
     <string name="add_new_workflow">Add New Workflow</string>
     <string name="add_schedule">Add Schedule</string>
     <string name="add_tag_title">Add a New Tag</string>
+    <string name="all_day">All day</string>
     <string name="all_schedules_title">All Schedules</string>
     <string name="announcement_unread_indicator">Unread Indicator</string>
     <string name="app_name">GWS-Auto for Android</string>

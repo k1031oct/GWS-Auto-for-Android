@@ -43,6 +43,7 @@
 
     <!-- Schedule -->
     <string name="schedule_title">Schedule</string>
+    <string name="all_day">All day</string>
 
     <!-- History -->
     <string name="history_title">History</string>

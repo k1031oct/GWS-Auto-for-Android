@@ -367,6 +367,7 @@ string add_module
 string add_new_workflow
 string add_schedule
 string add_tag_title
+string all_day
 string all_schedules_title
 string announcement_unread_indicator
 string app_name

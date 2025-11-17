@@ -5039,6 +5039,7 @@ int string add_module 0x7f13002f
 int string add_new_workflow 0x7f130030
 int string add_schedule 0x7f130031
 int string add_tag_title 0x7f130032
+int string all_day 0x7f1301f7
 int string all_schedules_title 0x7f130033
 int string android_credentials_TYPE_PASSWORD_CREDENTIAL 0x7f130034
 int string androidx_credentials_TYPE_PUBLIC_KEY_CREDENTIAL 0x7f130035
