@@ -75,13 +75,15 @@ fun CalendarScreen(
     val context = LocalContext.current
     val scaffoldState = rememberBottomSheetScaffoldState()
     val scope = rememberCoroutineScope()
+    val schedulesForSelectedDate by viewModel.schedulesForSelectedDate.collectAsState()
+    val currentDate by viewModel.currentDate.collectAsState()
 
     Scaffold {
  paddingValues ->
         BottomSheetScaffold(
             scaffoldState = scaffoldState,
             sheetPeekHeight = 32.dp, // Provide a peek height for the handle area
-            sheetContent = { DayTimelineSheet() },
+            sheetContent = { DayTimelineSheet(date = currentDate, schedules = schedulesForSelectedDate) },
             sheetContainerColor = MaterialTheme.colorScheme.surfaceContainer, // Use a lighter surface color
             containerColor = MaterialTheme.colorScheme.background // Ensure calendar has the correct background
         ) {
@@ -108,7 +110,7 @@ fun CalendarContent(
         pageCount = { Int.MAX_VALUE }
     )
     val holidays by viewModel.holidays.collectAsState()
-    val schedules by viewModel.schedules.collectAsState()
+    val allSchedules by viewModel.allSchedules.collectAsState()
     val currentDate by viewModel.currentDate.collectAsState()
     val firstDayOfWeekSetting by viewModel.firstDayOfWeek.collectAsState()
 
@@ -171,7 +173,7 @@ fun CalendarContent(
             MonthView(
                 yearMonth = month,
                 holidays = holidays,
-                schedules = schedules,
+                schedules = allSchedules,
                 onDateClick = onDateClick,
                 daysOfWeek = daysOfWeek
             )
@@ -180,10 +182,17 @@ fun CalendarContent(
 }
 
 @Composable
-fun DayTimelineSheet() {
-    // Dummy Data for now, will be replaced by ViewModel
-    val date = LocalDate.now()
+fun DayTimelineSheet(date: LocalDate, schedules: List<Schedule>) {
     val holidays = emptyList<Holiday>()
+    val schedulesWithTime = schedules.mapNotNull { schedule ->
+        schedule.time?.let { timeStr ->
+            try {
+                LocalTime.parse(timeStr) to (schedule.workflowId)
+            } catch (e: Exception) {
+                null
+            }
+        }
+    }
 
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         Text(
@@ -200,7 +209,7 @@ fun DayTimelineSheet() {
             }
 
             item {
-                HourTimeline(schedules = emptyList(), timelineHourHeight = 64.dp, hourTextWidth = 60.dp, eventColor = MaterialTheme.colorScheme.primary)
+                HourTimeline(schedules = schedulesWithTime, timelineHourHeight = 64.dp, hourTextWidth = 60.dp, eventColor = MaterialTheme.colorScheme.primary)
             }
         }
     }
@@ -278,7 +287,15 @@ fun MonthView(
 
             DayCell(
                 date = date,
-                schedules = schedules.filter { it.weeklyDays?.contains(date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())) == true || it.monthlyDays?.contains(date.dayOfMonth) == true || it.scheduleType == "daily" },
+                schedules = schedules.filter { schedule ->
+                    when (schedule.scheduleType) {
+                        "daily" -> true
+                        "weekly" -> schedule.weeklyDays?.any { day -> day.equals(date.dayOfWeek.name, ignoreCase = true) } == true
+                        "monthly" -> schedule.monthlyDays?.contains(date.dayOfMonth) == true
+                        "yearly" -> schedule.yearlyMonth == date.monthValue && schedule.yearlyDayOfMonth == date.dayOfMonth
+                        else -> false
+                    }
+                },
                 holidays = holidays.filter { it.date == date },
                 modifier = Modifier.clickable { onDateClick(date) }
             )

@@ -197,6 +197,11 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_settings">Settings</string>
     <string name="sign_in_required">Please sign in to continue.</string>
+    <string name="action_export_csv">Export as CSV</string>
 
     <string name="country">Country</string>
+    <string name="action_clear_history">Clear History</string>
+    <string name="no_history_prompt_no_workflow">No history. Create a workflow to get started.</string>
+    <string name="no_history_prompt_with_workflow">No history. Run a workflow to see its execution.</string>
+    <string name="sign_in_prompt_message">To access this feature, please sign in to your account.</string>
 </resources>

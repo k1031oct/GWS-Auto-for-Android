@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.databinding.FragmentHistoryBinding
+import com.gws.auto.mobile.android.ui.workflow.WorkflowViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -24,6 +26,7 @@ class HistoryFragment : Fragment() {
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
     private val viewModel: HistoryViewModel by viewModels()
+    private val workflowViewModel: WorkflowViewModel by viewModels()
     private lateinit var historyAdapter: HistoryAdapter
 
     override fun onCreateView(
@@ -81,8 +84,23 @@ class HistoryFragment : Fragment() {
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect {
-                    historyAdapter.submitList(it)
+                binding.progressBar.visibility = View.VISIBLE
+                combine(viewModel.uiState, workflowViewModel.filteredItems) { history, workflows ->
+                    Pair(history, workflows)
+                }.collect { (history, workflows) ->
+                    binding.progressBar.visibility = View.GONE
+                    historyAdapter.submitList(history)
+
+                    if (history.isEmpty()) {
+                        binding.emptyViewHistory.visibility = View.VISIBLE
+                        if (workflows.isEmpty()) {
+                            binding.emptyViewHistory.text = getString(R.string.no_history_prompt_no_workflow)
+                        } else {
+                            binding.emptyViewHistory.text = getString(R.string.no_history_prompt_with_workflow)
+                        }
+                    } else {
+                        binding.emptyViewHistory.visibility = View.GONE
+                    }
                 }
             }
         }

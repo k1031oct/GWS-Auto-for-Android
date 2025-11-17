@@ -1,5 +1,7 @@
 package com.gws.auto.mobile.android.ui.settings.app
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,17 +10,24 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.toColorInt
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.data.repository.SettingsRepository
 import com.gws.auto.mobile.android.databinding.FragmentAppSettingsBinding
+import com.gws.auto.mobile.android.ui.history.HistoryViewModel
 import com.gws.auto.mobile.android.ui.settings.tag.TagManagementFragment
 import com.gws.auto.mobile.android.ui.settings.user.UserInfoFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -26,9 +35,21 @@ class AppSettingsFragment : Fragment() {
 
     private var _binding: FragmentAppSettingsBinding? = null
     private val binding get() = _binding!!
+    private val historyViewModel: HistoryViewModel by viewModels()
 
     @Inject
     lateinit var settingsRepository: SettingsRepository
+
+    private val createCsvLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.data?.also { uri ->
+                requireContext().contentResolver.openOutputStream(uri)?.use {
+                    historyViewModel.exportHistoryToCsv(it)
+                    Toast.makeText(requireContext(), "History exported successfully", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +78,34 @@ class AppSettingsFragment : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
+        binding.exportHistoryButton.setOnClickListener {
+            launchCreateCsvIntent()
+        }
+        binding.clearHistoryButton.setOnClickListener {
+            showClearHistoryConfirmationDialog()
+        }
+    }
+
+    private fun launchCreateCsvIntent() {
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "text/csv"
+            val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+            putExtra(Intent.EXTRA_TITLE, "history_export_$timestamp.csv")
+        }
+        createCsvLauncher.launch(intent)
+    }
+
+    private fun showClearHistoryConfirmationDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Clear All History")
+            .setMessage("Are you sure you want to delete all execution history? This action cannot be undone.")
+            .setPositiveButton("Clear All") { _, _ ->
+                historyViewModel.clearHistory()
+                Toast.makeText(requireContext(), "All history has been cleared", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     private fun setupSpinners() {

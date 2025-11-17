@@ -84,11 +84,6 @@ class MainActivity : AppCompatActivity() {
         setupActionButtons()
         setupBackButtonHandler()
         observeViewModel()
-
-        // Insert dummy data
-        lifecycleScope.launch {
-            insertDummyHistoryData()
-        }
     }
 
     override fun onResume() {
@@ -108,37 +103,6 @@ class MainActivity : AppCompatActivity() {
             "Dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
-    }
-
-    private suspend fun insertDummyHistoryData() {
-        val dummyHistories = listOf(
-            History(
-                workflowId = "Dummy Workflow 1",
-                workflowName = "Success Case",
-                executedAt = Date(System.currentTimeMillis() - 86400000), // 1 day ago
-                status = "Success",
-                logs = "Log message 1",
-                isBookmarked = true
-            ),
-            History(
-                workflowId = "Dummy Workflow 2",
-                workflowName = "Failure Case",
-                executedAt = Date(System.currentTimeMillis() - 18000000), // 5 hours ago
-                status = "Failure",
-                logs = """Step 1 completed
-Step 2 failed due to an error""",
-                isBookmarked = false
-            ),
-            History(
-                workflowId = "Dummy Workflow 3",
-                workflowName = "Another Success",
-                executedAt = Date(System.currentTimeMillis() - 1800000), // 30 minutes ago
-                status = "Success",
-                logs = "All steps completed successfully",
-                isBookmarked = false
-            )
-        )
-        dummyHistories.forEach { historyRepository.insertHistory(it) }
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
@@ -161,7 +125,7 @@ Step 2 failed due to an error""",
                     updateFab(position)
                 } else {
                     binding.viewPager.currentItem = 0
-                    Toast.makeText(this@MainActivity, R.string.sign_in_required, Toast.LENGTH_SHORT).show()
+                    showSignInRequiredDialog()
                 }
             }
         })
@@ -181,10 +145,23 @@ Step 2 failed due to an error""",
                 binding.viewPager.setCurrentItem(pageIndex, true)
                 true
             } else {
-                Toast.makeText(this, R.string.sign_in_required, Toast.LENGTH_SHORT).show()
+                showSignInRequiredDialog()
                 false
             }
         }
+    }
+
+    private fun showSignInRequiredDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.sign_in_required)
+            .setMessage(R.string.sign_in_prompt_message)
+            .setPositiveButton(R.string.sign_in) { _, _ ->
+                val intent = Intent(this, SettingsActivity::class.java)
+                intent.putExtra("fragment_to_load", "user_info")
+                startActivity(intent)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     private fun setupSearchView() {

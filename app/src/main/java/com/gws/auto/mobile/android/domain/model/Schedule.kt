@@ -6,13 +6,21 @@ import androidx.room.TypeConverters
 import com.gws.auto.mobile.android.data.local.db.IntListConverter
 import com.gws.auto.mobile.android.data.local.db.ListConverter
 
+enum class ScheduleType {
+    HOURLY,
+    DAILY,
+    WEEKLY,
+    MONTHLY,
+    YEARLY
+}
+
 @Entity(tableName = "schedules")
 @TypeConverters(ListConverter::class, IntListConverter::class)
 data class Schedule(
     @PrimaryKey
     val id: String,
     val workflowId: String = "",
-    val scheduleType: String = "daily", // hourly, daily, weekly, monthly, yearly
+    val scheduleType: ScheduleType,
     val hourlyInterval: Int? = null,
     val time: String? = null, // "HH:mm"
     val weeklyDays: List<String>? = null,

@@ -1,21 +1,26 @@
 package com.gws.auto.mobile.android.ui.history
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gws.auto.mobile.android.data.repository.HistoryRepository
 import com.gws.auto.mobile.android.domain.model.History
+import com.gws.auto.mobile.android.domain.service.HistoryCsvExporter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.io.OutputStream
 import javax.inject.Inject
 
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
-    private val historyRepository: HistoryRepository
+    private val historyRepository: HistoryRepository,
+    private val csvExporter: HistoryCsvExporter
 ) : ViewModel() {
 
     private val _expandedIds = MutableStateFlow<Set<Long>>(emptySet())
@@ -73,6 +78,13 @@ class HistoryViewModel @Inject constructor(
     fun clearHistory() {
         viewModelScope.launch {
             historyRepository.deleteAllHistory()
+        }
+    }
+
+    fun exportHistoryToCsv(outputStream: OutputStream) {
+        viewModelScope.launch {
+            val historyList = historyRepository.getAllHistory().first()
+            csvExporter.export(historyList, outputStream)
         }
     }
 }

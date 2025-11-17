@@ -30,8 +30,22 @@ class ScheduleViewModel @Inject constructor(
     private val _currentDate = MutableStateFlow(LocalDate.now())
     val currentDate: StateFlow<LocalDate> = _currentDate
 
-    val schedules: StateFlow<List<Schedule>> = scheduleRepository.getSchedulesFlow()
+    // Expose all schedules for the calendar month view
+    val allSchedules: StateFlow<List<Schedule>> = scheduleRepository.getSchedulesFlow()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    // Expose schedules filtered by the selected date for the timeline view
+    val schedulesForSelectedDate: StateFlow<List<Schedule>> = combine(_currentDate, allSchedules) { date, schedules ->
+        schedules.filter { schedule ->
+            when (schedule.scheduleType) {
+                "daily" -> true
+                "weekly" -> schedule.weeklyDays?.any { it.equals(date.dayOfWeek.name, ignoreCase = true) } == true
+                "monthly" -> schedule.monthlyDays?.contains(date.dayOfMonth) == true
+                "yearly" -> schedule.yearlyMonth == date.monthValue && schedule.yearlyDayOfMonth == date.dayOfMonth
+                else -> false
+            }
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val _holidays = MutableStateFlow<List<Holiday>>(emptyList())
     val holidays: StateFlow<List<Holiday>> = _holidays

@@ -93,6 +93,7 @@ drawable ic_chevron_right
 drawable ic_create_new_folder
 drawable ic_dashboard
 drawable ic_delete
+drawable ic_delete_forever
 drawable ic_delete_sweep
 drawable ic_edit
 drawable ic_file
@@ -144,6 +145,7 @@ id day_text
 id delete_button
 id delete_tag_button
 id edit_button
+id empty_view_history
 id error_count_day_change_text
 id error_count_month_change_text
 id error_count_text
@@ -152,6 +154,7 @@ id event_title
 id execution_count_text
 id execution_status
 id execution_time
+id export_history_button
 id fab_add_module
 id fab_main
 id favorite_button
@@ -201,6 +204,7 @@ id parameters_container
 id privacy_policy_button
 id profile_image
 id progressBar
+id progress_bar
 id query_text
 id rating_button
 id refresh_button
@@ -352,6 +356,8 @@ string about_share_app
 string about_terms_of_service
 string about_title
 string about_version
+string action_clear_history
+string action_export_csv
 string action_search
 string action_settings
 string add
@@ -436,6 +442,8 @@ string navigation_drawer_open
 string new_announcement_notification
 string next_month
 string no
+string no_history_prompt_no_workflow
+string no_history_prompt_with_workflow
 string placeholder_event_time
 string placeholder_event_title
 string placeholder_time
@@ -472,6 +480,7 @@ string settings_theme_dialog_title
 string settings_theme_title
 string settings_title
 string sign_in
+string sign_in_prompt_message
 string sign_in_required
 string sign_in_with_google
 string sign_in_with_google_to_sync

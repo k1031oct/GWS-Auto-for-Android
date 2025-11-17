@@ -21,10 +21,16 @@ public final class FragmentAppSettingsBinding implements ViewBinding {
   private final ScrollView rootView;
 
   @NonNull
+  public final TextView clearHistoryButton;
+
+  @NonNull
   public final View colorIndicator;
 
   @NonNull
   public final Spinner countrySpinner;
+
+  @NonNull
+  public final TextView exportHistoryButton;
 
   @NonNull
   public final Spinner firstDayOfWeekSpinner;
@@ -44,14 +50,17 @@ public final class FragmentAppSettingsBinding implements ViewBinding {
   @NonNull
   public final TextView userInfoButton;
 
-  private FragmentAppSettingsBinding(@NonNull ScrollView rootView, @NonNull View colorIndicator,
-      @NonNull Spinner countrySpinner, @NonNull Spinner firstDayOfWeekSpinner,
-      @NonNull Spinner highlightColorSpinner, @NonNull Spinner languageSpinner,
-      @NonNull TextView tagManagementButton, @NonNull Spinner themeSpinner,
-      @NonNull TextView userInfoButton) {
+  private FragmentAppSettingsBinding(@NonNull ScrollView rootView,
+      @NonNull TextView clearHistoryButton, @NonNull View colorIndicator,
+      @NonNull Spinner countrySpinner, @NonNull TextView exportHistoryButton,
+      @NonNull Spinner firstDayOfWeekSpinner, @NonNull Spinner highlightColorSpinner,
+      @NonNull Spinner languageSpinner, @NonNull TextView tagManagementButton,
+      @NonNull Spinner themeSpinner, @NonNull TextView userInfoButton) {
     this.rootView = rootView;
+    this.clearHistoryButton = clearHistoryButton;
     this.colorIndicator = colorIndicator;
     this.countrySpinner = countrySpinner;
+    this.exportHistoryButton = exportHistoryButton;
     this.firstDayOfWeekSpinner = firstDayOfWeekSpinner;
     this.highlightColorSpinner = highlightColorSpinner;
     this.languageSpinner = languageSpinner;
@@ -87,6 +96,12 @@ public final class FragmentAppSettingsBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.clear_history_button;
+      TextView clearHistoryButton = ViewBindings.findChildViewById(rootView, id);
+      if (clearHistoryButton == null) {
+        break missingId;
+      }
+
       id = R.id.color_indicator;
       View colorIndicator = ViewBindings.findChildViewById(rootView, id);
       if (colorIndicator == null) {
@@ -96,6 +111,12 @@ public final class FragmentAppSettingsBinding implements ViewBinding {
       id = R.id.country_spinner;
       Spinner countrySpinner = ViewBindings.findChildViewById(rootView, id);
       if (countrySpinner == null) {
+        break missingId;
+      }
+
+      id = R.id.export_history_button;
+      TextView exportHistoryButton = ViewBindings.findChildViewById(rootView, id);
+      if (exportHistoryButton == null) {
         break missingId;
       }
 
@@ -135,9 +156,10 @@ public final class FragmentAppSettingsBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentAppSettingsBinding((ScrollView) rootView, colorIndicator, countrySpinner,
-          firstDayOfWeekSpinner, highlightColorSpinner, languageSpinner, tagManagementButton,
-          themeSpinner, userInfoButton);
+      return new FragmentAppSettingsBinding((ScrollView) rootView, clearHistoryButton,
+          colorIndicator, countrySpinner, exportHistoryButton, firstDayOfWeekSpinner,
+          highlightColorSpinner, languageSpinner, tagManagementButton, themeSpinner,
+          userInfoButton);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
