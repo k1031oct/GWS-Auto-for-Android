@@ -6,6 +6,7 @@ import com.gws.auto.mobile.android.data.repository.ScheduleRepository
 import com.gws.auto.mobile.android.data.repository.SettingsRepository
 import com.gws.auto.mobile.android.domain.model.Holiday
 import com.gws.auto.mobile.android.domain.model.Schedule
+import com.gws.auto.mobile.android.domain.model.ScheduleType
 import com.gws.auto.mobile.android.domain.service.GoogleApiAuthorizer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,10 +39,10 @@ class ScheduleViewModel @Inject constructor(
     val schedulesForSelectedDate: StateFlow<List<Schedule>> = combine(_currentDate, allSchedules) { date, schedules ->
         schedules.filter { schedule ->
             when (schedule.scheduleType) {
-                "daily" -> true
-                "weekly" -> schedule.weeklyDays?.any { it.equals(date.dayOfWeek.name, ignoreCase = true) } == true
-                "monthly" -> schedule.monthlyDays?.contains(date.dayOfMonth) == true
-                "yearly" -> schedule.yearlyMonth == date.monthValue && schedule.yearlyDayOfMonth == date.dayOfMonth
+                ScheduleType.DAILY -> true
+                ScheduleType.WEEKLY -> schedule.weeklyDays?.any { it.equals(date.dayOfWeek.name, ignoreCase = true) } == true
+                ScheduleType.MONTHLY -> schedule.monthlyDays?.contains(date.dayOfMonth) == true
+                ScheduleType.YEARLY -> schedule.yearlyMonth == date.monthValue && schedule.yearlyDayOfMonth == date.dayOfMonth
                 else -> false
             }
         }
@@ -86,7 +87,7 @@ class ScheduleViewModel @Inject constructor(
         viewModelScope.launch {
             val yearMonth = YearMonth.from(_currentDate.value)
             val currentCountry = holidayCountry.value
-            _holidays.value = scheduleRepository.getHolidays(currentCountry, yearMonth.year, yearMonth.monthValue)
+            scheduleRepository.getHolidays(currentCountry, yearMonth.year, yearMonth.monthValue)
         }
     }
 }

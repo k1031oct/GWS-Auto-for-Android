@@ -1,83 +1,55 @@
 package com.gws.auto.mobile.android.data.repository
 
-import com.google.api.client.googleapis.json.GoogleJsonResponseException
-import com.google.api.services.calendar.Calendar
+import android.content.Context
+import androidx.work.Data
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.gws.auto.mobile.android.data.local.db.ScheduleDao
 import com.gws.auto.mobile.android.domain.model.Holiday
 import com.gws.auto.mobile.android.domain.model.Schedule
+import com.gws.auto.mobile.android.domain.service.CalendarApiService
 import com.gws.auto.mobile.android.domain.service.GoogleApiAuthorizer
-import kotlinx.coroutines.Dispatchers
+import com.gws.auto.mobile.android.domain.service.ScheduleWorker
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.withContext
-import timber.log.Timber
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class ScheduleRepositoryImpl @Inject constructor(
-    private val apiAuthorizer: GoogleApiAuthorizer
+    private val scheduleDao: ScheduleDao,
+    @ApplicationContext private val context: Context,
+    private val calendarApiService: CalendarApiService,
+    private val googleApiAuthorizer: GoogleApiAuthorizer
 ) : ScheduleRepository {
 
+    private val workManager = WorkManager.getInstance(context)
+
     override fun getSchedulesFlow(): Flow<List<Schedule>> {
-        // Return an empty list to avoid any compilation issues for now.
-        return flowOf(emptyList())
+        return scheduleDao.getAllSchedules()
     }
 
-    override suspend fun addSchedule(schedule: Schedule) {
-        // TODO: Implement
+    override suspend fun createSchedule(schedule: Schedule) {
+        scheduleDao.insertSchedule(schedule)
+        val workRequest = PeriodicWorkRequestBuilder<ScheduleWorker>(
+            schedule.hourlyInterval?.toLong() ?: 24, TimeUnit.HOURS
+        )
+            .setInputData(Data.Builder().putString(ScheduleWorker.KEY_WORKFLOW_ID, schedule.workflowId).build())
+            .build()
+
+        workManager.enqueueUniquePeriodicWork(
+            schedule.id,
+            ExistingPeriodicWorkPolicy.REPLACE,
+            workRequest
+        )
     }
 
-    override suspend fun updateSchedule(schedule: Schedule) {
-        // TODO: Implement
+    override suspend fun deleteSchedule(scheduleId: String) {
+        scheduleDao.deleteScheduleById(scheduleId)
+        workManager.cancelUniqueWork(scheduleId)
     }
 
-    override suspend fun getHolidays(country: String, year: Int, month: Int): List<Holiday> = withContext(Dispatchers.IO) {
-        try {
-            val credential = apiAuthorizer.getCredential(scopes = listOf("https://www.googleapis.com/auth/calendar.readonly"))
-            if (credential == null) {
-                Timber.w("User not authenticated, cannot fetch holidays.")
-                return@withContext emptyList()
-            }
-
-            val calendarService = Calendar.Builder(apiAuthorizer.httpTransport, apiAuthorizer.jsonFactory, credential)
-                .setApplicationName("GWS-Auto for Android")
-                .build()
-
-            val holidayId = when (country.uppercase()) {
-                "JP" -> "ja.japanese"
-                "US" -> "en.usa"
-                "GB" -> "en.uk"
-                "CA" -> "en.canadian"
-                "AU" -> "en.australian"
-                else -> "en.${country.lowercase()}"
-            }
-            val calendarId = "${holidayId}#holiday@group.v.calendar.google.com"
-            
-            val timeMin = "${year}-${String.format("%02d", month)}-01T00:00:00-00:00"
-            val timeMax = "${year}-${String.format("%02d", month)}-${LocalDate.of(year, month, 1).lengthOfMonth()}T23:59:59-00:00"
-
-            val events = calendarService.events().list(calendarId)
-                .setSingleEvents(true)
-                .setOrderBy("startTime")
-                .execute()
-
-            val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
-
-            return@withContext events.items.mapNotNull { event ->
-                val dateString = event.start.date?.toStringRfc3339()?.substring(0, 10)
-                if (dateString != null) {
-                    Holiday(LocalDate.parse(dateString, dateFormatter), event.summary)
-                } else {
-                    null
-                }
-            }
-        } catch (e: GoogleJsonResponseException) {
-            Timber.e(e, "Error fetching holidays from Google Calendar API. It's possible the calendar ID is incorrect or the user has no access.")
-            return@withContext emptyList() // Return empty list if calendar is not found or other API error occurs
-        } catch (e: Exception) {
-            Timber.e(e, "Failed to fetch holidays for $country, $year-$month")
-            return@withContext emptyList()
-        }
+    override suspend fun getHolidays(countryCode: String, year: Int, month: Int): List<Holiday> {
+        return calendarApiService.getHolidays(countryCode, year, month)
     }
 }

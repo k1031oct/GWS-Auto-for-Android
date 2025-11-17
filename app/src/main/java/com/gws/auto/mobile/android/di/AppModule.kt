@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.data.local.db.AppDatabase
 import com.gws.auto.mobile.android.data.local.db.HistoryDao
+import com.gws.auto.mobile.android.data.local.db.ScheduleDao
 import com.gws.auto.mobile.android.data.local.db.SearchHistoryDao
 import com.gws.auto.mobile.android.data.local.db.TagDao
 import com.gws.auto.mobile.android.data.local.db.WorkflowDao
@@ -52,6 +53,11 @@ object AppModule {
     @Provides
     fun provideHistoryDao(appDatabase: AppDatabase): HistoryDao {
         return appDatabase.historyDao()
+    }
+
+    @Provides
+    fun provideScheduleDao(appDatabase: AppDatabase): ScheduleDao {
+        return appDatabase.scheduleDao()
     }
 
     @Provides
@@ -99,8 +105,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideScheduleRepository(apiAuthorizer: GoogleApiAuthorizer): ScheduleRepository {
-        return ScheduleRepositoryImpl(apiAuthorizer)
+    fun provideScheduleRepository(
+        scheduleDao: ScheduleDao,
+        @ApplicationContext context: Context,
+        calendarApiService: CalendarApiService,
+        googleApiAuthorizer: GoogleApiAuthorizer
+    ): ScheduleRepository {
+        return ScheduleRepositoryImpl(scheduleDao, context, calendarApiService, googleApiAuthorizer)
     }
 
     @Provides

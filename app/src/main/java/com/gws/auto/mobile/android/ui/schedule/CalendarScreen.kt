@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.sp
 import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.domain.model.Holiday
 import com.gws.auto.mobile.android.domain.model.Schedule
+import com.gws.auto.mobile.android.domain.model.ScheduleType
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -288,11 +289,11 @@ fun MonthView(
             DayCell(
                 date = date,
                 schedules = schedules.filter { schedule ->
-                    when (schedule.scheduleType) {
-                        "daily" -> true
-                        "weekly" -> schedule.weeklyDays?.any { day -> day.equals(date.dayOfWeek.name, ignoreCase = true) } == true
-                        "monthly" -> schedule.monthlyDays?.contains(date.dayOfMonth) == true
-                        "yearly" -> schedule.yearlyMonth == date.monthValue && schedule.yearlyDayOfMonth == date.dayOfMonth
+                    when (schedule.scheduleType.name) {
+                        ScheduleType.DAILY.name -> true
+                        ScheduleType.WEEKLY.name -> schedule.weeklyDays?.any { day -> day.equals(date.dayOfWeek.name, ignoreCase = true) } == true
+                        ScheduleType.MONTHLY.name -> schedule.monthlyDays?.contains(date.dayOfMonth) == true
+                        ScheduleType.YEARLY.name -> schedule.yearlyMonth == date.monthValue && schedule.yearlyDayOfMonth == date.dayOfMonth
                         else -> false
                     }
                 },

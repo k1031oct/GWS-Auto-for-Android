@@ -6,6 +6,7 @@ import com.gws.auto.mobile.android.data.repository.ScheduleRepository
 import com.gws.auto.mobile.android.data.repository.SettingsRepository
 import com.gws.auto.mobile.android.data.repository.WorkflowRepository
 import com.gws.auto.mobile.android.domain.model.Schedule
+import com.gws.auto.mobile.android.domain.model.ScheduleType
 import com.gws.auto.mobile.android.domain.model.Workflow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,7 +41,7 @@ class ScheduleSettingsViewModel @Inject constructor(
         }
         workflowRepository.getAllWorkflows().onEach { workflows ->
             _workflows.value = workflows
-            if (workflows.isNotEmpty()) {
+            if (workflows.isNotEmpty() && _uiState.value.selectedWorkflowId.isEmpty()) {
                 _uiState.update { state -> state.copy(selectedWorkflowId = workflows.first().id) }
             }
         }.launchIn(viewModelScope)
@@ -100,7 +101,14 @@ class ScheduleSettingsViewModel @Inject constructor(
             val schedule = Schedule(
                 id = UUID.randomUUID().toString(),
                 workflowId = state.selectedWorkflowId,
-                scheduleType = state.scheduleType,
+                scheduleType = when(state.scheduleType) {
+                    "時間毎" -> ScheduleType.HOURLY
+                    "日毎" -> ScheduleType.DAILY
+                    "週毎" -> ScheduleType.WEEKLY
+                    "月毎" -> ScheduleType.MONTHLY
+                    "年毎" -> ScheduleType.YEARLY
+                    else -> throw IllegalArgumentException("Invalid schedule type")
+                },
                 hourlyInterval = if (state.scheduleType == "時間毎") state.hourlyInterval else null,
                 time = when(state.scheduleType) {
                     "日毎" -> state.dailyTime.toString()
@@ -114,7 +122,7 @@ class ScheduleSettingsViewModel @Inject constructor(
                 yearlyMonth = if (state.scheduleType == "年毎") state.yearlyMonth else null,
                 yearlyDayOfMonth = if (state.scheduleType == "年毎") state.yearlyDayOfMonth else null,
             )
-            scheduleRepository.addSchedule(schedule)
+            scheduleRepository.createSchedule(schedule)
         }
     }
 }

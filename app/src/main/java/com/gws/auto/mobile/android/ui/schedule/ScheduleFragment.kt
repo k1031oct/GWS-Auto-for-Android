@@ -48,8 +48,5 @@ class ScheduleFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        // ViewModel now handles loading holidays automatically when state changes.
-        // We can trigger a check here in case the sign-in state changed while the app was paused.
-        viewModel.loadHolidaysForCurrentMonth()
     }
 }

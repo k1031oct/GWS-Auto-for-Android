@@ -31,6 +31,7 @@ MERGED from [androidx.appcompat:appcompat-resources:1.7.1] C:\Users\k1031\.gradl
 MERGED from [androidx.preference:preference-ktx:1.2.1] C:\Users\k1031\.gradle\caches\8.13\transforms\2da39b9d8d1b79eb36db04d2576f7512\transformed\jetified-preference-ktx-1.2.1\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.preference:preference:1.2.1] C:\Users\k1031\.gradle\caches\8.13\transforms\199e8bb8df6e55cfe93164d0f2ccb29e\transformed\preference-1.2.1\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.appcompat:appcompat:1.7.1] C:\Users\k1031\.gradle\caches\8.13\transforms\4a5a80007ecb9786ea1cb5b1a92f4db9\transformed\appcompat-1.7.1\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.hilt:hilt-work:1.2.0] C:\Users\k1031\.gradle\caches\8.13\transforms\29b306f530884a620d02683b3f539ad2\transformed\jetified-hilt-work-1.2.0\AndroidManifest.xml:17:1-22:12
 MERGED from [com.google.dagger:hilt-android:2.57.2] C:\Users\k1031\.gradle\caches\8.13\transforms\442c465e06926a8cb5e05c35155ec232\transformed\jetified-hilt-android-2.57.2\AndroidManifest.xml:16:1-19:12
 MERGED from [androidx.compose.material3:material3-android:1.4.0] C:\Users\k1031\.gradle\caches\8.13\transforms\728866596072322c92df7608218ebe59\transformed\jetified-material3\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.compose.material:material-android:1.9.4] C:\Users\k1031\.gradle\caches\8.13\transforms\e4fda0329ca2dca5f67b005c1d122a48\transformed\jetified-material\AndroidManifest.xml:2:1-7:12
@@ -447,6 +448,8 @@ MERGED from [androidx.preference:preference:1.2.1] C:\Users\k1031\.gradle\caches
 MERGED from [androidx.preference:preference:1.2.1] C:\Users\k1031\.gradle\caches\8.13\transforms\199e8bb8df6e55cfe93164d0f2ccb29e\transformed\preference-1.2.1\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.appcompat:appcompat:1.7.1] C:\Users\k1031\.gradle\caches\8.13\transforms\4a5a80007ecb9786ea1cb5b1a92f4db9\transformed\appcompat-1.7.1\AndroidManifest.xml:5:5-44
 MERGED from [androidx.appcompat:appcompat:1.7.1] C:\Users\k1031\.gradle\caches\8.13\transforms\4a5a80007ecb9786ea1cb5b1a92f4db9\transformed\appcompat-1.7.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.hilt:hilt-work:1.2.0] C:\Users\k1031\.gradle\caches\8.13\transforms\29b306f530884a620d02683b3f539ad2\transformed\jetified-hilt-work-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.hilt:hilt-work:1.2.0] C:\Users\k1031\.gradle\caches\8.13\transforms\29b306f530884a620d02683b3f539ad2\transformed\jetified-hilt-work-1.2.0\AndroidManifest.xml:20:5-44
 MERGED from [com.google.dagger:hilt-android:2.57.2] C:\Users\k1031\.gradle\caches\8.13\transforms\442c465e06926a8cb5e05c35155ec232\transformed\jetified-hilt-android-2.57.2\AndroidManifest.xml:18:3-42
 MERGED from [com.google.dagger:hilt-android:2.57.2] C:\Users\k1031\.gradle\caches\8.13\transforms\442c465e06926a8cb5e05c35155ec232\transformed\jetified-hilt-android-2.57.2\AndroidManifest.xml:18:3-42
 MERGED from [androidx.compose.material3:material3-android:1.4.0] C:\Users\k1031\.gradle\caches\8.13\transforms\728866596072322c92df7608218ebe59\transformed\jetified-material3\AndroidManifest.xml:20:5-44
