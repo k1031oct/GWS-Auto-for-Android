@@ -184,11 +184,10 @@ fun CalendarContent(
 
 @Composable
 fun DayTimelineSheet(date: LocalDate, schedules: List<Schedule>) {
-    val holidays = emptyList<Holiday>()
     val schedulesWithTime = schedules.mapNotNull { schedule ->
         schedule.time?.let { timeStr ->
             try {
-                LocalTime.parse(timeStr) to (schedule.workflowId)
+                LocalTime.parse(timeStr) to schedule.workflowName
             } catch (e: Exception) {
                 null
             }
@@ -205,10 +204,6 @@ fun DayTimelineSheet(date: LocalDate, schedules: List<Schedule>) {
         )
 
         LazyColumn {
-            items(holidays) { holiday ->
-                Text(holiday.name, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(bottom = 8.dp))
-            }
-
             item {
                 HourTimeline(schedules = schedulesWithTime, timelineHourHeight = 64.dp, hourTextWidth = 60.dp, eventColor = MaterialTheme.colorScheme.primary)
             }
@@ -336,7 +331,7 @@ fun DayCell(
         Spacer(modifier = Modifier.height(4.dp))
 
         holidays.forEach { ScheduleItemText(it.name) }
-        schedules.forEach { ScheduleItemText(it.workflowId) }
+        schedules.forEach { ScheduleItemText(it.workflowName) }
     }
 }
 

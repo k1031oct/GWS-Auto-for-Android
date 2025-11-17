@@ -20,6 +20,7 @@ data class Schedule(
     @PrimaryKey
     val id: String,
     val workflowId: String = "",
+    val workflowName: String = "",
     val scheduleType: ScheduleType,
     val hourlyInterval: Int? = null,
     val time: String? = null, // "HH:mm"

@@ -98,9 +98,15 @@ class ScheduleSettingsViewModel @Inject constructor(
     fun saveSchedule() {
         viewModelScope.launch {
             val state = _uiState.value
+            val selectedWorkflow = _workflows.value.find { it.id == state.selectedWorkflowId }
+            if (selectedWorkflow == null) {
+                // Handle error: workflow not found
+                return@launch
+            }
             val schedule = Schedule(
                 id = UUID.randomUUID().toString(),
                 workflowId = state.selectedWorkflowId,
+                workflowName = selectedWorkflow.name,
                 scheduleType = when(state.scheduleType) {
                     "時間毎" -> ScheduleType.HOURLY
                     "日毎" -> ScheduleType.DAILY
