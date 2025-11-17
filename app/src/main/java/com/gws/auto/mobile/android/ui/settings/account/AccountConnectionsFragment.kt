@@ -1,14 +1,13 @@
 package com.gws.auto.mobile.android.ui.settings.account
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.gws.auto.mobile.android.R
-import com.gws.auto.mobile.android.SignInActivity
 import com.gws.auto.mobile.android.databinding.FragmentAccountConnectionsBinding
 import com.gws.auto.mobile.android.domain.service.GoogleApiAuthorizer
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +26,14 @@ class AccountConnectionsFragment : Fragment() {
 
     @Inject
     lateinit var authorizer: GoogleApiAuthorizer
+
+    private val signInLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        authorizer.handleSignInResult(result.data) {
+            updateUI()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,7 +60,7 @@ class AccountConnectionsFragment : Fragment() {
             binding.syncStatusText.text = getString(R.string.sync_disabled)
             binding.authButton.text = getString(R.string.sign_in_with_google_to_sync)
             binding.authButton.setOnClickListener {
-                startActivity(Intent(activity, SignInActivity::class.java))
+                signInLauncher.launch(authorizer.getSignInIntent())
             }
         }
     }

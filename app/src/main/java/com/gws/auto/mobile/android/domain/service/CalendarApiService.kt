@@ -8,6 +8,7 @@ import com.google.api.services.calendar.model.EventDateTime
 import com.gws.auto.mobile.android.domain.model.Holiday
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
@@ -37,12 +38,14 @@ class CalendarApiService @Inject constructor(
 
     suspend fun getHolidays(countryCode: String, year: Int, month: Int): List<Holiday> = withContext(Dispatchers.IO) {
         val service = getService()
-        val calendarId = "holiday@group.v.calendar.google.com".replace("holiday", "en.$countryCode#holiday")
+        // Holiday calendar IDs are in the format of `en.usa#holiday@group.v.calendar.google.com`
+        val calendarId = "en.${countryCode.lowercase()}#holiday@group.v.calendar.google.com"
 
         val timeMin = DateTime(Date.from(LocalDate.of(year, month, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()))
         val timeMax = DateTime(Date.from(LocalDate.of(year, month, 1).plusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant()))
 
         try {
+            Timber.d("Fetching holidays for calendar: $calendarId")
             val events = service.events().list(calendarId)
                 .setTimeMin(timeMin)
                 .setTimeMax(timeMax)
@@ -51,13 +54,15 @@ class CalendarApiService @Inject constructor(
                 .execute()
 
             events.items.mapNotNull { event ->
-                event.start.date?.value?.let { dateValue ->
-                    val localDate = LocalDate.ofEpochDay(dateValue / (24 * 60 * 60 * 1000))
-                    Holiday(localDate, event.summary)
+                val dateString = event.start?.date?.toStringRfc3339()?.substring(0, 10)
+                if (dateString != null) {
+                    Holiday(LocalDate.parse(dateString), event.summary)
+                } else {
+                    null
                 }
             }
         } catch (e: Exception) {
-            // Likely the holiday calendar for the region does not exist.
+            Timber.e(e, "Failed to fetch holidays for $calendarId")
             emptyList()
         }
     }

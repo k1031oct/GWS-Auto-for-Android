@@ -161,7 +161,6 @@ class AppSettingsFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selection = languageValues[position]
                 lifecycleScope.launch { settingsRepository.saveLanguage(selection) }
-                Toast.makeText(requireContext(), "App restart required to apply changes", Toast.LENGTH_SHORT).show()
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
@@ -181,7 +180,6 @@ class AppSettingsFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selection = themeValues[position]
                 lifecycleScope.launch { settingsRepository.saveTheme(selection) }
-                Toast.makeText(requireContext(), "App restart required to apply changes", Toast.LENGTH_SHORT).show()
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }

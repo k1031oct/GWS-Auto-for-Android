@@ -31,11 +31,6 @@
         </activity>
 
         <activity
-            android:name=".SignInActivity"
-            android:exported="false"
-            android:theme="@style/Theme.GWSAutoForAndroid" />
-
-        <activity
             android:name=".ui.workflow.editor.WorkflowEditorActivity"
             android:exported="false"
             android:theme="@style/Theme.GWSAutoForAndroid" />

@@ -250,6 +250,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_announcement -> "announcement"
                 R.id.settings_application -> "app_settings"
                 R.id.about_app -> "about_app"
+                R.id.user_info -> "user_info"
                 else -> null
             }
             if (fragmentKey != null) {
