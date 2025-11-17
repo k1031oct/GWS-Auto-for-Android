@@ -13,7 +13,7 @@ import com.gws.auto.mobile.android.domain.model.WorkflowFolder
 
 @Database(
     entities = [Workflow::class, Module::class, SearchHistory::class, WorkflowFolder::class, Tag::class, History::class, Schedule::class],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 @TypeConverters(DateConverter::class, ListConverter::class, ScheduleTypeConverter::class)
