@@ -143,6 +143,7 @@ id dark_button
 id date
 id day_text
 id delete_button
+id delete_folder_button
 id delete_tag_button
 id edit_button
 id empty_view_history
