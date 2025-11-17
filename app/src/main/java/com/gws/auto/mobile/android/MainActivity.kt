@@ -157,7 +157,7 @@ class MainActivity : AppCompatActivity() {
             .setMessage(R.string.sign_in_prompt_message)
             .setPositiveButton(R.string.sign_in) { _, _ ->
                 val intent = Intent(this, SettingsActivity::class.java)
-                intent.putExtra("fragment_to_load", "user_info")
+                intent.putExtra("fragment_to_load", "app_settings")
                 startActivity(intent)
             }
             .setNegativeButton(R.string.cancel, null)
@@ -250,7 +250,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_announcement -> "announcement"
                 R.id.settings_application -> "app_settings"
                 R.id.about_app -> "about_app"
-                R.id.user_info -> "user_info"
                 else -> null
             }
             if (fragmentKey != null) {

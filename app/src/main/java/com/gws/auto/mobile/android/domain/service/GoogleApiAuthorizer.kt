@@ -1,9 +1,11 @@
 package com.gws.auto.mobile.android.domain.service
 
 import android.content.Context
+import android.content.Intent
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.http.javanet.NetHttpTransport
@@ -12,6 +14,7 @@ import com.google.api.client.json.gson.GsonFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,6 +40,25 @@ class GoogleApiAuthorizer @Inject constructor(@ApplicationContext private val co
             GoogleAccountCredential.usingOAuth2(context, scopes).apply {
                 selectedAccount = account.account
             }
+        }
+    }
+
+    fun getSignInIntent(): Intent {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+        val signInClient = GoogleSignIn.getClient(context, gso)
+        return signInClient.signInIntent
+    }
+
+    fun handleSignInResult(data: Intent?, onComplete: () -> Unit) {
+        try {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            val account = task.getResult(ApiException::class.java)
+            Timber.d("Signed in as: ${account?.email}")
+            onComplete()
+        } catch (e: ApiException) {
+            Timber.w(e, "Sign-in failed")
         }
     }
 

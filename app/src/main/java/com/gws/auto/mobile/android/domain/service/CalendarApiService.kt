@@ -11,6 +11,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -38,8 +39,7 @@ class CalendarApiService @Inject constructor(
 
     suspend fun getHolidays(countryCode: String, year: Int, month: Int): List<Holiday> = withContext(Dispatchers.IO) {
         val service = getService()
-        // Holiday calendar IDs are in the format of `en.usa#holiday@group.v.calendar.google.com`
-        val calendarId = "en.${countryCode.lowercase()}#holiday@group.v.calendar.google.com"
+        val calendarId = "${countryCode.lowercase()}__#holiday@group.v.calendar.google.com"
 
         val timeMin = DateTime(Date.from(LocalDate.of(year, month, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()))
         val timeMax = DateTime(Date.from(LocalDate.of(year, month, 1).plusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant()))
@@ -56,7 +56,12 @@ class CalendarApiService @Inject constructor(
             events.items.mapNotNull { event ->
                 val dateString = event.start?.date?.toStringRfc3339()?.substring(0, 10)
                 if (dateString != null) {
-                    Holiday(LocalDate.parse(dateString), event.summary)
+                    try {
+                        Holiday(LocalDate.parse(dateString, DateTimeFormatter.ISO_DATE), event.summary)
+                    } catch (e: Exception) {
+                        Timber.e(e, "Failed to parse date: $dateString")
+                        null
+                    }
                 } else {
                     null
                 }
