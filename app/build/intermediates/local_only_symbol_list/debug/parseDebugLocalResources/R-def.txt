@@ -89,6 +89,7 @@ drawable ic_announcement
 drawable ic_badge
 drawable ic_bookmark
 drawable ic_bookmark_border
+drawable ic_chevron_right
 drawable ic_create_new_folder
 drawable ic_dashboard
 drawable ic_delete
@@ -123,6 +124,7 @@ id add_tag_button
 id announcement_content
 id announcement_recycler_view
 id announcement_title
+id app_bar_layout
 id auth_button
 id back_button
 id bookmark_button
@@ -133,6 +135,7 @@ id cancel_button
 id clear_history_button
 id color_indicator
 id compose_view
+id confirm_button
 id contact_button
 id country_spinner
 id dark_button
@@ -183,6 +186,7 @@ id module_stats_title
 id module_type
 id monday_button
 id nav_graph
+id navigate_icon
 id navigation_account_connections
 id navigation_announcement
 id navigation_app_settings

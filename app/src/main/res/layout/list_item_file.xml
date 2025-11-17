@@ -4,7 +4,10 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/file_icon"
@@ -19,5 +22,12 @@
         android:layout_weight="1"
         android:layout_marginStart="16dp"
         android:text="File Name" />
+
+    <ImageView
+        android:id="@+id/navigate_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_chevron_right"
+        android:visibility="gone"/>
 
 </LinearLayout>

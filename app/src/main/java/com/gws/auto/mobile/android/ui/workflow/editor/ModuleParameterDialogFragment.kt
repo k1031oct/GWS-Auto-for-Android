@@ -22,40 +22,38 @@ class ModuleParameterDialogFragment : DialogFragment() {
     private val moduleParameters = mutableMapOf<String, String>()
     private lateinit var moduleType: String
 
-    private val filePickerRequests = mutableMapOf<Int, Pair<String, Button>>()
+    private val filePickerRequests = mutableMapOf<Int, Triple<String, String, Button>>() // requestCode -> (paramName, expectedType, button)
     private var nextRequestCode = 100
 
     companion object {
         private const val ARG_MODULE_TYPE = "module_type"
+    }
 
-        fun newInstance(moduleType: String): ModuleParameterDialogFragment {
-            val args = Bundle()
-            args.putString(ARG_MODULE_TYPE, moduleType)
-            val fragment = ModuleParameterDialogFragment()
-            fragment.arguments = args
-            return fragment
-        }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        moduleType = requireArguments().getString(ARG_MODULE_TYPE)!!
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        moduleType = requireArguments().getString(ARG_MODULE_TYPE)!!
-
         val layout = LinearLayout(requireContext()).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(48, 24, 48, 24)
         }
 
         val editTexts = mutableMapOf<String, EditText>()
-        val filePickerParams = setOf("sourceFileId", "destFolderId", "targetFolderId", "sourceFileUrl", "destinationFolderUrl", "spreadsheetUrl", "targetUrl")
+        val filePickerParams = getFilePickerParameters(moduleType)
 
         getRequiredParameters(moduleType).forEach { paramName ->
-            if (filePickerParams.contains(paramName)) {
+            if (filePickerParams.containsKey(paramName)) {
+                val expectedType = filePickerParams[paramName]!!
                 val button = Button(requireContext()).apply {
-                    text = "Select: $paramName"
+                    text = "Select: $paramName ($expectedType)"
                     setOnClickListener {
                         val requestCode = nextRequestCode++
-                        filePickerRequests[requestCode] = paramName to this
-                        val intent = Intent(requireContext(), FilePickerActivity::class.java)
+                        filePickerRequests[requestCode] = Triple(paramName, expectedType, this)
+                        val intent = Intent(requireContext(), FilePickerActivity::class.java).apply {
+                            putExtra("expectedType", expectedType)
+                        }
                         startActivityForResult(intent, requestCode)
                     }
                 }
@@ -90,7 +88,7 @@ class ModuleParameterDialogFragment : DialogFragment() {
         if (resultCode == Activity.RESULT_OK && filePickerRequests.containsKey(requestCode)) {
             val fileId = data?.getStringExtra("fileId")
             val fileName = data?.getStringExtra("fileName")
-            val (paramName, button) = filePickerRequests[requestCode]!!
+            val (paramName, _, button) = filePickerRequests[requestCode]!!
 
             if (fileId != null && fileName != null) {
                 moduleParameters[paramName] = fileId
@@ -100,18 +98,34 @@ class ModuleParameterDialogFragment : DialogFragment() {
     }
 
     private fun getRequiredParameters(moduleType: String): List<String> {
+        // Returns all possible parameters for a module
+        return getFilePickerParameters(moduleType).keys.toList() + getManualParameters(moduleType)
+    }
+
+    private fun getFilePickerParameters(moduleType: String): Map<String, String> {
+        return when (moduleType) {
+            "drive_copy_file" -> mapOf("sourceFileId" to "file", "destFolderId" to "folder")
+            "drive_create_folder" -> mapOf("parentFolderId" to "folder")
+            "drive_move_file" -> mapOf("sourceFileUrl" to "file", "destinationFolderUrl" to "folder")
+            "DUPLICATE_SPREADSHEET" -> mapOf("sourceSpreadsheetId" to "file", "targetFolderId" to "folder")
+            "sheets_create_new" -> mapOf("destFolderId" to "folder")
+            "sheets_set_value", "sheets_append_row", "sheets_clear_values" -> mapOf("targetUrl" to "file")
+            else -> emptyMap()
+        }
+    }
+
+    private fun getManualParameters(moduleType: String): List<String> {
         return when (moduleType) {
             "LOG_MESSAGE" -> listOf("message")
             "chat_post" -> listOf("webhookUrl", "message")
-            "drive_create_folder" -> listOf("parentFolderId", "newFolderName")
-            "drive_copy_file" -> listOf("sourceFileId", "destFolderId", "newFileName")
-            "drive_move_file" -> listOf("sourceFileUrl", "destinationFolderUrl")
-            "DUPLICATE_SPREADSHEET" -> listOf("sourceSpreadsheetId", "newSpreadsheetName", "targetFolderId")
+            "drive_create_folder" -> listOf("newFolderName")
+            "drive_copy_file" -> listOf("newFileName")
+            "DUPLICATE_SPREADSHEET" -> listOf("newSpreadsheetName")
             "gmail_send_email" -> listOf("to", "subject", "body", "cc", "bcc")
-            "sheets_create_new" -> listOf("newFileName", "destFolderId")
-            "sheets_set_value" -> listOf("targetUrl", "targetSheet", "targetCell", "valueToSet")
-            "sheets_append_row" -> listOf("spreadsheetUrl", "sheetName", "rowData")
-            "sheets_clear_values" -> listOf("targetUrl", "targetSheet", "targetRange")
+            "sheets_create_new" -> listOf("newFileName")
+            "sheets_set_value" -> listOf("targetSheet", "targetCell", "valueToSet")
+            "sheets_append_row" -> listOf("sheetName", "rowData")
+            "sheets_clear_values" -> listOf("targetSheet", "targetRange")
             "calendar_create_event" -> listOf("calendarId", "title", "startTime", "endTime")
             else -> emptyList()
         }
