@@ -40,8 +40,9 @@ class CalendarApiService @Inject constructor(
 
     suspend fun getHolidays(countryCode: String, year: Int, month: Int): List<Holiday> = withContext(Dispatchers.IO) {
         val service = getService()
-        val language = Locale.forLanguageTag(countryCode).language
-        val calendarId = "${language}.${countryCode.lowercase()}#holiday@group.v.calendar.google.com"
+        val locale = Locale.forLanguageTag(countryCode)
+        val country = if (countryCode.equals("us", ignoreCase = true)) "usa" else countryCode.lowercase()
+        val calendarId = "${locale.language}.${country}#holiday@group.v.calendar.google.com"
 
         val timeMin = DateTime(Date.from(LocalDate.of(year, month, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()))
         val timeMax = DateTime(Date.from(LocalDate.of(year, month, 1).plusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant()))
