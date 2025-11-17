@@ -6,16 +6,20 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.lifecycle.SavedStateHandle
 import com.gws.auto.mobile.android.ui.theme.GWSAutoForAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ScheduleSettingsActivity : ComponentActivity() {
 
+    // The viewModels() delegate will automatically handle the SavedStateHandle
+    // when the activity is created with the intent extras.
     private val viewModel: ScheduleSettingsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
         setContent {
             GWSAutoForAndroidTheme {
                 ScheduleSettingsScreen(viewModel = viewModel, onSave = { finish() })
@@ -24,12 +28,13 @@ class ScheduleSettingsActivity : ComponentActivity() {
     }
 
     companion object {
-        private const val EXTRA_SCHEDULE_ID = "scheduleId"
+        // The key used to pass the schedule ID in the Intent and retrieve it in the ViewModel
+        const val EXTRA_SCHEDULE_ID = "scheduleId"
 
         fun newIntent(context: Context, scheduleId: String? = null): Intent {
-            val intent = Intent(context, ScheduleSettingsActivity::class.java)
-            scheduleId?.let { intent.putExtra(EXTRA_SCHEDULE_ID, it) }
-            return intent
+            return Intent(context, ScheduleSettingsActivity::class.java).apply {
+                scheduleId?.let { putExtra(EXTRA_SCHEDULE_ID, it) }
+            }
         }
     }
 }

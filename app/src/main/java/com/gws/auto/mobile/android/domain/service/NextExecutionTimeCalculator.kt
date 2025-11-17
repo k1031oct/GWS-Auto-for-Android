@@ -18,55 +18,53 @@ object NextExecutionTimeCalculator {
         val time = schedule.time?.let { LocalTime.parse(it) } ?: LocalTime.MIDNIGHT
 
         return when (schedule.scheduleType) {
-            ScheduleType.HOURLY -> now.plusHours(schedule.hourlyInterval?.toLong() ?: 1)
-
+            ScheduleType.HOURLY -> {
+                now.plusHours(schedule.hourlyInterval?.toLong() ?: 1)
+            }
             ScheduleType.DAILY -> {
-                val todayExecution = now.with(time)
+                val todayExecution = now.toLocalDate().atTime(time)
                 if (todayExecution.isAfter(now)) todayExecution else todayExecution.plusDays(1)
             }
-
             ScheduleType.WEEKLY -> {
-                val scheduleDays = schedule.weeklyDays
-                    ?.mapNotNull { dayString ->
-                        mapDayToDayOfWeek(dayString)
+                val scheduleDays = schedule.weeklyDays?.mapNotNull(::mapDayToDayOfWeek)?.toSet()
+                if (scheduleDays.isNullOrEmpty()) {
+                    now.plusYears(100) // Should not happen with valid data
+                } else {
+                    var potentialExecution = now.toLocalDate().atTime(time)
+                    if (!potentialExecution.isAfter(now)) {
+                        potentialExecution = potentialExecution.plusDays(1)
                     }
-                    ?.sorted() ?: return now.plusYears(100) // No days, schedule far in future
-
-                var next = now.with(time)
-                if (next.isBefore(now)) {
-                    next = next.plusDays(1)
+                    while (potentialExecution.dayOfWeek !in scheduleDays) {
+                        potentialExecution = potentialExecution.plusDays(1)
+                    }
+                    potentialExecution
                 }
-
-                while (next.dayOfWeek !in scheduleDays) {
-                    next = next.plusDays(1)
-                }
-                next
             }
-
             ScheduleType.MONTHLY -> {
-                val scheduleDaysOfMonth = schedule.monthlyDays?.sorted() ?: return now.plusYears(100)
-                
-                var tempDate = now
-                while (true) {
-                    for (day in scheduleDaysOfMonth) {
-                        // Check if the day is valid for the current month
-                        if (day <= tempDate.toLocalDate().lengthOfMonth()) {
-                            val nextExecution = tempDate.withDayOfMonth(day).with(time)
-                            if (nextExecution.isAfter(now)) {
-                                return nextExecution
-                            }
-                        }
+                val scheduleDaysOfMonth = schedule.monthlyDays?.toSet()
+                if (scheduleDaysOfMonth.isNullOrEmpty()) {
+                    now.plusYears(100) // Should not happen
+                } else {
+                    var potentialExecution = now.toLocalDate().atTime(time)
+                    if (!potentialExecution.isAfter(now)) {
+                        potentialExecution = potentialExecution.plusDays(1)
                     }
-                    // Move to the next month
-                    tempDate = tempDate.plusMonths(1).withDayOfMonth(1)
+                    while (potentialExecution.dayOfMonth !in scheduleDaysOfMonth) {
+                        potentialExecution = potentialExecution.plusDays(1)
+                    }
+                    potentialExecution
                 }
             }
-            
             ScheduleType.YEARLY -> {
-                val next = now.with(time)
+                val thisYearExecution = now.toLocalDate()
                     .withMonth(schedule.yearlyMonth ?: 1)
                     .withDayOfMonth(schedule.yearlyDayOfMonth ?: 1)
-                if (next.isAfter(now)) next else next.plusYears(1)
+                    .atTime(time)
+                if (thisYearExecution.isAfter(now)) {
+                    thisYearExecution
+                } else {
+                    thisYearExecution.plusYears(1)
+                }
             }
         }
     }

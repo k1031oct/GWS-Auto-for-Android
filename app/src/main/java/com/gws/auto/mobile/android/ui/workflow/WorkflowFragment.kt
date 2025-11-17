@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.databinding.FragmentWorkflowBinding
 import com.gws.auto.mobile.android.domain.engine.WorkflowEngine
+import com.gws.auto.mobile.android.domain.model.Workflow
+import com.gws.auto.mobile.android.domain.model.WorkflowFolder
 import com.gws.auto.mobile.android.domain.model.WorkflowListItem
 import com.gws.auto.mobile.android.ui.MainSharedViewModel
 import com.gws.auto.mobile.android.ui.workflow.editor.WorkflowEditorActivity
@@ -77,7 +79,8 @@ class WorkflowFragment : Fragment() {
                 intent.putExtra("workflowId", workflow.id)
                 startActivity(intent)
             },
-            onDeleteClicked = { workflow -> viewModel.deleteWorkflow(workflow) },
+            onDeleteClicked = { workflow -> showDeleteConfirmationDialog(workflow) },
+            onFolderDeleteClicked = { folder -> showDeleteFolderConfirmationDialog(folder) },
             onAddClicked = {
                 Timber.d("Add new workflow clicked")
                 startActivity(Intent(activity, WorkflowEditorActivity::class.java))
@@ -110,6 +113,28 @@ class WorkflowFragment : Fragment() {
             .setNegativeButton(R.string.cancel) { dialog, _ ->
                 dialog.cancel()
             }
+            .show()
+    }
+    
+    private fun showDeleteConfirmationDialog(workflow: Workflow) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(workflow.name)
+            .setMessage("このワークフローを本当に削除しますか？")
+            .setPositiveButton("削除") { _, _ ->
+                viewModel.deleteWorkflow(workflow)
+            }
+            .setNegativeButton("キャンセル", null)
+            .show()
+    }
+
+    private fun showDeleteFolderConfirmationDialog(folder: WorkflowFolder) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(folder.name)
+            .setMessage("このフォルダを本当に削除しますか？ (中のワークフローは削除されません)")
+            .setPositiveButton("削除") { _, _ ->
+                viewModel.deleteWorkflowFolder(folder.id)
+            }
+            .setNegativeButton("キャンセル", null)
             .show()
     }
 

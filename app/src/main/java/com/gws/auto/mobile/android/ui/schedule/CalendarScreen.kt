@@ -26,7 +26,6 @@ import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
@@ -34,14 +33,12 @@ import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -281,14 +278,22 @@ private fun HourTimeline(
     onScheduleClick: (Schedule) -> Unit
 ) {
     val timelineColor = MaterialTheme.colorScheme.outlineVariant
+    val groupedSchedules = schedules.groupBy { it.first } // Group by LocalTime
 
-    BoxWithConstraints(modifier = Modifier
-        .fillMaxWidth()
-        .height(timelineHourHeight * 24)) {
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(timelineHourHeight * 24)
+    ) {
+        val timelineAreaWidth = this.maxWidth - hourTextWidth
+
+        // Draw hour lines
         for (hour in 0..23) {
-            Row(modifier = Modifier
-                .height(timelineHourHeight)
-                .offset(y = (hour * timelineHourHeight.value).dp)) {
+            Row(
+                modifier = Modifier
+                    .height(timelineHourHeight)
+                    .offset(y = (hour * timelineHourHeight.value).dp)
+            ) {
                 Text(
                     text = String.format("%02d:00", hour),
                     style = MaterialTheme.typography.bodySmall,
@@ -297,27 +302,44 @@ private fun HourTimeline(
                         .padding(end = 8.dp),
                     textAlign = TextAlign.End
                 )
-                Box(modifier = Modifier
-                    .fillMaxHeight()
-                    .width(1.dp)
-                    .background(timelineColor))
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(1.dp)
+                        .background(timelineColor)
+                )
             }
         }
 
-        schedules.forEach { (time, name, schedule) ->
-            val yOffset = (time.hour * timelineHourHeight.value) + (time.minute / 60f * timelineHourHeight.value)
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .offset(y = yOffset.dp, x = hourTextWidth)
-                    .clickable { onScheduleClick(schedule) },
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(modifier = Modifier
-                    .size(8.dp)
-                    .background(eventColor, CircleShape))
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(name, style = MaterialTheme.typography.bodyMedium, fontSize = 14.sp)
+        // Draw schedule events
+        groupedSchedules.forEach { (time, schedulesInGroup) ->
+            val eventWidth = timelineAreaWidth / schedulesInGroup.size
+            schedulesInGroup.forEachIndexed { index, (_, name, schedule) ->
+                val yOffset = (time.hour * timelineHourHeight.value) + (time.minute / 60f * timelineHourHeight.value)
+                val xOffset = hourTextWidth + (eventWidth * index)
+
+                Row(
+                    modifier = Modifier
+                        .width(eventWidth)
+                        .offset(x = xOffset, y = yOffset.dp)
+                        .clickable { onScheduleClick(schedule) }
+                        .padding(horizontal = 2.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(8.dp)
+                            .background(eventColor, CircleShape)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        name,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontSize = 14.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
         }
     }
