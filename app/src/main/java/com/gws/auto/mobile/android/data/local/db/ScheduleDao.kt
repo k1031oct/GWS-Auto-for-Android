@@ -14,6 +14,9 @@ interface ScheduleDao {
     @Query("SELECT * FROM schedules")
     fun getAllSchedules(): Flow<List<Schedule>>
 
+    @Query("SELECT * FROM schedules WHERE id = :scheduleId")
+    suspend fun getScheduleById(scheduleId: String): Schedule?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSchedule(schedule: Schedule)
 

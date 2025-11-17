@@ -1,5 +1,6 @@
 package com.gws.auto.mobile.android.ui.schedule
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gws.auto.mobile.android.data.repository.ScheduleRepository
@@ -25,7 +26,8 @@ import javax.inject.Inject
 class ScheduleSettingsViewModel @Inject constructor(
     private val scheduleRepository: ScheduleRepository,
     private val settingsRepository: SettingsRepository,
-    private val workflowRepository: WorkflowRepository
+    private val workflowRepository: WorkflowRepository,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ScheduleSettingsUiState())
@@ -34,6 +36,8 @@ class ScheduleSettingsViewModel @Inject constructor(
     private val _workflows = MutableStateFlow<List<Workflow>>(emptyList())
     val workflows: StateFlow<List<Workflow>> = _workflows.asStateFlow()
 
+    private val scheduleId: String? = savedStateHandle.get("scheduleId")
+
     init {
         viewModelScope.launch {
             val firstDay = settingsRepository.firstDayOfWeek.first()
@@ -41,10 +45,43 @@ class ScheduleSettingsViewModel @Inject constructor(
         }
         workflowRepository.getAllWorkflows().onEach { workflows ->
             _workflows.value = workflows
-            if (workflows.isNotEmpty() && _uiState.value.selectedWorkflowId.isEmpty()) {
+            // If not editing, select the first workflow by default
+            if (scheduleId == null && workflows.isNotEmpty() && _uiState.value.selectedWorkflowId.isEmpty()) {
                 _uiState.update { state -> state.copy(selectedWorkflowId = workflows.first().id) }
             }
         }.launchIn(viewModelScope)
+
+        if (scheduleId != null) {
+            loadScheduleForEditing(scheduleId)
+        }
+    }
+
+    private fun loadScheduleForEditing(id: String) {
+        viewModelScope.launch {
+            scheduleRepository.getScheduleById(id)?.let { schedule ->
+                _uiState.update {
+                    it.copy(
+                        scheduleType = when (schedule.scheduleType) {
+                            ScheduleType.HOURLY -> "時間毎"
+                            ScheduleType.DAILY -> "日毎"
+                            ScheduleType.WEEKLY -> "週毎"
+                            ScheduleType.MONTHLY -> "月毎"
+                            ScheduleType.YEARLY -> "年毎"
+                        },
+                        hourlyInterval = schedule.hourlyInterval ?: 1,
+                        dailyTime = schedule.time?.let { LocalTime.parse(it) } ?: LocalTime.of(9, 0),
+                        weeklyDays = schedule.weeklyDays?.toSet() ?: emptySet(),
+                        weeklyTime = schedule.time?.let { LocalTime.parse(it) } ?: LocalTime.of(9, 0),
+                        monthlyDays = schedule.monthlyDays?.toSet() ?: emptySet(),
+                        monthlyTime = schedule.time?.let { LocalTime.parse(it) } ?: LocalTime.of(9, 0),
+                        yearlyMonth = schedule.yearlyMonth ?: 1,
+                        yearlyDayOfMonth = schedule.yearlyDayOfMonth ?: 1,
+                        yearlyTime = schedule.time?.let { LocalTime.parse(it) } ?: LocalTime.of(9, 0),
+                        selectedWorkflowId = schedule.workflowId
+                    )
+                }
+            }
+        }
     }
 
     fun onScheduleTypeChange(type: String) {
@@ -104,7 +141,7 @@ class ScheduleSettingsViewModel @Inject constructor(
                 return@launch
             }
             val schedule = Schedule(
-                id = UUID.randomUUID().toString(),
+                id = scheduleId ?: UUID.randomUUID().toString(), // Use existing ID if editing
                 workflowId = state.selectedWorkflowId,
                 workflowName = selectedWorkflow.name,
                 scheduleType = when(state.scheduleType) {
@@ -128,7 +165,7 @@ class ScheduleSettingsViewModel @Inject constructor(
                 yearlyMonth = if (state.scheduleType == "年毎") state.yearlyMonth else null,
                 yearlyDayOfMonth = if (state.scheduleType == "年毎") state.yearlyDayOfMonth else null,
             )
-            scheduleRepository.createSchedule(schedule)
+            scheduleRepository.createSchedule(schedule) // createSchedule in repo handles both create and update
         }
     }
 }

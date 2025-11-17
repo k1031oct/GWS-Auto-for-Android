@@ -2,14 +2,15 @@ package com.gws.auto.mobile.android.data.repository
 
 import android.content.Context
 import androidx.work.Data
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.gws.auto.mobile.android.data.local.db.ScheduleDao
 import com.gws.auto.mobile.android.domain.model.Holiday
 import com.gws.auto.mobile.android.domain.model.Schedule
 import com.gws.auto.mobile.android.domain.service.CalendarApiService
 import com.gws.auto.mobile.android.domain.service.GoogleApiAuthorizer
+import com.gws.auto.mobile.android.domain.service.NextExecutionTimeCalculator
 import com.gws.auto.mobile.android.domain.service.ScheduleWorker
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -29,24 +30,33 @@ class ScheduleRepositoryImpl @Inject constructor(
         return scheduleDao.getAllSchedules()
     }
 
+    override suspend fun getScheduleById(scheduleId: String): Schedule? {
+        return scheduleDao.getScheduleById(scheduleId)
+    }
+
     override suspend fun createSchedule(schedule: Schedule) {
         scheduleDao.insertSchedule(schedule)
-        val workRequest = PeriodicWorkRequestBuilder<ScheduleWorker>(
-            schedule.hourlyInterval?.toLong() ?: 24, TimeUnit.HOURS
-        )
-            .setInputData(Data.Builder().putString(ScheduleWorker.KEY_WORKFLOW_ID, schedule.workflowId).build())
-            .build()
-
-        workManager.enqueueUniquePeriodicWork(
-            schedule.id,
-            ExistingPeriodicWorkPolicy.REPLACE,
-            workRequest
-        )
+        scheduleWorkflow(schedule)
     }
 
     override suspend fun deleteSchedule(scheduleId: String) {
         scheduleDao.deleteScheduleById(scheduleId)
         workManager.cancelUniqueWork(scheduleId)
+    }
+
+    private fun scheduleWorkflow(schedule: Schedule) {
+        val delay = NextExecutionTimeCalculator.calculateDelay(schedule)
+        
+        val workRequest = OneTimeWorkRequestBuilder<ScheduleWorker>()
+            .setInitialDelay(delay.toMillis(), TimeUnit.MILLISECONDS)
+            .setInputData(Data.Builder().putString(ScheduleWorker.KEY_SCHEDULE_ID, schedule.id).build())
+            .build()
+
+        workManager.enqueueUniqueWork(
+            schedule.id, // Use schedule ID as unique work name
+            ExistingWorkPolicy.REPLACE,
+            workRequest
+        )
     }
 
     override suspend fun getHolidays(countryCode: String, year: Int, month: Int): List<Holiday> {

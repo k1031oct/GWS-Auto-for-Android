@@ -20,9 +20,24 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 import javax.inject.Inject
+
+// Helper function to safely map Japanese day string to DayOfWeek enum
+private fun mapJapaneseDayToDayOfWeek(japaneseDay: String): DayOfWeek? {
+    return when (japaneseDay) {
+        "月" -> DayOfWeek.MONDAY
+        "火" -> DayOfWeek.TUESDAY
+        "水" -> DayOfWeek.WEDNESDAY
+        "木" -> DayOfWeek.THURSDAY
+        "金" -> DayOfWeek.FRIDAY
+        "土" -> DayOfWeek.SATURDAY
+        "日" -> DayOfWeek.SUNDAY
+        else -> null
+    }
+}
 
 @HiltViewModel
 class ScheduleViewModel @Inject constructor(
@@ -42,7 +57,10 @@ class ScheduleViewModel @Inject constructor(
             when (schedule.scheduleType) {
                 ScheduleType.HOURLY -> true
                 ScheduleType.DAILY -> true
-                ScheduleType.WEEKLY -> schedule.weeklyDays?.any { day -> day.equals(date.dayOfWeek.name, ignoreCase = true) } == true
+                ScheduleType.WEEKLY -> {
+                    val scheduleDays = schedule.weeklyDays?.mapNotNull { mapJapaneseDayToDayOfWeek(it) }
+                    scheduleDays?.contains(date.dayOfWeek) == true
+                }
                 ScheduleType.MONTHLY -> schedule.monthlyDays?.contains(date.dayOfMonth) == true
                 ScheduleType.YEARLY -> schedule.yearlyMonth == date.monthValue && schedule.yearlyDayOfMonth == date.dayOfMonth
                 else -> false

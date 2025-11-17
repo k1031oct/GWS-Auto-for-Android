@@ -27,6 +27,8 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Divider
@@ -34,8 +36,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
@@ -58,6 +62,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.domain.model.Holiday
 import com.gws.auto.mobile.android.domain.model.Schedule
@@ -72,6 +77,20 @@ import java.time.format.FormatStyle
 import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
 import java.util.Locale
+
+// Helper function to safely map Japanese day string to DayOfWeek enum
+private fun mapJapaneseDayToDayOfWeek(japaneseDay: String): DayOfWeek? {
+    return when (japaneseDay) {
+        "月" -> DayOfWeek.MONDAY
+        "火" -> DayOfWeek.TUESDAY
+        "水" -> DayOfWeek.WEDNESDAY
+        "木" -> DayOfWeek.THURSDAY
+        "金" -> DayOfWeek.FRIDAY
+        "土" -> DayOfWeek.SATURDAY
+        "日" -> DayOfWeek.SUNDAY
+        else -> null
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -89,7 +108,11 @@ fun CalendarScreen(
         ScheduleActionsDialog(
             schedule = it,
             onDismiss = { selectedSchedule = null },
-            onEdit = { /* TODO: Implement edit */ },
+            onEdit = {
+                val intent = ScheduleSettingsActivity.newIntent(context, it.id)
+                context.startActivity(intent)
+                selectedSchedule = null
+            },
             onDelete = {
                 viewModel.deleteSchedule(it.id)
                 selectedSchedule = null
@@ -112,8 +135,7 @@ fun CalendarScreen(
                 onDateClick = {
                     viewModel.setCurrentDate(it)
                     scope.launch { scaffoldState.bottomSheetState.expand() }
-                },
-                onScheduleClick = { selectedSchedule = it }
+                }
             )
         }
     }
@@ -124,8 +146,7 @@ fun CalendarScreen(
 fun CalendarContent(
     viewModel: ScheduleViewModel, 
     modifier: Modifier = Modifier,
-    onDateClick: (LocalDate) -> Unit,
-    onScheduleClick: (Schedule) -> Unit
+    onDateClick: (LocalDate) -> Unit
 ) {
     val pagerState = rememberPagerState(
         initialPage = Int.MAX_VALUE / 2,
@@ -197,7 +218,6 @@ fun CalendarContent(
                 holidays = holidays,
                 schedules = allSchedules,
                 onDateClick = onDateClick,
-                onScheduleClick = onScheduleClick,
                 daysOfWeek = daysOfWeek
             )
         }
@@ -309,7 +329,6 @@ fun MonthView(
     holidays: List<Holiday>,
     schedules: List<Schedule>,
     onDateClick: (LocalDate) -> Unit,
-    onScheduleClick: (Schedule) -> Unit,
     daysOfWeek: List<DayOfWeek>
 ) {
     val firstDayOfMonth = yearMonth.atDay(1)
@@ -334,14 +353,16 @@ fun MonthView(
                     when (schedule.scheduleType) {
                         ScheduleType.HOURLY -> true
                         ScheduleType.DAILY -> true
-                        ScheduleType.WEEKLY -> schedule.weeklyDays?.any { day -> day.equals(date.dayOfWeek.name, ignoreCase = true) } == true
+                        ScheduleType.WEEKLY -> {
+                            val scheduleDays = schedule.weeklyDays?.mapNotNull { mapJapaneseDayToDayOfWeek(it) }
+                            scheduleDays?.contains(date.dayOfWeek) == true
+                        }
                         ScheduleType.MONTHLY -> schedule.monthlyDays?.contains(date.dayOfMonth) == true
                         ScheduleType.YEARLY -> schedule.yearlyMonth == date.monthValue && schedule.yearlyDayOfMonth == date.dayOfMonth
                         else -> false
                     }
                 },
                 holidays = holidays.filter { it.date == date },
-                onScheduleClick = onScheduleClick,
                 modifier = Modifier.clickable { onDateClick(date) }
             )
         }
@@ -353,7 +374,6 @@ fun DayCell(
     date: LocalDate,
     schedules: List<Schedule>,
     holidays: List<Holiday>,
-    onScheduleClick: (Schedule) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val isToday = date == LocalDate.now()
@@ -381,9 +401,7 @@ fun DayCell(
         Spacer(modifier = Modifier.height(4.dp))
 
         holidays.forEach { ScheduleItemText(it.name) }
-        schedules.forEach { schedule ->
-            ScheduleItemText(schedule.workflowName, modifier = Modifier.clickable { onScheduleClick(schedule) })
-        }
+        schedules.forEach { ScheduleItemText(it.workflowName) }
     }
 }
 
@@ -405,18 +423,29 @@ fun ScheduleActionsDialog(
     onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(schedule.workflowName) },
-        text = { Text("What would you like to do with this schedule?") },
-        confirmButton = {
-            Row {
-                TextButton(onClick = onEdit) { Text("Edit") }
-                TextButton(onClick = onDelete) { Text("Delete") }
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = MaterialTheme.shapes.medium,
+            color = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ) {
+            Column {
+                ListItem(
+                    headlineContent = { Text(schedule.workflowName, fontWeight = FontWeight.Bold) },
+                    supportingContent = { Text("Type: ${schedule.scheduleType}") },
+                )
+                Divider()
+                ListItem(
+                    headlineContent = { Text("Edit") },
+                    leadingContent = { Icon(Icons.Default.Edit, contentDescription = "Edit Schedule") },
+                    modifier = Modifier.clickable(onClick = onEdit)
+                )
+                ListItem(
+                    headlineContent = { Text("Delete") },
+                    leadingContent = { Icon(Icons.Default.Delete, contentDescription = "Delete Schedule", tint = MaterialTheme.colorScheme.error) },
+                    modifier = Modifier.clickable(onClick = onDelete)
+                )
             }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
         }
-    )
+    }
 }

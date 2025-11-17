@@ -8,5 +8,6 @@ interface ScheduleRepository {
     fun getSchedulesFlow(): Flow<List<Schedule>>
     suspend fun createSchedule(schedule: Schedule)
     suspend fun deleteSchedule(scheduleId: String)
+    suspend fun getScheduleById(scheduleId: String): Schedule?
     suspend fun getHolidays(countryCode: String, year: Int, month: Int): List<Holiday>
 }
