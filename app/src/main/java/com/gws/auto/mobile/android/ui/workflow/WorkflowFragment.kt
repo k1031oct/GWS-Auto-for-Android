@@ -67,7 +67,7 @@ class WorkflowFragment : Fragment() {
             onRunClicked = { workflow ->
                 lifecycleScope.launch {
                     try {
-                        workflowEngine.execute(workflow.id, workflow.name, workflow.modules)
+                        workflowEngine.executeWorkflow(workflow.id)
                         Timber.d("Workflow execution requested: ${workflow.name}")
                     } catch (e: Exception) {
                         Timber.e(e, "Failed to execute workflow: ${workflow.name}")

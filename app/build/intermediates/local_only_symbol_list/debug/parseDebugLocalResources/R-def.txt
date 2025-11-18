@@ -131,7 +131,6 @@ id back_button
 id bookmark_button
 id bottom_nav
 id button_bar
-id button_container
 id cancel_button
 id clear_history_button
 id color_indicator
@@ -179,6 +178,7 @@ id line_top
 id log_message
 id manual_button
 id module_card
+id module_enabled_switch
 id module_error_rate_chart
 id module_icon
 id module_name
@@ -210,6 +210,7 @@ id query_text
 id rating_button
 id refresh_button
 id run_button
+id run_module_button
 id save_button
 id schedule_status
 id schedule_title_text

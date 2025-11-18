@@ -12,7 +12,9 @@ import com.gws.auto.mobile.android.domain.model.Module
 
 class ModuleAdapter(
     private val onEditClicked: (Module) -> Unit,
-    private val onRemoveClicked: (Module) -> Unit
+    private val onRemoveClicked: (Module) -> Unit,
+    private val onRunModuleClicked: (Module) -> Unit,
+    private val onModuleEnabledChanged: (Module, Boolean) -> Unit
 ) : ListAdapter<Module, ModuleAdapter.ModuleViewHolder>(ModuleDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ModuleViewHolder {
@@ -25,6 +27,10 @@ class ModuleAdapter(
         holder.bind(module)
         holder.itemView.setOnClickListener { onEditClicked(module) }
         holder.binding.deleteButton.setOnClickListener { onRemoveClicked(module) }
+        holder.binding.runModuleButton.setOnClickListener { onRunModuleClicked(module) }
+        holder.binding.moduleEnabledSwitch.setOnCheckedChangeListener { _, isChecked ->
+            onModuleEnabledChanged(module, isChecked)
+        }
 
         if (position == 0) {
             holder.binding.lineTop.visibility = View.INVISIBLE
@@ -42,6 +48,7 @@ class ModuleAdapter(
     inner class ModuleViewHolder(val binding: ListItemModuleBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(module: Module) {
             binding.moduleName.text = module.type
+            binding.moduleEnabledSwitch.isChecked = module.isEnabled
         }
     }
 }

@@ -87,8 +87,8 @@ class DashboardViewModel @Inject constructor(
             workflowExecutionCounts = repoData.workflowCounts,
 
             // Module Stats
-            moduleUsageCount = moduleStats.sumOf { it.usageCount },
-            moduleErrorCount = moduleStats.sumOf { it.errorCount },
+            moduleUsageCount = repoData.allHistory.size,
+            moduleErrorCount = repoData.allHistory.count { it.status != "Success" },
             moduleStats = moduleStats
         )
     }.stateIn(
@@ -124,7 +124,7 @@ class DashboardViewModel @Inject constructor(
             val workflow = workflows.find { it.id == h.workflowId }
             workflow?.modules?.forEach { module ->
                 moduleUsage[module.type] = (moduleUsage[module.type] ?: 0) + 1
-                if (h.status == "Failure") { // A simplified assumption
+                if (h.status != "Success") { // A simplified assumption
                     moduleErrors[module.type] = (moduleErrors[module.type] ?: 0) + 1
                 }
             }

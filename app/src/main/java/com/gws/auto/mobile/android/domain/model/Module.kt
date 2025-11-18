@@ -14,5 +14,6 @@ data class Module(
     @PrimaryKey
     val id: String,
     val type: String, // e.g., "CREATE_PDF_FROM_SHEET"
-    val parameters: Map<String, String> // e.g., {"sheet_url": "https://...", "output_name": "report.pdf"}
+    val parameters: Map<String, String>, // e.g., {"sheet_url": "https://...", "output_name": "report.pdf"}
+    val isEnabled: Boolean = true
 )

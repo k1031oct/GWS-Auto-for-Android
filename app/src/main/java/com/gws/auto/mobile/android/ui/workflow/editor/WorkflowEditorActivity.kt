@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -23,7 +24,7 @@ import timber.log.Timber
 import java.util.UUID
 
 @AndroidEntryPoint
-class WorkflowEditorActivity : AppCompatActivity(), ModuleListDialogFragment.ModuleListListener, ModuleParameterDialogFragment.ModuleParameterListener {
+class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragment.ModuleParameterListener {
 
     private lateinit var binding: ActivityWorkflowEditorBinding
     private val viewModel: WorkflowEditorViewModel by viewModels()
@@ -59,11 +60,7 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleListDialogFragment.Mod
         setupDragAndDrop()
         observeViewModel()
 
-        binding.fabAddModule.setOnClickListener {
-            val dialog = ModuleListDialogFragment()
-            dialog.listener = this
-            dialog.show(supportFragmentManager, "ModuleListDialog")
-        }
+        binding.fabAddModule.visibility = View.GONE
 
         binding.cancelButton.setOnClickListener { finish() }
         binding.saveButton.setOnClickListener { saveWorkflow() }
@@ -89,16 +86,6 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleListDialogFragment.Mod
         }
     }
 
-    override fun onModuleSelected(moduleType: String) {
-        val dialog = ModuleParameterDialogFragment().apply {
-            arguments = Bundle().apply {
-                putString(ModuleParameterDialogFragment.ARG_MODULE_TYPE, moduleType)
-            }
-            listener = this@WorkflowEditorActivity
-        }
-        dialog.show(supportFragmentManager, "ModuleParameterDialog")
-    }
-
     override fun onModuleParametersSet(module: Module) {
         viewModel.addModule(module.copy(id = UUID.randomUUID().toString()))
     }
@@ -121,6 +108,12 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleListDialogFragment.Mod
             },
             onRemoveClicked = { module ->
                 viewModel.removeModule(module)
+            },
+            onRunModuleClicked = { module ->
+                viewModel.runSingleModule(module)
+            },
+            onModuleEnabledChanged = { module, isEnabled ->
+                viewModel.setModuleEnabled(module.id, isEnabled)
             }
         )
         binding.moduleRecyclerView.apply {
@@ -149,11 +142,24 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleListDialogFragment.Mod
 
     private fun setupFolderRecyclerView() {
         val folders = listOf(
-            "Core", "Gmail", "Drive", "Sheets", "Calendar", "Custom"
+            "Input", "Output", "Process", "Core", "Gmail", "Drive", "Sheets", "Calendar", "Custom"
         )
 
         folderAdapter = FolderAdapter(folders) { folder ->
             val modules = when (folder) {
+                "Input" -> listOf(
+                    Module(id = "", type = "FILE_PICKER", parameters = emptyMap()),
+                    Module(id = "", type = "GET_CLIPBOARD", parameters = emptyMap())
+                )
+                "Output" -> listOf(
+                    Module(id = "", type = "SHOW_TOAST", parameters = emptyMap()),
+                    Module(id = "", type = "LOG_MESSAGE", parameters = emptyMap()),
+                    Module(id = "", type = "SET_CLIPBOARD", parameters = emptyMap())
+                )
+                "Process" -> listOf(
+                    Module(id = "", type = "CALCULATE", parameters = emptyMap()),
+                    Module(id = "", type = "HTTP_REQUEST", parameters = emptyMap())
+                )
                 "Core" -> listOf(
                     Module(id = "", type = "DEFINE_VARIABLE", parameters = emptyMap()),
                     Module(id = "", type = "GET_RELATIVE_DATE", parameters = emptyMap())
@@ -222,6 +228,22 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleListDialogFragment.Mod
         lifecycleScope.launch {
             viewModel.modules.collectLatest { modules ->
                 moduleAdapter.submitList(modules)
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.singleModuleExecutionResult.collectLatest { result ->
+                if (result != null) {
+                    AlertDialog.Builder(this@WorkflowEditorActivity)
+                        .setTitle("Module Execution Result")
+                        .setMessage("Success: ${result.isSuccess}\nOutput: ${result.outputMessage ?: "N/A"}")
+                        .setPositiveButton("OK") { _, _ ->
+                            viewModel.clearSingleModuleExecutionResult()
+                        }
+                        .setOnDismissListener { 
+                            viewModel.clearSingleModuleExecutionResult()
+                        }
+                        .show()
+                }
             }
         }
     }

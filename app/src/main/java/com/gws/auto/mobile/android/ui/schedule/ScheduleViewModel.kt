@@ -46,6 +46,9 @@ class ScheduleViewModel @Inject constructor(
     private val googleApiAuthorizer: GoogleApiAuthorizer
 ) : ViewModel() {
 
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
     private val _currentDate = MutableStateFlow(LocalDate.now())
     val currentDate: StateFlow<LocalDate> = _currentDate
 
@@ -85,6 +88,7 @@ class ScheduleViewModel @Inject constructor(
         combine(holidayCountry, currentYearMonth) { country, yearMonth ->
             country to yearMonth
         }.onEach { (country, yearMonth) ->
+            _isLoading.value = true
             loadHolidaysForMonth(yearMonth, country)
         }.launchIn(viewModelScope)
     }
@@ -117,6 +121,7 @@ class ScheduleViewModel @Inject constructor(
         if (!googleApiAuthorizer.isSignedIn()) {
             Timber.d("Not signed in, clearing holidays.")
             _holidays.value = emptyList()
+            _isLoading.value = false
             return
         }
 
@@ -130,6 +135,8 @@ class ScheduleViewModel @Inject constructor(
         } catch (e: Exception) {
             Timber.e(e, "Failed to load holidays.")
             _holidays.value = emptyList()
+        } finally {
+            _isLoading.value = false
         }
     }
 }

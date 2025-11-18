@@ -2,7 +2,7 @@ package com.gws.auto.mobile.android.domain.engine.modules
 
 import com.google.api.services.sheets.v4.model.ValueRange
 import com.gws.auto.mobile.android.domain.engine.ExecutionContext
-import com.gws.auto.mobile.android.domain.engine.ExecutionResult
+import com.gws.auto.mobile.android.domain.model.ExecutionResult
 import com.gws.auto.mobile.android.domain.engine.ModuleExecutor
 import com.gws.auto.mobile.android.domain.service.SheetsApiService
 import timber.log.Timber

@@ -2,7 +2,7 @@ package com.gws.auto.mobile.android.domain.engine.modules
 
 import com.google.api.client.util.DateTime
 import com.gws.auto.mobile.android.domain.engine.ExecutionContext
-import com.gws.auto.mobile.android.domain.engine.ExecutionResult
+import com.gws.auto.mobile.android.domain.model.ExecutionResult
 import com.gws.auto.mobile.android.domain.engine.ModuleExecutor
 import com.gws.auto.mobile.android.domain.service.CalendarApiService
 import timber.log.Timber

@@ -22,7 +22,11 @@ class ScheduleSettingsActivity : ComponentActivity() {
         
         setContent {
             GWSAutoForAndroidTheme {
-                ScheduleSettingsScreen(viewModel = viewModel, onSave = { finish() })
+                ScheduleSettingsScreen(
+                    viewModel = viewModel, 
+                    onSave = { finish() },
+                    onCancel = { finish() }
+                )
             }
         }
     }

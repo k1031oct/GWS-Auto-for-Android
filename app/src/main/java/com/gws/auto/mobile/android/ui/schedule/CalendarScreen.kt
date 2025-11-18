@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
@@ -153,6 +154,7 @@ fun CalendarContent(
     val allSchedules by viewModel.allSchedules.collectAsState()
     val currentDate by viewModel.currentDate.collectAsState()
     val firstDayOfWeekSetting by viewModel.firstDayOfWeek.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     val daysOfWeek = remember(firstDayOfWeekSetting) {
         val week = DayOfWeek.values()
@@ -176,47 +178,53 @@ fun CalendarContent(
         }
     }
 
-    Column(modifier = modifier.fillMaxSize()) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            FilledTonalButton(onClick = { viewModel.moveToPreviousMonth() }) { Text(stringResource(id = R.string.calendar_previous_month_button)) }
-            Text(
-                text = currentVisibleMonth.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.getDefault())),
-                style = MaterialTheme.typography.headlineSmall
-            )
-            FilledTonalButton(onClick = { viewModel.moveToNextMonth() }) { Text(stringResource(id = R.string.calendar_next_month_button)) }
+    if (isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
         }
-
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 8.dp)) {
-            daysOfWeek.forEach { day ->
+    } else {
+        Column(modifier = modifier.fillMaxSize()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                FilledTonalButton(onClick = { viewModel.moveToPreviousMonth() }) { Text(stringResource(id = R.string.calendar_previous_month_button)) }
                 Text(
-                    text = day.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.weight(1f)
+                    text = currentVisibleMonth.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.getDefault())),
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                FilledTonalButton(onClick = { viewModel.moveToNextMonth() }) { Text(stringResource(id = R.string.calendar_next_month_button)) }
+            }
+
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 8.dp)) {
+                daysOfWeek.forEach { day ->
+                    Text(
+                        text = day.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+
+            VerticalPager(
+                state = pagerState,
+                modifier = Modifier.weight(1f)
+            ) { page ->
+                val month = YearMonth.now().plusMonths((page - (Int.MAX_VALUE / 2)).toLong())
+                MonthView(
+                    yearMonth = month,
+                    holidays = holidays,
+                    schedules = allSchedules,
+                    onDateClick = onDateClick,
+                    daysOfWeek = daysOfWeek
                 )
             }
-        }
-
-        VerticalPager(
-            state = pagerState,
-            modifier = Modifier.weight(1f)
-        ) { page ->
-            val month = YearMonth.now().plusMonths((page - (Int.MAX_VALUE / 2)).toLong())
-            MonthView(
-                yearMonth = month,
-                holidays = holidays,
-                schedules = allSchedules,
-                onDateClick = onDateClick,
-                daysOfWeek = daysOfWeek
-            )
         }
     }
 }

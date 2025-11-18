@@ -49,9 +49,25 @@
                 android:textAppearance="?attr/textAppearanceBodyLarge"
                 app:layout_constraintStart_toEndOf="@id/module_icon"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/run_module_button" />
+                
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/module_enabled_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/run_module_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Run this module"
+                android:src="@drawable/ic_play_arrow"
                 app:layout_constraintEnd_toStartOf="@+id/delete_button"
-                tools:text="Module Name" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/delete_button"
@@ -60,9 +76,8 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Delete Module"
                 android:src="@drawable/ic_delete"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintEnd_toStartOf="@+id/module_enabled_switch"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

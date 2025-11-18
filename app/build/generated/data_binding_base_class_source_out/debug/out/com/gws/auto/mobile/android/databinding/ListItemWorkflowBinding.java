@@ -5,13 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.gws.auto.mobile.android.R;
 import java.lang.NullPointerException;
@@ -23,16 +22,13 @@ public final class ListItemWorkflowBinding implements ViewBinding {
   private final MaterialCardView rootView;
 
   @NonNull
-  public final LinearLayout buttonContainer;
-
-  @NonNull
-  public final ImageButton deleteButton;
+  public final MaterialButton deleteButton;
 
   @NonNull
   public final CheckBox favoriteButton;
 
   @NonNull
-  public final ImageButton runButton;
+  public final MaterialButton runButton;
 
   @NonNull
   public final TextView workflowDescription;
@@ -47,12 +43,11 @@ public final class ListItemWorkflowBinding implements ViewBinding {
   public final TextView workflowTrigger;
 
   private ListItemWorkflowBinding(@NonNull MaterialCardView rootView,
-      @NonNull LinearLayout buttonContainer, @NonNull ImageButton deleteButton,
-      @NonNull CheckBox favoriteButton, @NonNull ImageButton runButton,
-      @NonNull TextView workflowDescription, @NonNull TextView workflowName,
-      @NonNull TextView workflowStatus, @NonNull TextView workflowTrigger) {
+      @NonNull MaterialButton deleteButton, @NonNull CheckBox favoriteButton,
+      @NonNull MaterialButton runButton, @NonNull TextView workflowDescription,
+      @NonNull TextView workflowName, @NonNull TextView workflowStatus,
+      @NonNull TextView workflowTrigger) {
     this.rootView = rootView;
-    this.buttonContainer = buttonContainer;
     this.deleteButton = deleteButton;
     this.favoriteButton = favoriteButton;
     this.runButton = runButton;
@@ -89,14 +84,8 @@ public final class ListItemWorkflowBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.button_container;
-      LinearLayout buttonContainer = ViewBindings.findChildViewById(rootView, id);
-      if (buttonContainer == null) {
-        break missingId;
-      }
-
       id = R.id.delete_button;
-      ImageButton deleteButton = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton deleteButton = ViewBindings.findChildViewById(rootView, id);
       if (deleteButton == null) {
         break missingId;
       }
@@ -108,7 +97,7 @@ public final class ListItemWorkflowBinding implements ViewBinding {
       }
 
       id = R.id.run_button;
-      ImageButton runButton = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton runButton = ViewBindings.findChildViewById(rootView, id);
       if (runButton == null) {
         break missingId;
       }
@@ -137,9 +126,8 @@ public final class ListItemWorkflowBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ListItemWorkflowBinding((MaterialCardView) rootView, buttonContainer, deleteButton,
-          favoriteButton, runButton, workflowDescription, workflowName, workflowStatus,
-          workflowTrigger);
+      return new ListItemWorkflowBinding((MaterialCardView) rootView, deleteButton, favoriteButton,
+          runButton, workflowDescription, workflowName, workflowStatus, workflowTrigger);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

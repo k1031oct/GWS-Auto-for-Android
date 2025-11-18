@@ -14,6 +14,8 @@ import com.gws.auto.mobile.android.domain.service.NextExecutionTimeCalculator
 import com.gws.auto.mobile.android.domain.service.ScheduleWorker
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import java.time.Duration
+import java.time.ZonedDateTime
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -45,8 +47,10 @@ class ScheduleRepositoryImpl @Inject constructor(
     }
 
     private fun scheduleWorkflow(schedule: Schedule) {
-        val delay = NextExecutionTimeCalculator.calculateDelay(schedule)
-        
+        val now = ZonedDateTime.now()
+        val nextExecutionTime = NextExecutionTimeCalculator.calculateNextExecutionTime(schedule, now)
+        val delay = Duration.between(now, nextExecutionTime)
+
         val workRequest = OneTimeWorkRequestBuilder<ScheduleWorker>()
             .setInitialDelay(delay.toMillis(), TimeUnit.MILLISECONDS)
             .setInputData(Data.Builder().putString(ScheduleWorker.KEY_SCHEDULE_ID, schedule.id).build())

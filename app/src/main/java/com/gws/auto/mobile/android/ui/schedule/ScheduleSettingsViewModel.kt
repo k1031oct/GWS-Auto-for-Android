@@ -1,15 +1,23 @@
 package com.gws.auto.mobile.android.ui.schedule
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.gws.auto.mobile.android.data.repository.ScheduleRepository
 import com.gws.auto.mobile.android.data.repository.SettingsRepository
 import com.gws.auto.mobile.android.data.repository.WorkflowRepository
 import com.gws.auto.mobile.android.domain.model.Schedule
 import com.gws.auto.mobile.android.domain.model.ScheduleType
 import com.gws.auto.mobile.android.domain.model.Workflow
+import com.gws.auto.mobile.android.domain.service.NextExecutionTimeCalculator
+import com.gws.auto.mobile.android.domain.service.ScheduleWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,12 +26,16 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.Duration
 import java.time.LocalTime
+import java.time.ZonedDateTime
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
 class ScheduleSettingsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context, // Injected context
     private val scheduleRepository: ScheduleRepository,
     private val settingsRepository: SettingsRepository,
     private val workflowRepository: WorkflowRepository,
@@ -166,7 +178,25 @@ class ScheduleSettingsViewModel @Inject constructor(
                 yearlyDayOfMonth = if (state.scheduleType == "年毎") state.yearlyDayOfMonth else null,
             )
             scheduleRepository.createSchedule(schedule) // createSchedule in repo handles both create and update
+            scheduleWork(schedule)
         }
+    }
+
+    private fun scheduleWork(schedule: Schedule) {
+        val workManager = WorkManager.getInstance(context)
+        val nextExecutionTime = NextExecutionTimeCalculator.calculateNextExecutionTime(schedule)
+        val delay = Duration.between(ZonedDateTime.now(), nextExecutionTime).toMillis()
+
+        val workRequest = OneTimeWorkRequestBuilder<ScheduleWorker>()
+            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+            .setInputData(Data.Builder().putString(ScheduleWorker.KEY_SCHEDULE_ID, schedule.id).build())
+            .build()
+
+        workManager.enqueueUniqueWork(
+            schedule.id, // Unique work name
+            ExistingWorkPolicy.REPLACE,
+            workRequest
+        )
     }
 }
 

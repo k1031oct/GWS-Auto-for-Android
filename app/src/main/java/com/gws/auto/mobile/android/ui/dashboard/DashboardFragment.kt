@@ -168,9 +168,14 @@ class DashboardFragment : Fragment() {
         }
         chart.visibility = View.VISIBLE
 
+        val typedValue = TypedValue()
+        requireContext().theme.resolveAttribute(com.google.android.material.R.attr.colorOnSurface, typedValue, true)
+        val textColor = typedValue.data
+
         val dataSet = BarDataSet(entries, getString(R.string.dashboard_executions)).apply {
             colors = ColorTemplate.MATERIAL_COLORS.toList()
             setDrawValues(true)
+            valueTextColor = textColor
             valueTextSize = 10f
         }
 
@@ -183,12 +188,15 @@ class DashboardFragment : Fragment() {
                 setDrawGridLines(false)
                 granularity = 1f
                 labelRotationAngle = -45f
+                this.textColor = textColor
             }
             axisLeft.apply {
                 setDrawGridLines(false)
                 axisMinimum = 0f
+                this.textColor = textColor
             }
             axisRight.isEnabled = false
+            legend.textColor = textColor
             legend.isEnabled = true
             animateY(1400)
             invalidate()

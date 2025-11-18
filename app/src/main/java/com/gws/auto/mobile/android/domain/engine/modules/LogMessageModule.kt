@@ -1,7 +1,7 @@
 package com.gws.auto.mobile.android.domain.engine.modules
 
 import com.gws.auto.mobile.android.domain.engine.ExecutionContext
-import com.gws.auto.mobile.android.domain.engine.ExecutionResult
+import com.gws.auto.mobile.android.domain.model.ExecutionResult
 import com.gws.auto.mobile.android.domain.engine.ModuleExecutor
 import javax.inject.Inject
 
