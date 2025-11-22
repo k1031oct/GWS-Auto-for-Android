@@ -112,8 +112,18 @@ class WorkflowViewModel @Inject constructor(
 
     fun moveWorkflowToFolder(workflowId: String, folderId: String) = viewModelScope.launch {
         val allFolders = workflowFolderRepository.getAllWorkflowFolders().first()
-
         val sourceFolder = allFolders.find { it.workflowIds.contains(workflowId) }
+
+        // If folderId is empty, remove from current folder (move to root)
+        if (folderId.isEmpty()) {
+            if (sourceFolder != null) {
+                val updatedSourceIds = sourceFolder.workflowIds.toMutableList().also { it.remove(workflowId) }
+                workflowFolderRepository.updateWorkflowFolder(sourceFolder.copy(workflowIds = updatedSourceIds))
+            }
+            return@launch
+        }
+
+        // Otherwise, existing logic to move between folders
         val targetFolder = allFolders.find { it.id == folderId }
 
         // If target folder doesn't exist, or it's the same as the source, do nothing.

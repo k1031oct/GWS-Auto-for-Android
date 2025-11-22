@@ -167,6 +167,12 @@ fun WorkflowScreen(
                     )
                 }
                 is WorkflowListItem.AddItem -> {
+                    // Add root drop zone before AddItem
+                    RootDropZoneRow(
+                        onDrop = { workflowId ->
+                            onMoveWorkflowToFolder(workflowId, "")
+                        }
+                    )
                     AddItemRow(onAddClicked = onAddClicked)
                 }
             }
@@ -375,6 +381,85 @@ fun DropTargetFolderItemRow(
                         leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
                     )
                 }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun RootDropZoneRow(
+    onDrop: (String) -> Unit
+) {
+    var isDraggingOver by remember { mutableStateOf(false) }
+
+    val dropTarget = remember {
+        object : DragAndDropTarget {
+            override fun onDrop(event: DragAndDropEvent): Boolean {
+                isDraggingOver = false
+                val clipData = event.toAndroidDragEvent().clipData
+                if (clipData != null && clipData.itemCount > 0) {
+                    val workflowId = clipData.getItemAt(0).text.toString()
+                    onDrop(workflowId)
+                    return true
+                }
+                return false
+            }
+
+            override fun onEntered(event: DragAndDropEvent) {
+                isDraggingOver = true
+            }
+
+            override fun onExited(event: DragAndDropEvent) {
+                isDraggingOver = false
+            }
+        }
+    }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp)
+            .dragAndDropTarget(
+                shouldStartDragAndDrop = { event ->
+                    event.mimeTypes().contains(ClipDescription.MIMETYPE_TEXT_PLAIN)
+                },
+                target = dropTarget
+            ),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isDraggingOver)
+                MaterialTheme.colorScheme.primaryContainer
+            else
+                MaterialTheme.colorScheme.surfaceVariant
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = if (isDraggingOver) 4.dp else 1.dp
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.Home,
+                contentDescription = "Root Level",
+                modifier = Modifier.padding(end = 12.dp),
+                tint = if (isDraggingOver) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = "ルートレベル（フォルダから取り出す）",
+                style = MaterialTheme.typography.bodyMedium,
+                color = if (isDraggingOver) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.weight(1f)
+            )
+            if (isDraggingOver) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Drop here",
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
         }
     }
