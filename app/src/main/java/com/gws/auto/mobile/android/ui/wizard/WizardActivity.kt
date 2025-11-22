@@ -9,12 +9,17 @@ import com.gws.auto.mobile.android.MainActivity
 import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.databinding.ActivityWizardBinding
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import android.content.res.Configuration
+import com.gws.auto.mobile.android.ui.theme.ThemeViewModel
 
 @AndroidEntryPoint
 class WizardActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWizardBinding
     private val viewModel: WizardViewModel by viewModels()
+    private val themeViewModel: ThemeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,5 +54,21 @@ class WizardActivity : AppCompatActivity() {
         binding.backButton.setOnClickListener {
             binding.wizardViewPager.currentItem -= 1
         }
+        
+        // Observe theme and apply button text colors
+        lifecycleScope.launch {
+            themeViewModel.theme.collect { _ ->
+                applyButtonTextColors()
+            }
+        }
+    }
+    
+    private fun applyButtonTextColors() {
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val isDarkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+        val textColor = if (isDarkTheme) android.graphics.Color.WHITE else android.graphics.Color.BLACK
+        
+        binding.backButton.setTextColor(textColor)
+        binding.nextButton.setTextColor(textColor)
     }
 }

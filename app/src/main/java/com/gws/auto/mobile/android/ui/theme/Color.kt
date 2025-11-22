@@ -67,7 +67,7 @@ val AccentLight = Color(0xFFB9F6CA)      // Pastel Green (Success)
 // Highlight Color Variants for Dynamic Primary Colors
 // Default Theme (Sharp Neon)
 val DefaultPrimaryDark = Color(0xFFDFFF00)   // Volt Yellow
-val DefaultPrimaryLight = Color(0xFF6750A4)  // Purple
+val DefaultPrimaryLight = Color(0xFFFFC66D)  // Pastel Yellow-Orange
 
 // Forest Theme
 val ForestPrimaryDark = Color(0xFF76FF03)   // Bright Lime Green

@@ -15,6 +15,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.gws.auto.mobile.android.ui.theme.*
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import androidx.compose.ui.graphics.toArgb
 import android.content.res.Configuration
 import kotlinx.coroutines.launch
@@ -51,7 +53,10 @@ class SettingsActivity : AppCompatActivity() {
                     "tag_management" -> TagManagementFragment()
                     else -> MainSettingsFragment()
                 }
-                supportActionBar?.title = getTitleForFragment(fragmentKey)
+                val title = getTitleForFragment(fragmentKey)
+                val spannableTitle = SpannableString(title)
+                spannableTitle.setSpan(ForegroundColorSpan(android.graphics.Color.BLACK), 0, title.length, 0)
+                supportActionBar?.title = spannableTitle
 
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.settings_fragment_container, fragment)
