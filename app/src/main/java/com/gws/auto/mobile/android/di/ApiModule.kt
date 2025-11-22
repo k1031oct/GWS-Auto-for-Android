@@ -12,7 +12,6 @@ import com.google.api.services.sheets.v4.SheetsScopes
 import com.google.firebase.auth.FirebaseAuth
 import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.data.remote.CalendarApiService
-import com.gws.auto.mobile.android.data.remote.ChatApiService
 import com.gws.auto.mobile.android.data.remote.OutlookApiService
 import com.gws.auto.mobile.android.domain.service.GoogleApiAuthorizer
 import com.gws.auto.mobile.android.domain.service.MicrosoftApiAuthorizer
@@ -63,12 +62,6 @@ object ApiModule {
     @Singleton
     fun provideCalendarApiService(authorizer: GoogleApiAuthorizer): CalendarApiService {
         return CalendarApiService(authorizer)
-    }
-
-    @Provides
-    @Singleton
-    fun provideChatApiService(authorizer: GoogleApiAuthorizer): ChatApiService {
-        return ChatApiService(authorizer)
     }
 
     @Provides

@@ -25,6 +25,9 @@ public final class FragmentDashboardBinding implements ViewBinding {
   private final ScrollView rootView;
 
   @NonNull
+  public final MaterialButton announcementButton;
+
+  @NonNull
   public final TextView errorCountDayChangeText;
 
   @NonNull
@@ -85,17 +88,19 @@ public final class FragmentDashboardBinding implements ViewBinding {
   public final TextView workflowStatsTitle;
 
   private FragmentDashboardBinding(@NonNull ScrollView rootView,
-      @NonNull TextView errorCountDayChangeText, @NonNull TextView errorCountMonthChangeText,
-      @NonNull TextView errorCountText, @NonNull PieChart moduleErrorRateChart,
-      @NonNull BarChart moduleRankingChart, @NonNull RecyclerView moduleStatsTable,
-      @NonNull TextView moduleStatsTitle, @NonNull MaterialButton refreshButton,
-      @NonNull GridLayout summaryGrid, @NonNull TextView summaryTitle,
-      @NonNull TextView totalDurationDayChangeText, @NonNull TextView totalDurationMonthChangeText,
-      @NonNull TextView totalDurationText, @NonNull TextView totalExecutionsDayChangeText,
+      @NonNull MaterialButton announcementButton, @NonNull TextView errorCountDayChangeText,
+      @NonNull TextView errorCountMonthChangeText, @NonNull TextView errorCountText,
+      @NonNull PieChart moduleErrorRateChart, @NonNull BarChart moduleRankingChart,
+      @NonNull RecyclerView moduleStatsTable, @NonNull TextView moduleStatsTitle,
+      @NonNull MaterialButton refreshButton, @NonNull GridLayout summaryGrid,
+      @NonNull TextView summaryTitle, @NonNull TextView totalDurationDayChangeText,
+      @NonNull TextView totalDurationMonthChangeText, @NonNull TextView totalDurationText,
+      @NonNull TextView totalExecutionsDayChangeText,
       @NonNull TextView totalExecutionsMonthChangeText, @NonNull TextView totalExecutionsText,
       @NonNull PieChart workflowErrorRateChart, @NonNull BarChart workflowRankingChart,
       @NonNull RecyclerView workflowStatsTable, @NonNull TextView workflowStatsTitle) {
     this.rootView = rootView;
+    this.announcementButton = announcementButton;
     this.errorCountDayChangeText = errorCountDayChangeText;
     this.errorCountMonthChangeText = errorCountMonthChangeText;
     this.errorCountText = errorCountText;
@@ -145,6 +150,12 @@ public final class FragmentDashboardBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.announcement_button;
+      MaterialButton announcementButton = ViewBindings.findChildViewById(rootView, id);
+      if (announcementButton == null) {
+        break missingId;
+      }
+
       id = R.id.error_count_day_change_text;
       TextView errorCountDayChangeText = ViewBindings.findChildViewById(rootView, id);
       if (errorCountDayChangeText == null) {
@@ -265,10 +276,10 @@ public final class FragmentDashboardBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentDashboardBinding((ScrollView) rootView, errorCountDayChangeText,
-          errorCountMonthChangeText, errorCountText, moduleErrorRateChart, moduleRankingChart,
-          moduleStatsTable, moduleStatsTitle, refreshButton, summaryGrid, summaryTitle,
-          totalDurationDayChangeText, totalDurationMonthChangeText, totalDurationText,
+      return new FragmentDashboardBinding((ScrollView) rootView, announcementButton,
+          errorCountDayChangeText, errorCountMonthChangeText, errorCountText, moduleErrorRateChart,
+          moduleRankingChart, moduleStatsTable, moduleStatsTitle, refreshButton, summaryGrid,
+          summaryTitle, totalDurationDayChangeText, totalDurationMonthChangeText, totalDurationText,
           totalExecutionsDayChangeText, totalExecutionsMonthChangeText, totalExecutionsText,
           workflowErrorRateChart, workflowRankingChart, workflowStatsTable, workflowStatsTitle);
     }

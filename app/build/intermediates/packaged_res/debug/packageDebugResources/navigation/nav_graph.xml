@@ -38,12 +38,6 @@
         tools:layout="@layout/fragment_announcement" />
 
     <fragment
-        android:id="@+id/navigation_user_info"
-        android:name="com.gws.auto.mobile.android.ui.settings.user.UserInfoFragment"
-        android:label="@string/title_user_info"
-        tools:layout="@layout/fragment_user_info" />
-
-    <fragment
         android:id="@+id/navigation_account_connections"
         android:name="com.gws.auto.mobile.android.ui.settings.account.AccountConnectionsFragment"
         android:label="@string/title_account_connections"

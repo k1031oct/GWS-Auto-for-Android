@@ -1,51 +1,47 @@
 package com.gws.auto.mobile.android.domain.engine.modules
 
+import com.gws.auto.mobile.android.data.remote.ChatApiService
+
 import com.gws.auto.mobile.android.domain.engine.ExecutionContext
-import com.gws.auto.mobile.android.domain.model.ExecutionResult
 import com.gws.auto.mobile.android.domain.engine.ModuleExecutor
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
-import timber.log.Timber
+import com.gws.auto.mobile.android.domain.model.ExecutionResult
+import com.gws.auto.mobile.android.domain.model.Module
+import dagger.Binds
+import dagger.multibindings.IntoMap
 import javax.inject.Inject
 
+/**
+ * A workflow module executor for posting a message to Google Chat.
+ * This implementation uses the [ChatApiService] which relies on OAuth 2.0.
+ */
 class ChatPostModule @Inject constructor(
-    private val httpClient: OkHttpClient
+    private val chatApiService: ChatApiService
 ) : ModuleExecutor {
-    override suspend fun execute(context: ExecutionContext): ExecutionResult {
-        val webhookUrl = context.resolveVariables(context.module.parameters["webhookUrl"] ?: "")
-        val message = context.resolveVariables(context.module.parameters["message"] ?: "")
 
-        if (webhookUrl.isBlank() || message.isBlank()) {
-            return ExecutionResult(false, "Webhook URL and message are required.")
+    companion object {
+        private const val PARAM_SPACE_ID = "spaceId"
+        private const val PARAM_MESSAGE = "message"
+    }
+
+    override suspend fun execute(context: ExecutionContext): ExecutionResult {
+        val module = context.module
+        // Retrieve parameters, ensuring they are not null or empty.
+        val spaceId = module.parameters[PARAM_SPACE_ID]
+        val message = module.parameters[PARAM_MESSAGE]
+
+        if (spaceId.isNullOrEmpty() || message.isNullOrEmpty()) {
+            // Missing required parameters for this module.
+            return ExecutionResult(isSuccess = false, outputMessage = "Missing required parameters for ChatPostModule.")
         }
 
-        return withContext(Dispatchers.IO) {
-            try {
-                val json = "{\"text\":\"$message\"}"
-                val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaType())
-                val request = Request.Builder()
-                    .url(webhookUrl)
-                    .post(requestBody)
-                    .build()
-
-                httpClient.newCall(request).execute().use { response ->
-                    if (response.isSuccessful) {
-                        Timber.d("Successfully posted message to Google Chat.")
-                        ExecutionResult(true, "Message posted successfully.")
-                    } else {
-                        val errorBody = response.body?.string()
-                        Timber.e("Failed to post message to Google Chat: ${response.code} - $errorBody")
-                        ExecutionResult(false, "Failed to post message: ${response.code} - $errorBody")
-                    }
-                }
-            } catch (e: Exception) {
-                Timber.e(e, "Exception while posting message to Google Chat")
-                ExecutionResult(false, "Exception: ${e.message}")
-            }
+        // Use the modern ChatApiService to post the message.
+        val success = chatApiService.postMessage(spaceId, message)
+        return if (success) {
+            ExecutionResult(isSuccess = true)
+        } else {
+            ExecutionResult(isSuccess = false, outputMessage = "Failed to post message using ChatApiService.")
         }
     }
 }
+
+

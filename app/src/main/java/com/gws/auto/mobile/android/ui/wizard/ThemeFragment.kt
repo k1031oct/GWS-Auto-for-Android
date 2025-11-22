@@ -4,20 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
@@ -26,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.gws.auto.mobile.android.R
-import com.gws.auto.mobile.android.ui.theme.*
+import com.gws.auto.mobile.android.ui.theme.GWSAutoForAndroidTheme
 
 class ThemeFragment : Fragment() {
 
@@ -39,7 +43,10 @@ class ThemeFragment : Fragment() {
                 val theme by viewModel.theme.collectAsState()
                 val highlightColor by viewModel.highlightColor.collectAsState()
 
-                GWSAutoForAndroidTheme(theme = theme, highlightColor = highlightColor) {
+                GWSAutoForAndroidTheme(
+                    theme = theme,
+                    highlightColor = highlightColor
+                ) {
                     Surface {
                         ThemeSettingsPage(viewModel)
                     }
@@ -52,12 +59,6 @@ class ThemeFragment : Fragment() {
 @Composable
 fun ThemeSettingsPage(viewModel: WizardViewModel) {
     val currentTheme by viewModel.theme.collectAsState()
-    val currentHighlight by viewModel.highlightColor.collectAsState()
-    val isDark = when (currentTheme) {
-        "Light" -> false
-        "Dark" -> true
-        else -> isSystemInDarkTheme()
-    }
 
     Column(
         modifier = Modifier
@@ -85,19 +86,6 @@ fun ThemeSettingsPage(viewModel: WizardViewModel) {
             ThemeRadioButton("Dark", currentTheme) { viewModel.setTheme("Dark") }
             ThemeRadioButton("System", currentTheme) { viewModel.setTheme("System") }
         }
-
-        Spacer(Modifier.height(24.dp))
-
-        Text("Highlight Color", style = MaterialTheme.typography.titleMedium)
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            HighlightColorChip("default", if (isDark) md_theme_dark_primary else md_theme_light_primary, currentHighlight) { viewModel.setHighlightColor("default") }
-            Spacer(Modifier.width(16.dp))
-            HighlightColorChip("forest", if (isDark) forest_theme_dark_primary else forest_theme_light_primary, currentHighlight) { viewModel.setHighlightColor("forest") }
-            Spacer(Modifier.width(16.dp))
-            HighlightColorChip("ocean", if (isDark) ocean_theme_dark_primary else ocean_theme_light_primary, currentHighlight) { viewModel.setHighlightColor("ocean") }
-            Spacer(Modifier.width(16.dp))
-            HighlightColorChip("sakura", if (isDark) sakura_theme_dark_primary else sakura_theme_light_primary, currentHighlight) { viewModel.setHighlightColor("sakura") }
-        }
     }
 }
 
@@ -115,20 +103,4 @@ private fun ThemeRadioButton(text: String, selectedTheme: String, onClick: () ->
         )
         Text(text = text, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(start = 4.dp))
     }
-}
-
-@Composable
-private fun HighlightColorChip(colorName: String, color: Color, selectedHighlight: String, onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .size(48.dp)
-            .clip(CircleShape)
-            .background(color)
-            .clickable(onClick = onClick)
-            .then(
-                if (colorName == selectedHighlight) {
-                    Modifier.border(2.dp, MaterialTheme.colorScheme.onSurface, CircleShape)
-                } else Modifier
-            )
-    )
 }

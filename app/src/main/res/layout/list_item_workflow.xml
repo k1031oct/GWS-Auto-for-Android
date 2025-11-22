@@ -60,7 +60,7 @@
         <TextView
             android:id="@+id/workflow_trigger"
             android:layout_width="wrap_content"
-            android.layout_height="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:textAppearance="?attr/textAppearanceCaption"
             app:layout_constraintStart_toEndOf="@+id/workflow_status"

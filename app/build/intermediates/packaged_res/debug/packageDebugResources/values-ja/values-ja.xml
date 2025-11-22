@@ -16,7 +16,7 @@
     <string name="add_tag_title">新しいタグを追加</string>
     <string name="all_schedules_title">すべてのスケジュール</string>
     <string name="announcement_unread_indicator">未読インジケーター</string>
-    <string name="app_name">GWS Auto for Android</string>
+    <string name="app_name">Tsunagu</string>
     <string name="calendar_next_month_button">></string>
     <string name="calendar_previous_month_button">&lt;</string>
     <string name="cancel">キャンセル</string>
@@ -69,7 +69,7 @@
     <string name="search_history">履歴を検索</string>
     <string name="search_workflows_hint">ワークフローを名前またはタグで検索</string>
     <string name="settings_category_account">アカウント設定</string>
-    <string name="settings_category_app">アプリ設定</string>
+    <string name="settings_category_app">アプリケーションの設定</string>
     <string name="settings_category_other">その他</string>
     <string name="sign_in">サインイン</string>
     <string name="sign_in_with_google">Googleでサインイン</string>

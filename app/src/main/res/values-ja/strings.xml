@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">GWS Auto for Android</string>
+    <string name="app_name">Tsunagu</string>
 
     <!-- Days of week -->
     <string name="sunday">日曜日</string>
@@ -100,7 +100,7 @@
     <string name="add_a_new_tag">新しいタグを追加</string>
     <string name="profile_image_description">プロフィール画像</string>
     <string name="settings_category_account">アカウント設定</string>
-    <string name="settings_category_app">アプリ設定</string>
+    <string name="settings_category_app">アプリケーションの設定</string>
     <string name="settings_category_other">その他</string>
     <string name="country">国</string>
 

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -53,6 +54,10 @@ class DashboardFragment : Fragment() {
 
         binding.refreshButton.setOnClickListener {
             viewModel.refresh()
+        }
+
+        binding.announcementButton.setOnClickListener {
+            findNavController().navigate(R.id.navigation_announcement)
         }
     }
 

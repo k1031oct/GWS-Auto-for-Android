@@ -18,4 +18,8 @@ class TagRepository @Inject constructor(private val tagDao: TagDao) {
     suspend fun deleteTag(tag: Tag) {
         tagDao.deleteTag(tag)
     }
+
+    suspend fun updateTag(tag: Tag) {
+        tagDao.updateTag(tag)
+    }
 }

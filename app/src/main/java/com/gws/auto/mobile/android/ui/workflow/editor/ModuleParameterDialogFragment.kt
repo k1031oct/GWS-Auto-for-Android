@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.gws.auto.mobile.android.domain.model.Module
@@ -22,8 +24,8 @@ class ModuleParameterDialogFragment : DialogFragment() {
     private val moduleParameters = mutableMapOf<String, String>()
     private lateinit var moduleType: String
 
-    private val filePickerRequests = mutableMapOf<Int, Triple<String, String, Button>>() // requestCode -> (paramName, expectedType, button)
-    private var nextRequestCode = 100
+    private lateinit var filePickerLauncher: ActivityResultLauncher<Intent>
+    private var currentFilePickerRequest: Triple<String, String, Button>? = null
 
     companion object {
         const val ARG_MODULE_TYPE = "module_type"
@@ -32,6 +34,21 @@ class ModuleParameterDialogFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         moduleType = requireArguments().getString(ARG_MODULE_TYPE)!!
+
+        filePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                currentFilePickerRequest?.let { (paramName, _, button) ->
+                    val fileId = result.data?.getStringExtra("fileId")
+                    val fileName = result.data?.getStringExtra("fileName")
+
+                    if (fileId != null && fileName != null) {
+                        moduleParameters[paramName] = fileId
+                        button.text = "$paramName: $fileName"
+                    }
+                }
+                currentFilePickerRequest = null // Clear the request
+            }
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -49,12 +66,11 @@ class ModuleParameterDialogFragment : DialogFragment() {
                 val button = Button(requireContext()).apply {
                     text = "Select: $paramName ($expectedType)"
                     setOnClickListener {
-                        val requestCode = nextRequestCode++
-                        filePickerRequests[requestCode] = Triple(paramName, expectedType, this)
+                        currentFilePickerRequest = Triple(paramName, expectedType, this)
                         val intent = Intent(requireContext(), FilePickerActivity::class.java).apply {
                             putExtra("expectedType", expectedType)
                         }
-                        startActivityForResult(intent, requestCode)
+                        filePickerLauncher.launch(intent)
                     }
                 }
                 layout.addView(button)
@@ -83,20 +99,6 @@ class ModuleParameterDialogFragment : DialogFragment() {
             .create()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && filePickerRequests.containsKey(requestCode)) {
-            val fileId = data?.getStringExtra("fileId")
-            val fileName = data?.getStringExtra("fileName")
-            val (paramName, _, button) = filePickerRequests[requestCode]!!
-
-            if (fileId != null && fileName != null) {
-                moduleParameters[paramName] = fileId
-                button.text = "$paramName: $fileName"
-            }
-        }
-    }
-
     private fun getRequiredParameters(moduleType: String): List<String> {
         // Returns all possible parameters for a module
         return getFilePickerParameters(moduleType).keys.toList() + getManualParameters(moduleType)
@@ -117,7 +119,7 @@ class ModuleParameterDialogFragment : DialogFragment() {
     private fun getManualParameters(moduleType: String): List<String> {
         return when (moduleType) {
             "LOG_MESSAGE" -> listOf("message")
-            "chat_post" -> listOf("webhookUrl", "message")
+            "chat_post" -> listOf("spaceId", "message")
             "drive_create_folder" -> listOf("newFolderName")
             "drive_copy_file" -> listOf("newFileName")
             "DUPLICATE_SPREADSHEET" -> listOf("newSpreadsheetName")

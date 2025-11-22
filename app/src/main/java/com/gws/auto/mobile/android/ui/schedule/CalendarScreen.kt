@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -28,6 +30,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.CircularProgressIndicator
@@ -35,11 +38,13 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -118,7 +123,18 @@ fun CalendarScreen(
         )
     }
 
-    Scaffold {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(id = R.string.schedule_fragment_title)) },
+                actions = {
+                    IconButton(onClick = { context.startActivity(Intent(context, ScheduleSettingsActivity::class.java)) }) {
+                        Icon(Icons.Default.Settings, contentDescription = stringResource(id = R.string.settings_title))
+                    }
+                }
+            )
+        }
+    ) {
  paddingValues ->
         BottomSheetScaffold(
             scaffoldState = scaffoldState,
@@ -191,12 +207,24 @@ fun CalendarContent(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                FilledTonalButton(onClick = { viewModel.moveToPreviousMonth() }) { Text(stringResource(id = R.string.calendar_previous_month_button)) }
+                FilledTonalButton(
+                    onClick = { viewModel.moveToPreviousMonth() },
+                    colors = ButtonDefaults.filledTonalButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                ) { Text(stringResource(id = R.string.calendar_previous_month_button)) }
                 Text(
                     text = currentVisibleMonth.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.getDefault())),
                     style = MaterialTheme.typography.headlineSmall
                 )
-                FilledTonalButton(onClick = { viewModel.moveToNextMonth() }) { Text(stringResource(id = R.string.calendar_next_month_button)) }
+                FilledTonalButton(
+                    onClick = { viewModel.moveToNextMonth() },
+                    colors = ButtonDefaults.filledTonalButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                ) { Text(stringResource(id = R.string.calendar_next_month_button)) }
             }
 
             Row(modifier = Modifier
@@ -258,7 +286,10 @@ fun DayTimelineSheet(
         if (allDaySchedules.isNotEmpty()) {
             Text(stringResource(R.string.all_day), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             allDaySchedules.forEach {
-                ScheduleItemText(it.workflowName, modifier = Modifier.clickable { onScheduleClick(it) })
+                ScheduleItemText(it.workflowName, modifier = Modifier.clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { onScheduleClick(it) })
             }
             Divider(modifier = Modifier.padding(vertical = 8.dp))
         }
@@ -330,7 +361,10 @@ private fun HourTimeline(
                     modifier = Modifier
                         .width(eventWidth)
                         .offset(x = xOffset, y = yOffset.dp)
-                        .clickable { onScheduleClick(schedule) }
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) { onScheduleClick(schedule) }
                         .padding(horizontal = 2.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -393,7 +427,10 @@ fun MonthView(
                     }
                 },
                 holidays = holidays.filter { it.date == date },
-                modifier = Modifier.clickable { onDateClick(date) }
+                modifier = Modifier.clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { onDateClick(date) }
             )
         }
     }
@@ -468,12 +505,20 @@ fun ScheduleActionsDialog(
                 ListItem(
                     headlineContent = { Text("Edit") },
                     leadingContent = { Icon(Icons.Default.Edit, contentDescription = "Edit Schedule") },
-                    modifier = Modifier.clickable(onClick = onEdit)
+                    modifier = Modifier.clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = onEdit
+                    )
                 )
                 ListItem(
                     headlineContent = { Text("Delete") },
                     leadingContent = { Icon(Icons.Default.Delete, contentDescription = "Delete Schedule", tint = MaterialTheme.colorScheme.error) },
-                    modifier = Modifier.clickable(onClick = onDelete)
+                    modifier = Modifier.clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = onDelete
+                    )
                 )
             }
         }

@@ -31,4 +31,11 @@ class TagManagementViewModel @Inject constructor(
             tagRepository.deleteTag(tag)
         }
     }
+
+    fun updateTag(oldTag: Tag, newName: String) {
+        if (newName.isBlank()) return
+        viewModelScope.launch {
+            tagRepository.updateTag(oldTag.copy(name = newName.trim()))
+        }
+    }
 }

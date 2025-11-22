@@ -75,6 +75,10 @@ color md_theme_light_surface
 color md_theme_light_surfaceVariant
 color md_theme_light_tertiary
 color md_theme_light_tertiaryContainer
+color neon_green
+color neon_pink
+color neon_turquoise
+color neon_yellow
 color purple_200
 color purple_500
 color purple_700
@@ -122,6 +126,7 @@ id about_app
 id action_edit
 id action_settings
 id add_tag_button
+id announcement_button
 id announcement_content
 id announcement_recycler_view
 id announcement_title
@@ -198,7 +203,6 @@ id navigation_bar
 id navigation_dashboard
 id navigation_history
 id navigation_schedule
-id navigation_user_info
 id navigation_workflow
 id next_button
 id parameters_container
@@ -260,7 +264,6 @@ id unread_indicator
 id usage_count_text
 id user_avatar
 id user_email
-id user_info_button
 id user_name
 id version_text
 id view_pager
@@ -301,7 +304,6 @@ layout fragment_search
 layout fragment_settings
 layout fragment_tag_management
 layout fragment_theme_settings
-layout fragment_user_info
 layout fragment_wizard_locale
 layout fragment_wizard_theme
 layout fragment_wizard_week_start
@@ -345,6 +347,7 @@ mipmap ic_launcher
 mipmap ic_launcher_foreground
 mipmap ic_launcher_round
 navigation nav_graph
+raw auth_config_single_account
 string about_app_version
 string about_contact
 string about_description
@@ -457,6 +460,7 @@ string profile_image_description
 string project_id
 string refresh
 string save_workflow
+string schedule_fragment_title
 string schedule_list_item_type
 string schedule_list_item_workflow
 string schedule_title

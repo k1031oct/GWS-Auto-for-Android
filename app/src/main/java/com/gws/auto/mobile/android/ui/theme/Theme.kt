@@ -1,77 +1,84 @@
 package com.gws.auto.mobile.android.ui.theme
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ripple.LocalRippleTheme
+import androidx.compose.material.ripple.RippleAlpha
+import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
+// Define the color scheme for the dark theme using the Sharp Neon palette
 private val DarkColorScheme = darkColorScheme(
-    primary = md_theme_dark_primary,
-    onPrimary = md_theme_dark_onPrimary,
-    primaryContainer = md_theme_dark_primaryContainer,
-    onPrimaryContainer = md_theme_dark_onPrimaryContainer,
-    secondary = md_theme_dark_secondary,
-    onSecondary = md_theme_dark_onSecondary,
-    secondaryContainer = md_theme_dark_secondaryContainer,
-    onSecondaryContainer = md_theme_dark_onSecondaryContainer,
-    tertiary = md_theme_dark_tertiary,
-    onTertiary = md_theme_dark_onTertiary,
-    tertiaryContainer = md_theme_dark_tertiaryContainer,
-    onTertiaryContainer = md_theme_dark_onTertiaryContainer,
-    error = md_theme_dark_error,
-    onError = md_theme_dark_onError,
-    errorContainer = md_theme_dark_errorContainer,
-    onErrorContainer = md_theme_dark_onErrorContainer,
-    background = md_theme_dark_background,
-    onBackground = md_theme_dark_onBackground,
-    surface = md_theme_dark_surface,
-    onSurface = md_theme_dark_onSurface,
-    surfaceVariant = md_theme_dark_surfaceVariant,
-    onSurfaceVariant = md_theme_dark_onSurfaceVariant,
-    outline = md_theme_dark_outline,
-    inverseOnSurface = md_theme_dark_inverseOnSurface,
-    inverseSurface = md_theme_dark_inverseSurface,
-    inversePrimary = md_theme_dark_inversePrimary,
-    surfaceTint = md_theme_dark_surfaceTint,
-    outlineVariant = md_theme_dark_outlineVariant,
-    scrim = md_theme_dark_scrim,
+    primary = PrimaryDark,
+    onPrimary = OnPrimaryDark,
+    primaryContainer = PrimaryContainerDark,
+    onPrimaryContainer = OnPrimaryContainerDark,
+    secondary = SecondaryDark,
+    onSecondary = OnSecondaryDark,
+    secondaryContainer = SecondaryContainerDark,
+    onSecondaryContainer = OnSecondaryContainerDark,
+    tertiary = TertiaryDark,
+    onTertiary = OnTertiaryDark,
+    tertiaryContainer = TertiaryContainerDark,
+    onTertiaryContainer = OnTertiaryContainerDark,
+    error = ErrorDark,
+    onError = OnErrorDark,
+    errorContainer = ErrorContainerDark,
+    onErrorContainer = OnErrorContainerDark,
+    background = BackgroundDark,
+    onBackground = OnBackgroundDark,
+    surface = SurfaceDark,
+    onSurface = OnSurfaceDark,
+    surfaceVariant = SurfaceVariantDark,
+    onSurfaceVariant = OnSurfaceVariantDark,
+    outline = OutlineDark,
+    inverseOnSurface = InverseOnSurfaceDark,
+    inverseSurface = InverseSurfaceDark,
+    inversePrimary = InversePrimaryDark,
 )
 
+// Define the color scheme for the light theme using the Sharp Neon palette
 private val LightColorScheme = lightColorScheme(
-    primary = md_theme_light_primary,
-    onPrimary = md_theme_light_onPrimary,
-    primaryContainer = md_theme_light_primaryContainer,
-    onPrimaryContainer = md_theme_light_onPrimaryContainer,
-    secondary = md_theme_light_secondary,
-    onSecondary = md_theme_light_onSecondary,
-    secondaryContainer = md_theme_light_secondaryContainer,
-    onSecondaryContainer = md_theme_light_onSecondaryContainer,
-    tertiary = md_theme_light_tertiary,
-    onTertiary = md_theme_light_onTertiary,
-    tertiaryContainer = md_theme_light_tertiaryContainer,
-    onTertiaryContainer = md_theme_light_onTertiaryContainer,
-    error = md_theme_light_error,
-    onError = md_theme_light_onError,
-    errorContainer = md_theme_light_errorContainer,
-    onErrorContainer = md_theme_light_onErrorContainer,
-    background = md_theme_light_background,
-    onBackground = md_theme_light_onBackground,
-    surface = md_theme_light_surface,
-    onSurface = md_theme_light_onSurface,
-    surfaceVariant = md_theme_light_surfaceVariant,
-    onSurfaceVariant = md_theme_light_onSurfaceVariant,
-    outline = md_theme_light_outline,
-    inverseOnSurface = md_theme_light_inverseOnSurface,
-    inverseSurface = md_theme_light_inverseSurface,
-    inversePrimary = md_theme_light_inversePrimary,
-    surfaceTint = md_theme_light_surfaceTint,
-    outlineVariant = md_theme_light_outlineVariant,
-    scrim = md_theme_light_scrim,
+    primary = PrimaryLight,
+    onPrimary = OnPrimaryLight,
+    primaryContainer = PrimaryContainerLight,
+    onPrimaryContainer = OnPrimaryContainerLight,
+    secondary = SecondaryLight,
+    onSecondary = OnSecondaryLight,
+    secondaryContainer = SecondaryContainerLight,
+    onSecondaryContainer = OnSecondaryContainerLight,
+    tertiary = TertiaryLight,
+    onTertiary = OnTertiaryLight,
+    tertiaryContainer = TertiaryContainerLight,
+    onTertiaryContainer = OnTertiaryContainerLight,
+    error = ErrorLight,
+    onError = OnErrorLight,
+    errorContainer = ErrorContainerLight,
+    onErrorContainer = OnErrorContainerLight,
+    background = BackgroundLight,
+    onBackground = OnBackgroundLight,
+    surface = SurfaceLight,
+    onSurface = OnSurfaceLight,
+    surfaceVariant = SurfaceVariantLight,
+    onSurfaceVariant = OnSurfaceVariantLight,
+    outline = OutlineLight,
+    inverseOnSurface = InverseOnSurfaceLight,
+    inverseSurface = InverseSurfaceLight,
+    inversePrimary = InversePrimaryLight,
+)
+
+// Define the shapes for the theme, overriding all to be RectangleShape for a sharp design
+val AppShapes = Shapes(
+    small = RoundedCornerShape(0.dp),
+    medium = RoundedCornerShape(0.dp),
+    large = RoundedCornerShape(0.dp)
 )
 
 @Composable
@@ -80,68 +87,57 @@ fun GWSAutoForAndroidTheme(
     highlightColor: String = "default",
     content: @Composable () -> Unit
 ) {
-    val darkTheme = when (theme) {
+    // Determine if the dark theme should be used based on system or user setting
+    val useDarkTheme = when (theme) {
         "Light" -> false
         "Dark" -> true
         else -> isSystemInDarkTheme()
     }
 
-    val dynamicColor = false // Dynamic color is disabled for now
-
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> when (highlightColor) {
-            "forest" -> DarkColorScheme.copy(
-                primary = forest_theme_dark_primary,
-                onPrimary = forest_theme_dark_onPrimary,
-                primaryContainer = forest_theme_dark_primaryContainer,
-                onPrimaryContainer = forest_theme_dark_onPrimaryContainer
-            )
-            "ocean" -> DarkColorScheme.copy(
-                primary = ocean_theme_dark_primary,
-                onPrimary = ocean_theme_dark_onPrimary,
-                primaryContainer = ocean_theme_dark_primaryContainer,
-                onPrimaryContainer = ocean_theme_dark_onPrimaryContainer
-            )
-            "sakura" -> DarkColorScheme.copy(
-                primary = sakura_theme_dark_primary,
-                onPrimary = sakura_theme_dark_onPrimary,
-                primaryContainer = sakura_theme_dark_primaryContainer,
-                onPrimaryContainer = sakura_theme_dark_onPrimaryContainer
-            )
-            else -> DarkColorScheme
-        }
-
-        else -> when (highlightColor) {
-            "forest" -> LightColorScheme.copy(
-                primary = forest_theme_light_primary,
-                onPrimary = forest_theme_light_onPrimary,
-                primaryContainer = forest_theme_light_primaryContainer,
-                onPrimaryContainer = forest_theme_light_onPrimaryContainer
-            )
-            "ocean" -> LightColorScheme.copy(
-                primary = ocean_theme_light_primary,
-                onPrimary = ocean_theme_light_onPrimary,
-                primaryContainer = ocean_theme_light_primaryContainer,
-                onPrimaryContainer = ocean_theme_light_onPrimaryContainer
-            )
-            "sakura" -> LightColorScheme.copy(
-                primary = sakura_theme_light_primary,
-                onPrimary = sakura_theme_light_onPrimary,
-                primaryContainer = sakura_theme_light_primaryContainer,
-                onPrimaryContainer = sakura_theme_light_onPrimaryContainer
-            )
-            else -> LightColorScheme
-        }
+    // Select the appropriate color scheme
+    // Dynamic color is disabled to enforce the Sharp Neon design system.
+    val baseColorScheme = if (useDarkTheme) DarkColorScheme else LightColorScheme
+    
+    // Apply highlight color override for primary color
+    val colorScheme = when (highlightColor) {
+        "forest" -> baseColorScheme.copy(
+            primary = if (useDarkTheme) ForestPrimaryDark else ForestPrimaryLight,
+            primaryContainer = if (useDarkTheme) ForestPrimaryDark else ForestPrimaryLight
+        )
+        "ocean" -> baseColorScheme.copy(
+            primary = if (useDarkTheme) OceanPrimaryDark else OceanPrimaryLight,
+            primaryContainer = if (useDarkTheme) OceanPrimaryDark else OceanPrimaryLight
+        )
+        "sakura" -> baseColorScheme.copy(
+            primary = if (useDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight,
+            primaryContainer = if (useDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight
+        )
+        else -> baseColorScheme.copy( // "default" - Sharp Neon colors
+            primary = if (useDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight,
+            primaryContainer = if (useDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight
+        )
     }
 
+    // PlatformRippleがIndicationNodeFactoryを実装していない問題を回避するため
+    // Rippleを透明にするカスタムRippleThemeを定義
+    val noRippleTheme = object : RippleTheme {
+        @Composable
+        override fun defaultColor(): Color = Color.Transparent
+        
+        @Composable
+        override fun rippleAlpha(): RippleAlpha = RippleAlpha(0f, 0f, 0f, 0f)
+    }
+
+    // Apply the MaterialTheme with the new color scheme, typography, and shapes
     MaterialTheme(
         colorScheme = colorScheme,
         typography = AppTypography,
-        content = content
-    )
+        shapes = AppShapes // Apply the sharp shapes
+    ) {
+        // LocalRippleThemeでrippleを無効化してclickable修飾子の互換性エラーを回避
+        CompositionLocalProvider(LocalRippleTheme provides noRippleTheme) {
+            content()
+        }
+    }
 }
+

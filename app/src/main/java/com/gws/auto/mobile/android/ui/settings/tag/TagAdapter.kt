@@ -9,12 +9,13 @@ import com.gws.auto.mobile.android.databinding.ListItemSettingTagBinding
 import com.gws.auto.mobile.android.domain.model.Tag
 
 class TagAdapter(
-    private val onDeleteClicked: (Tag) -> Unit
+    private val onTagClick: (Tag) -> Unit,
+    private val onDeleteClick: (Tag) -> Unit
 ) : ListAdapter<Tag, TagAdapter.TagViewHolder>(TagDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagViewHolder {
         val binding = ListItemSettingTagBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return TagViewHolder(binding, onDeleteClicked)
+        return TagViewHolder(binding, onTagClick, onDeleteClick)
     }
 
     override fun onBindViewHolder(holder: TagViewHolder, position: Int) {
@@ -23,11 +24,13 @@ class TagAdapter(
 
     class TagViewHolder(
         private val binding: ListItemSettingTagBinding,
-        private val onDeleteClicked: (Tag) -> Unit
+        private val onTagClick: (Tag) -> Unit,
+        private val onDeleteClick: (Tag) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(tag: Tag) {
             binding.tagNameText.text = tag.name
-            binding.deleteTagButton.setOnClickListener { onDeleteClicked(tag) }
+            binding.root.setOnClickListener { onTagClick(tag) }
+            binding.deleteTagButton.setOnClickListener { onDeleteClick(tag) }
         }
     }
 }

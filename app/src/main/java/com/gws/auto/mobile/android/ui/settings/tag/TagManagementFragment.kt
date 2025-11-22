@@ -10,6 +10,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gws.auto.mobile.android.databinding.FragmentTagManagementBinding
+import com.gws.auto.mobile.android.domain.model.Tag
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -40,9 +41,14 @@ class TagManagementFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        tagAdapter = TagAdapter { tag ->
-            viewModel.deleteTag(tag)
-        }
+        tagAdapter = TagAdapter(
+            onTagClick = { tag ->
+                showEditTagDialog(tag)
+            },
+            onDeleteClick = { tag ->
+                viewModel.deleteTag(tag)
+            }
+        )
         binding.tagRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.tagRecyclerView.adapter = tagAdapter
     }
@@ -53,6 +59,23 @@ class TagManagementFragment : Fragment() {
             viewModel.addTag(tagName)
             binding.tagNameInput.text.clear()
         }
+    }
+
+    private fun showEditTagDialog(tag: Tag) {
+        val input = android.widget.EditText(requireContext())
+        input.setText(tag.name)
+        
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle("タグ名の編集")
+            .setView(input)
+            .setPositiveButton("保存") { _, _ ->
+                val newName = input.text.toString()
+                if (newName.isNotBlank()) {
+                    viewModel.updateTag(tag, newName)
+                }
+            }
+            .setNegativeButton("キャンセル", null)
+            .show()
     }
 
     private fun observeViewModel() {

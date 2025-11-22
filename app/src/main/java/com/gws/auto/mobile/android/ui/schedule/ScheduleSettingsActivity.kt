@@ -6,8 +6,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.SavedStateHandle
 import com.gws.auto.mobile.android.ui.theme.GWSAutoForAndroidTheme
+import com.gws.auto.mobile.android.ui.theme.ThemeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -16,12 +19,19 @@ class ScheduleSettingsActivity : ComponentActivity() {
     // The viewModels() delegate will automatically handle the SavedStateHandle
     // when the activity is created with the intent extras.
     private val viewModel: ScheduleSettingsViewModel by viewModels()
+    private val themeViewModel: ThemeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
         setContent {
-            GWSAutoForAndroidTheme {
+            val theme by themeViewModel.theme.collectAsState()
+            val highlightColor by themeViewModel.highlightColor.collectAsState()
+            
+            GWSAutoForAndroidTheme(
+                theme = theme,
+                highlightColor = highlightColor
+            ) {
                 ScheduleSettingsScreen(
                     viewModel = viewModel, 
                     onSave = { finish() },

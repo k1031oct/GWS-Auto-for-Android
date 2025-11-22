@@ -9,13 +9,40 @@ import timber.log.Timber
 import java.util.Date
 import javax.inject.Inject
 
-class WorkflowEngine @Inject constructor(
+/**
+ * Defines the contract for a workflow execution engine.
+ * This interface abstracts the mechanism of how a workflow is executed, allowing for different
+ * implementations (e.g., local, remote, or test environments).
+ */
+interface WorkflowEngine {
+    /**
+     * Executes all modules within a specified workflow.
+     *
+     * @param workflowId The ID of the workflow to execute.
+     */
+    suspend fun executeWorkflow(workflowId: String)
+
+    /**
+     * Executes a single, isolated module.
+     * This is typically used for testing or validating a module's configuration.
+     *
+     * @param module The module instance to execute.
+     * @return The result of the execution.
+     */
+    suspend fun executeSingleModule(module: Module): ExecutionResult
+}
+
+/**
+ * The default, local implementation of the [WorkflowEngine].
+ * It executes workflows directly on the user's device.
+ */
+class LocalWorkflowEngine @Inject constructor(
     private val moduleExecutorProvider: ModuleExecutorProvider,
     private val historyRepository: HistoryRepository,
     private val workflowRepository: WorkflowRepository
-) {
+) : WorkflowEngine {
 
-    suspend fun executeWorkflow(workflowId: String) {
+    override suspend fun executeWorkflow(workflowId: String) {
         val workflow = workflowRepository.getWorkflowById(workflowId) ?: return
         val modules = workflow.modules
         val executionStartTime = Date()
@@ -72,8 +99,8 @@ class WorkflowEngine @Inject constructor(
             Timber.d("Saved execution history for workflow: ${workflow.name}")
         }
     }
-    
-    suspend fun executeSingleModule(module: Module): ExecutionResult {
+
+    override suspend fun executeSingleModule(module: Module): ExecutionResult {
         val variables = mutableMapOf<String, Any>() // Empty context for single execution
         val context = ExecutionContext(module, variables)
         val executor = moduleExecutorProvider.get(module.type)

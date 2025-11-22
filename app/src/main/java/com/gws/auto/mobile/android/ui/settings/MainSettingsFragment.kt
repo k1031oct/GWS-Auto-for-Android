@@ -11,8 +11,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.databinding.FragmentMainSettingsBinding
 import com.gws.auto.mobile.android.ui.settings.about.AboutAppFragment
-import com.gws.auto.mobile.android.ui.settings.account.AccountConnectionsFragment
-import com.gws.auto.mobile.android.ui.settings.app.AppSettingsFragment
+import com.gws.auto.mobile.android.ui.settings.tag.TagManagementFragment
+import com.gws.auto.mobile.android.ui.wizard.ThemeFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -58,13 +58,13 @@ class MainSettingsFragment : Fragment() {
         val settingsItems = listOf(
             SettingsItem(getString(R.string.settings_category_account)) {
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.settings_fragment_container, AccountConnectionsFragment())
+                    .replace(R.id.settings_fragment_container, com.gws.auto.mobile.android.ui.settings.account.AccountConnectionsFragment())
                     .addToBackStack(null)
                     .commit()
             },
             SettingsItem(getString(R.string.settings_category_app)) {
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.settings_fragment_container, AppSettingsFragment())
+                    .replace(R.id.settings_fragment_container, com.gws.auto.mobile.android.ui.settings.app.AppSettingsFragment())
                     .addToBackStack(null)
                     .commit()
             },

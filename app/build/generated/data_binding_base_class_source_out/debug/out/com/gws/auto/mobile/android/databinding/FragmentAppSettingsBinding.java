@@ -4,6 +4,8 @@ package com.gws.auto.mobile.android.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -11,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.gms.common.SignInButton;
 import com.gws.auto.mobile.android.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -42,20 +45,34 @@ public final class FragmentAppSettingsBinding implements ViewBinding {
   public final Spinner languageSpinner;
 
   @NonNull
+  public final ImageView profileImage;
+
+  @NonNull
+  public final SignInButton signInButton;
+
+  @NonNull
+  public final Button signOutButton;
+
+  @NonNull
   public final TextView tagManagementButton;
 
   @NonNull
   public final Spinner themeSpinner;
 
   @NonNull
-  public final TextView userInfoButton;
+  public final TextView userEmail;
+
+  @NonNull
+  public final TextView userName;
 
   private FragmentAppSettingsBinding(@NonNull ScrollView rootView,
       @NonNull TextView clearHistoryButton, @NonNull View colorIndicator,
       @NonNull Spinner countrySpinner, @NonNull TextView exportHistoryButton,
       @NonNull Spinner firstDayOfWeekSpinner, @NonNull Spinner highlightColorSpinner,
-      @NonNull Spinner languageSpinner, @NonNull TextView tagManagementButton,
-      @NonNull Spinner themeSpinner, @NonNull TextView userInfoButton) {
+      @NonNull Spinner languageSpinner, @NonNull ImageView profileImage,
+      @NonNull SignInButton signInButton, @NonNull Button signOutButton,
+      @NonNull TextView tagManagementButton, @NonNull Spinner themeSpinner,
+      @NonNull TextView userEmail, @NonNull TextView userName) {
     this.rootView = rootView;
     this.clearHistoryButton = clearHistoryButton;
     this.colorIndicator = colorIndicator;
@@ -64,9 +81,13 @@ public final class FragmentAppSettingsBinding implements ViewBinding {
     this.firstDayOfWeekSpinner = firstDayOfWeekSpinner;
     this.highlightColorSpinner = highlightColorSpinner;
     this.languageSpinner = languageSpinner;
+    this.profileImage = profileImage;
+    this.signInButton = signInButton;
+    this.signOutButton = signOutButton;
     this.tagManagementButton = tagManagementButton;
     this.themeSpinner = themeSpinner;
-    this.userInfoButton = userInfoButton;
+    this.userEmail = userEmail;
+    this.userName = userName;
   }
 
   @Override
@@ -138,6 +159,24 @@ public final class FragmentAppSettingsBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.profile_image;
+      ImageView profileImage = ViewBindings.findChildViewById(rootView, id);
+      if (profileImage == null) {
+        break missingId;
+      }
+
+      id = R.id.sign_in_button;
+      SignInButton signInButton = ViewBindings.findChildViewById(rootView, id);
+      if (signInButton == null) {
+        break missingId;
+      }
+
+      id = R.id.sign_out_button;
+      Button signOutButton = ViewBindings.findChildViewById(rootView, id);
+      if (signOutButton == null) {
+        break missingId;
+      }
+
       id = R.id.tag_management_button;
       TextView tagManagementButton = ViewBindings.findChildViewById(rootView, id);
       if (tagManagementButton == null) {
@@ -150,16 +189,22 @@ public final class FragmentAppSettingsBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.user_info_button;
-      TextView userInfoButton = ViewBindings.findChildViewById(rootView, id);
-      if (userInfoButton == null) {
+      id = R.id.user_email;
+      TextView userEmail = ViewBindings.findChildViewById(rootView, id);
+      if (userEmail == null) {
+        break missingId;
+      }
+
+      id = R.id.user_name;
+      TextView userName = ViewBindings.findChildViewById(rootView, id);
+      if (userName == null) {
         break missingId;
       }
 
       return new FragmentAppSettingsBinding((ScrollView) rootView, clearHistoryButton,
           colorIndicator, countrySpinner, exportHistoryButton, firstDayOfWeekSpinner,
-          highlightColorSpinner, languageSpinner, tagManagementButton, themeSpinner,
-          userInfoButton);
+          highlightColorSpinner, languageSpinner, profileImage, signInButton, signOutButton,
+          tagManagementButton, themeSpinner, userEmail, userName);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

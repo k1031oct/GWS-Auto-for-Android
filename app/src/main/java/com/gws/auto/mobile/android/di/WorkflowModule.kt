@@ -1,24 +1,9 @@
 package com.gws.auto.mobile.android.di
 
 import com.gws.auto.mobile.android.domain.engine.ModuleExecutor
-import com.gws.auto.mobile.android.domain.engine.modules.CalendarCreateEventModule
-import com.gws.auto.mobile.android.domain.engine.modules.ChatPostModule
-import com.gws.auto.mobile.android.domain.engine.modules.CopyPasteSheetValuesModule
-import com.gws.auto.mobile.android.domain.engine.modules.CreateGmailDraftModule
-import com.gws.auto.mobile.android.domain.engine.modules.DefineVariableModule
-import com.gws.auto.mobile.android.domain.engine.modules.DriveCopyFileModule
-import com.gws.auto.mobile.android.domain.engine.modules.DriveCreateFolderModule
-import com.gws.auto.mobile.android.domain.engine.modules.DriveMoveFileModule
-import com.gws.auto.mobile.android.domain.engine.modules.DuplicateSpreadsheetModule
-import com.gws.auto.mobile.android.domain.engine.modules.GetRelativeDateModule
-import com.gws.auto.mobile.android.domain.engine.modules.GmailSendEmailModule
-import com.gws.auto.mobile.android.domain.engine.modules.LogMessageModule
-import com.gws.auto.mobile.android.domain.engine.modules.SheetsAppendRowModule
-import com.gws.auto.mobile.android.domain.engine.modules.SheetsClearValuesModule
-import com.gws.auto.mobile.android.domain.engine.modules.SheetsCreateNewModule
-import com.gws.auto.mobile.android.domain.engine.modules.SheetsSetValueModule
+import com.gws.auto.mobile.android.domain.engine.modules.*
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
@@ -26,85 +11,109 @@ import dagger.multibindings.StringKey
 
 @Module
 @InstallIn(SingletonComponent::class)
-object WorkflowModule {
+abstract class WorkflowModule {
 
-    @Provides
-    @IntoMap
-    @StringKey("DEFINE_VARIABLE")
-    fun provideDefineVariableModule(module: DefineVariableModule): ModuleExecutor = module
-
-    @Provides
-    @IntoMap
-    @StringKey("GET_RELATIVE_DATE")
-    fun provideGetRelativeDateModule(module: GetRelativeDateModule): ModuleExecutor = module
-
-    @Provides
-    @IntoMap
-    @StringKey("CREATE_GMAIL_DRAFT")
-    fun provideCreateGmailDraftModule(module: CreateGmailDraftModule): ModuleExecutor = module
-
-    @Provides
-    @IntoMap
-    @StringKey("DUPLICATE_SPREADSHEET")
-    fun provideDuplicateSpreadsheetModule(module: DuplicateSpreadsheetModule): ModuleExecutor = module
-
-    @Provides
-    @IntoMap
-    @StringKey("COPY_PASTE_SHEET_VALUES")
-    fun provideCopyPasteSheetValuesModule(module: CopyPasteSheetValuesModule): ModuleExecutor = module
-
-    @Provides
-    @IntoMap
-    @StringKey("LOG_MESSAGE")
-    fun provideLogMessageModule(module: LogMessageModule): ModuleExecutor = module
-
-    @Provides
-    @IntoMap
-    @StringKey("chat_post")
-    fun provideChatPostModule(module: ChatPostModule): ModuleExecutor = module
-
-    @Provides
-    @IntoMap
-    @StringKey("drive_create_folder")
-    fun provideDriveCreateFolderModule(module: DriveCreateFolderModule): ModuleExecutor = module
-
-    @Provides
-    @IntoMap
-    @StringKey("drive_copy_file")
-    fun provideDriveCopyFileModule(module: DriveCopyFileModule): ModuleExecutor = module
-
-    @Provides
-    @IntoMap
-    @StringKey("drive_move_file")
-    fun provideDriveMoveFileModule(module: DriveMoveFileModule): ModuleExecutor = module
-
-    @Provides
-    @IntoMap
-    @StringKey("gmail_send_email")
-    fun provideGmailSendEmailModule(module: GmailSendEmailModule): ModuleExecutor = module
-
-    @Provides
-    @IntoMap
-    @StringKey("sheets_create_new")
-    fun provideSheetsCreateNewModule(module: SheetsCreateNewModule): ModuleExecutor = module
-
-    @Provides
-    @IntoMap
-    @StringKey("sheets_set_value")
-    fun provideSheetsSetValueModule(module: SheetsSetValueModule): ModuleExecutor = module
-
-    @Provides
-    @IntoMap
-    @StringKey("sheets_append_row")
-    fun provideSheetsAppendRowModule(module: SheetsAppendRowModule): ModuleExecutor = module
-
-    @Provides
-    @IntoMap
-    @StringKey("sheets_clear_values")
-    fun provideSheetsClearValuesModule(module: SheetsClearValuesModule): ModuleExecutor = module
-
-    @Provides
+    // Google Calendar
+    @Binds
     @IntoMap
     @StringKey("calendar_create_event")
-    fun provideCalendarCreateEventModule(module: CalendarCreateEventModule): ModuleExecutor = module
+    abstract fun bindCalendarCreateEventModule(impl: CalendarCreateEventModule): ModuleExecutor
+
+    // Google Chat
+    @Binds
+    @IntoMap
+    @StringKey("chat_post")
+    abstract fun bindChatPostModule(impl: ChatPostModule): ModuleExecutor
+
+
+    // Google Sheets
+    @Binds
+    @IntoMap
+    @StringKey("copy_paste_sheet_values")
+    abstract fun bindCopyPasteSheetValuesModule(impl: CopyPasteSheetValuesModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("duplicate_spreadsheet")
+    abstract fun bindDuplicateSpreadsheetModule(impl: DuplicateSpreadsheetModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("sheets_append_row")
+    abstract fun bindSheetsAppendRowModule(impl: SheetsAppendRowModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("sheets_clear_values")
+    abstract fun bindSheetsClearValuesModule(impl: SheetsClearValuesModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("sheets_create_new")
+    abstract fun bindSheetsCreateNewModule(impl: SheetsCreateNewModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("sheets_set_value")
+    abstract fun bindSheetsSetValueModule(impl: SheetsSetValueModule): ModuleExecutor
+
+    // Gmail
+    @Binds
+    @IntoMap
+    @StringKey("create_gmail_draft")
+    abstract fun bindCreateGmailDraftModule(impl: CreateGmailDraftModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("gmail_send_email")
+    abstract fun bindGmailSendEmailModule(impl: GmailSendEmailModule): ModuleExecutor
+
+    // Google Drive
+    @Binds
+    @IntoMap
+    @StringKey("drive_copy_file")
+    abstract fun bindDriveCopyFileModule(impl: DriveCopyFileModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("drive_create_folder")
+    abstract fun bindDriveCreateFolderModule(impl: DriveCreateFolderModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("drive_move_file")
+    abstract fun bindDriveMoveFileModule(impl: DriveMoveFileModule): ModuleExecutor
+
+    // Microsoft Outlook
+    @Binds
+    @IntoMap
+    @StringKey("outlook_send_email")
+    abstract fun bindOutlookSendEmailModule(impl: OutlookSendEmailModule): ModuleExecutor
+
+    // Slack
+    @Binds
+    @IntoMap
+    @StringKey("slack_post")
+    abstract fun bindSlackPostModule(impl: SlackPostModule): ModuleExecutor
+
+    // Utility Modules
+    @Binds
+    @IntoMap
+    @StringKey("define_variable")
+    abstract fun bindDefineVariableModule(impl: DefineVariableModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("get_relative_date")
+    abstract fun bindGetRelativeDateModule(impl: GetRelativeDateModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("log_message")
+    abstract fun bindLogMessageModule(impl: LogMessageModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("toast_notification")
+    abstract fun bindToastNotificationModule(impl: ToastNotificationModule): ModuleExecutor
 }

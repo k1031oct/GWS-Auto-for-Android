@@ -55,7 +55,7 @@ android {
 
     defaultConfig {
         applicationId = "com.gws.auto.mobile.android"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         multiDexEnabled = true
 
@@ -139,6 +139,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.foundation)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.credentials)
@@ -165,6 +166,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     debugImplementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.preference)
+
+    // Microsoft Services
+    implementation(libs.msal)
+    implementation(libs.microsoft.graph)
 
     // Hilt
     implementation(libs.hilt.android)

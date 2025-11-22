@@ -21,13 +21,21 @@ import com.gws.auto.mobile.android.data.repository.SettingsRepository
 import com.gws.auto.mobile.android.databinding.FragmentAppSettingsBinding
 import com.gws.auto.mobile.android.ui.history.HistoryViewModel
 import com.gws.auto.mobile.android.ui.settings.tag.TagManagementFragment
-import com.gws.auto.mobile.android.ui.settings.user.UserInfoFragment
+
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import coil.load
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.common.api.ApiException
+import com.gws.auto.mobile.android.ui.MainSharedViewModel
+import timber.log.Timber
+import androidx.fragment.app.activityViewModels
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,9 +44,13 @@ class AppSettingsFragment : Fragment() {
     private var _binding: FragmentAppSettingsBinding? = null
     private val binding get() = _binding!!
     private val historyViewModel: HistoryViewModel by viewModels()
+    private val mainSharedViewModel: MainSharedViewModel by activityViewModels()
 
     @Inject
     lateinit var settingsRepository: SettingsRepository
+
+    @Inject
+    lateinit var googleSignInClient: GoogleSignInClient
 
     private val createCsvLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -48,6 +60,13 @@ class AppSettingsFragment : Fragment() {
                     Toast.makeText(requireContext(), "History exported successfully", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+
+    private val signInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            handleSignInResult(task)
         }
     }
 
@@ -65,13 +84,15 @@ class AppSettingsFragment : Fragment() {
         setupSpinners()
     }
 
+    override fun onStart() {
+        super.onStart()
+        updateUI()
+    }
+
     private fun setupListeners() {
-        binding.userInfoButton.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.settings_fragment_container, UserInfoFragment())
-                .addToBackStack(null)
-                .commit()
-        }
+        binding.signInButton.setOnClickListener { signIn() }
+        binding.signOutButton.setOnClickListener { signOut() }
+
         binding.tagManagementButton.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.settings_fragment_container, TagManagementFragment())
@@ -214,6 +235,47 @@ class AppSettingsFragment : Fragment() {
             else -> "#6750A4" // default
         }
         binding.colorIndicator.setBackgroundColor(Color.parseColor(color))
+    }
+
+    private fun signIn() {
+        val signInIntent = googleSignInClient.signInIntent
+        signInLauncher.launch(signInIntent)
+    }
+
+    private fun signOut() {
+        googleSignInClient.signOut().addOnCompleteListener(requireActivity()) {
+            mainSharedViewModel.setSignedInStatus(false)
+            updateUI()
+        }
+    }
+
+    private fun handleSignInResult(completedTask: com.google.android.gms.tasks.Task<GoogleSignInAccount>) {
+        try {
+            val account = completedTask.getResult(ApiException::class.java)
+            mainSharedViewModel.setSignedInStatus(true)
+            updateUI()
+        } catch (e: ApiException) {
+            Timber.w(e, "signInResult:failed code=" + e.statusCode)
+            mainSharedViewModel.setSignedInStatus(false)
+            updateUI()
+        }
+    }
+
+    private fun updateUI() {
+        val account = GoogleSignIn.getLastSignedInAccount(requireContext())
+        if (account != null) {
+            binding.userName.text = account.displayName
+            binding.userEmail.text = account.email
+            binding.profileImage.load(account.photoUrl) { crossfade(true) }
+            binding.signInButton.visibility = View.GONE
+            binding.signOutButton.visibility = View.VISIBLE
+        } else {
+            binding.userName.text = "Not Signed In"
+            binding.userEmail.text = ""
+            binding.profileImage.setImageResource(R.mipmap.ic_launcher_round)
+            binding.signInButton.visibility = View.VISIBLE
+            binding.signOutButton.visibility = View.GONE
+        }
     }
 
     override fun onDestroyView() {

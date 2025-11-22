@@ -2,100 +2,81 @@ package com.gws.auto.mobile.android.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val md_theme_light_primary = Color(0xFF6750A4)
-val md_theme_light_onPrimary = Color(0xFFFFFFFF)
-val md_theme_light_primaryContainer = Color(0xFFEADDFF)
-val md_theme_light_onPrimaryContainer = Color(0xFF21005D)
-val md_theme_light_secondary = Color(0xFF625B71)
-val md_theme_light_onSecondary = Color(0xFFFFFFFF)
-val md_theme_light_secondaryContainer = Color(0xFFE8DEF8)
-val md_theme_light_onSecondaryContainer = Color(0xFF1D192B)
-val md_theme_light_tertiary = Color(0xFF7D5260)
-val md_theme_light_onTertiary = Color(0xFFFFFFFF)
-val md_theme_light_tertiaryContainer = Color(0xFFFFD8E4)
-val md_theme_light_onTertiaryContainer = Color(0xFF31111D)
-val md_theme_light_error = Color(0xFFB3261E)
-val md_theme_light_onError = Color(0xFFFFFFFF)
-val md_theme_light_errorContainer = Color(0xFFF9DEDC)
-val md_theme_light_onErrorContainer = Color(0xFF410E0B)
-val md_theme_light_background = Color(0xFFFFFBFE)
-val md_theme_light_onBackground = Color(0xFF1C1B1F)
-val md_theme_light_surface = Color(0xFFFFFBFE)
-val md_theme_light_onSurface = Color(0xFF1C1B1F)
-val md_theme_light_surfaceVariant = Color(0xFFE7E0EC)
-val md_theme_light_onSurfaceVariant = Color(0xFF49454F)
-val md_theme_light_outline = Color(0xFF79747E)
-val md_theme_light_inverseOnSurface = Color(0xFFF4EFF4)
-val md_theme_light_inverseSurface = Color(0xFF313033)
-val md_theme_light_inversePrimary = Color(0xFFD0BCFF)
-val md_theme_light_shadow = Color(0xFF000000)
-val md_theme_light_surfaceTint = Color(0xFF6750A4)
-val md_theme_light_outlineVariant = Color(0xFFCAC4D0)
-val md_theme_light_scrim = Color(0xFF000000)
+// Sharp Neon Design System - Color Palette
 
-val md_theme_dark_primary = Color(0xFFD0BCFF)
-val md_theme_dark_onPrimary = Color(0xFF381E72)
-val md_theme_dark_primaryContainer = Color(0xFF4F378B)
-val md_theme_dark_onPrimaryContainer = Color(0xFFEADDFF)
-val md_theme_dark_secondary = Color(0xFFCCC2DC)
-val md_theme_dark_onSecondary = Color(0xFF332D41)
-val md_theme_dark_secondaryContainer = Color(0xFF4A4458)
-val md_theme_dark_onSecondaryContainer = Color(0xFFE8DEF8)
-val md_theme_dark_tertiary = Color(0xFFEFB8C8)
-val md_theme_dark_onTertiary = Color(0xFF492532)
-val md_theme_dark_tertiaryContainer = Color(0xFF633B48)
-val md_theme_dark_onTertiaryContainer = Color(0xFFFFD8E4)
-val md_theme_dark_error = Color(0xFFF2B8B5)
-val md_theme_dark_onError = Color(0xFF601410)
-val md_theme_dark_errorContainer = Color(0xFF8C1D18)
-val md_theme_dark_onErrorContainer = Color(0xFFF9DEDC)
-val md_theme_dark_background = Color(0xFF1C1B1F)
-val md_theme_dark_onBackground = Color(0xFFE6E1E5)
-val md_theme_dark_surface = Color(0xFF1C1B1F)
-val md_theme_dark_onSurface = Color(0xFFE6E1E5)
-val md_theme_dark_surfaceVariant = Color(0xFF49454F)
-val md_theme_dark_onSurfaceVariant = Color(0xFFCAC4D0)
-val md_theme_dark_outline = Color(0xFF938F99)
-val md_theme_dark_inverseOnSurface = Color(0xFF1C1B1F)
-val md_theme_dark_inverseSurface = Color(0xFFE6E1E5)
-val md_theme_dark_inversePrimary = Color(0xFF6750A4)
-val md_theme_dark_shadow = Color(0xFF000000)
-val md_theme_dark_surfaceTint = Color(0xFFD0BCFF)
-val md_theme_dark_outlineVariant = Color(0xFF49454F)
-val md_theme_dark_scrim = Color(0xFF000000)
+// Dark Theme (Default)
+val PrimaryDark = Color(0xFFDFFF00)      // Volt Yellow (Primary)
+val OnPrimaryDark = Color(0xFF000000)
+val PrimaryContainerDark = PrimaryDark
+val OnPrimaryContainerDark = OnPrimaryDark
+val SecondaryDark = Color(0xFF00F0FF)    // Cyber Turquoise (Secondary)
+val OnSecondaryDark = Color(0xFF000000)
+val SecondaryContainerDark = SecondaryDark
+val OnSecondaryContainerDark = OnSecondaryDark
+val TertiaryDark = Color(0xFFFF0099)     // Hot Pink (Tertiary)
+val OnTertiaryDark = Color(0xFF000000)
+val TertiaryContainerDark = TertiaryDark
+val OnTertiaryContainerDark = OnTertiaryDark
+val ErrorDark = Color(0xFFFF0099)        // Hot Pink (Error)
+val OnErrorDark = Color(0xFF000000)
+val ErrorContainerDark = ErrorDark
+val OnErrorContainerDark = OnErrorDark
+val BackgroundDark = Color(0xFF050505)    // Deep Black (Background)
+val OnBackgroundDark = Color(0xFFFFFFFF)
+val SurfaceDark = Color(0xFF121212)      // Card (Surface)
+val OnSurfaceDark = Color(0xFFFFFFFF)
+val SurfaceVariantDark = SurfaceDark
+val OnSurfaceVariantDark = OnSurfaceDark
+val OutlineDark = PrimaryDark // Use Primary for outline on dark theme
+val InverseOnSurfaceDark = OnBackgroundDark
+val InverseSurfaceDark = BackgroundDark
+val InversePrimaryDark = PrimaryDark
 
-// Forest Light Theme Colors
-val forest_theme_light_primary = Color(0xFF386A1F)
-val forest_theme_light_onPrimary = Color(0xFFFFFFFF)
-val forest_theme_light_primaryContainer = Color(0xFFB9F3A3)
-val forest_theme_light_onPrimaryContainer = Color(0xFF042100)
+// Light Theme
+val PrimaryLight = Color(0xFFEEFF41)     // Pastel Yellow (Primary)
+val OnPrimaryLight = Color(0xFF121212)
+val PrimaryContainerLight = PrimaryLight
+val OnPrimaryContainerLight = OnPrimaryLight
+val SecondaryLight = Color(0xFF80D8FF)   // Pastel Turquoise (Secondary)
+val OnSecondaryLight = Color(0xFF121212)
+val SecondaryContainerLight = SecondaryLight
+val OnSecondaryContainerLight = OnSecondaryLight
+val TertiaryLight = Color(0xFFFF80AB)    // Pastel Pink (Tertiary)
+val OnTertiaryLight = Color(0xFFFFFFFF)
+val TertiaryContainerLight = TertiaryLight
+val OnTertiaryContainerLight = OnTertiaryLight
+val ErrorLight = Color(0xFFFF80AB)        // Pastel Pink (Error)
+val OnErrorLight = Color(0xFFFFFFFF)
+val ErrorContainerLight = ErrorLight
+val OnErrorContainerLight = OnErrorLight
+val BackgroundLight = Color(0xFFFFFFFF)   // White (Background)
+val OnBackgroundLight = Color(0xFF121212)
+val SurfaceLight = Color(0xFFF5F5F5)     // Grey (Surface)
+val OnSurfaceLight = Color(0xFF121212)
+val SurfaceVariantLight = SurfaceLight
+val OnSurfaceVariantLight = OnSurfaceLight
+val OutlineLight = PrimaryLight // Use Primary for outline on light theme
+val InverseOnSurfaceLight = OnBackgroundLight
+val InverseSurfaceLight = BackgroundLight
+val InversePrimaryLight = PrimaryLight
 
-// Forest Dark Theme Colors
-val forest_theme_dark_primary = Color(0xFF9DCD83)
-val forest_theme_dark_onPrimary = Color(0xFF083900)
-val forest_theme_dark_primaryContainer = Color(0xFF1F5104)
-val forest_theme_dark_onPrimaryContainer = Color(0xFFB9F3A3)
+// Accent Colors (for custom usage)
+val AccentDark = Color(0xFF00FF41)       // Matrix Green (Success)
+val AccentLight = Color(0xFFB9F6CA)      // Pastel Green (Success)
 
-// Ocean Light Theme Colors
-val ocean_theme_light_primary = Color(0xFF00696F)
-val ocean_theme_light_onPrimary = Color(0xFFFFFFFF)
-val ocean_theme_light_primaryContainer = Color(0xFF9CF1F8)
-val ocean_theme_light_onPrimaryContainer = Color(0xFF002022)
+// Highlight Color Variants for Dynamic Primary Colors
+// Default Theme (Sharp Neon)
+val DefaultPrimaryDark = Color(0xFFDFFF00)   // Volt Yellow
+val DefaultPrimaryLight = Color(0xFF6750A4)  // Purple
 
-// Ocean Dark Theme Colors
-val ocean_theme_dark_primary = Color(0xFF4DD9E2)
-val ocean_theme_dark_onPrimary = Color(0xFF00373A)
-val ocean_theme_dark_primaryContainer = Color(0xFF004F54)
-val ocean_theme_dark_onPrimaryContainer = Color(0xFF9CF1F8)
+// Forest Theme
+val ForestPrimaryDark = Color(0xFF76FF03)   // Bright Lime Green
+val ForestPrimaryLight = Color(0xFF9CCC65)  // Light Green
 
-// Sakura Light Theme Colors
-val sakura_theme_light_primary = Color(0xFFB14E69)
-val sakura_theme_light_onPrimary = Color(0xFFFFFFFF)
-val sakura_theme_light_primaryContainer = Color(0xFFFFD9DD)
-val sakura_theme_light_onPrimaryContainer = Color(0xFF3F001A)
+// Ocean Theme  
+val OceanPrimaryDark = Color(0xFF00E5FF)    // Bright Cyan
+val OceanPrimaryLight = Color(0xFF4DD0E1)   // Light Cyan
 
-// Sakura Dark Theme Colors
-val sakura_theme_dark_primary = Color(0xFFFFAFD0)
-val sakura_theme_dark_onPrimary = Color(0xFF66203A)
-val sakura_theme_dark_primaryContainer = Color(0xFF853651)
-val sakura_theme_dark_onPrimaryContainer = Color(0xFFFFD9DD)
+// Sakura Theme
+val SakuraPrimaryDark = Color(0xFFFF4081)   // Vibrant Pink
+val SakuraPrimaryLight = Color(0xFFF48FB1)  // Light Pink

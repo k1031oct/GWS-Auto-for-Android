@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">GWS-Auto for Android</string>
+    <string name="app_name">Tsunagu</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">GWS-Auto for Android</string>
@@ -194,6 +194,7 @@
 
     <!-- Build error fix: Add missing title resources -->
     <string name="title_schedule">Schedule</string>
+    <string name="schedule_fragment_title">Schedule</string>
     <string name="title_history">History</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_settings">Settings</string>
