@@ -5,6 +5,7 @@ import android.content.ClipDescription
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.draganddrop.DragAndDropSourceScope
 import androidx.compose.foundation.draganddrop.dragAndDropSource
 import androidx.compose.foundation.draganddrop.dragAndDropTarget
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
@@ -195,19 +196,21 @@ fun DraggableWorkflowItemRow(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .dragAndDropSource {
-                detectDragGesturesAfterLongPress(
-                    onDragStart = { offset ->
-                        startTransfer(
-                            DragAndDropTransferData(
-                                clipData = ClipData.newPlainText("workflowId", item.workflow.id),
-                                flags = android.view.View.DRAG_FLAG_GLOBAL
+            .dragAndDropSource(
+                block = {
+                    detectDragGesturesAfterLongPress(
+                        onDragStart = { offset ->
+                            startTransfer(
+                                DragAndDropTransferData(
+                                    clipData = ClipData.newPlainText("workflowId", item.workflow.id),
+                                    flags = android.view.View.DRAG_FLAG_GLOBAL
+                                )
                             )
-                        )
-                    },
-                    onDrag = { _, _ -> }
-                )
-            }
+                        },
+                        onDrag = { _, _ -> }
+                    )
+                }
+            )
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = LocalIndication.current,
