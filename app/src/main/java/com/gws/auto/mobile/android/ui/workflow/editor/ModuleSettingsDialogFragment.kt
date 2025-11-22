@@ -38,6 +38,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
+import androidx.fragment.app.viewModels
+import com.gws.auto.mobile.android.ui.theme.*
+import androidx.compose.ui.graphics.toArgb
+import android.content.res.Configuration
+import android.content.res.ColorStateList
 
 @AndroidEntryPoint
 class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment() {
@@ -49,6 +54,9 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
 
     @Inject
     lateinit var googleApiAuthorizer: GoogleApiAuthorizer
+    
+    private val themeViewModel: com.gws.auto.mobile.android.ui.theme.ThemeViewModel by viewModels()
+    private var currentHighlightColor: Int? = null
 
     private val launchers = mutableMapOf<String, ActivityResultLauncher<Intent>>()
     private val selectedFiles = mutableMapOf<String, Pair<String, String>>()
@@ -114,6 +122,30 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
             else -> setupDefaultUI()
         }
         binding.cancelButton.setOnClickListener { dismiss() }
+        
+        // Observe and apply highlight color
+        lifecycleScope.launch {
+            themeViewModel.highlightColor.collect { colorName ->
+                val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                val isDarkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+
+                val color = when (colorName) {
+                    "forest" -> if (isDarkTheme) ForestPrimaryDark else ForestPrimaryLight
+                    "ocean" -> if (isDarkTheme) OceanPrimaryDark else OceanPrimaryLight
+                    "sakura" -> if (isDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight
+                    else -> if (isDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight
+                }
+                currentHighlightColor = color.toArgb()
+                applyHighlightColorToDialog()
+            }
+        }
+    }
+    
+    private fun applyHighlightColorToDialog() {
+        currentHighlightColor?.let { color ->
+            val colorStateList = ColorStateList.valueOf(color)
+            binding.saveButton.backgroundTintList = colorStateList
+        }
     }
 
     private fun setupDefineVariableUI() {
@@ -304,7 +336,13 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
     
     private fun createFilePickerViews(key: String, buttonText: String, initialParams: Map<String, String>, mimeType: String): View {
         val layout = LinearLayout(requireContext()).apply { orientation = LinearLayout.VERTICAL }
-        val button = Button(requireContext()).apply { text = buttonText }
+        val button = Button(requireContext()).apply { 
+            text = buttonText
+            // Apply highlight color if available
+            currentHighlightColor?.let {
+                backgroundTintList = ColorStateList.valueOf(it)
+            }
+        }
         val textView = TextView(requireContext()).apply {
             tag = "${key}Name"
             text = initialParams["${key}FileName"] ?: "None selected"
@@ -333,6 +371,10 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
         val textInputLayout = TextInputLayout(requireContext()).apply {
             this.hint = hint
             layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            // Apply highlight color if available
+            currentHighlightColor?.let {
+                setBoxStrokeColorStateList(ColorStateList.valueOf(it))
+            }
         }
         val editText = EditText(requireContext()).apply {
             setText(initialValue ?: "")
