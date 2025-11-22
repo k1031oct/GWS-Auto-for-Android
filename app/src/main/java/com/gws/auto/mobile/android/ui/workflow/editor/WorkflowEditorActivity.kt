@@ -288,6 +288,8 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
         // Apply to TextInputLayouts (input field borders when focused)
         binding.workflowNameLayout.setBoxStrokeColorStateList(colorStateList)
         binding.workflowDescriptionLayout.setBoxStrokeColorStateList(colorStateList)
+        binding.workflowNameLayout.setHintTextColor(colorStateList)
+        binding.workflowDescriptionLayout.setHintTextColor(colorStateList)
         
         // Apply to Cancel Button (text color)
         binding.cancelButton.setTextColor(colorInt)
