@@ -189,25 +189,19 @@ fun DraggableWorkflowItemRow(
     onDeleteClicked: (Workflow) -> Unit,
     onFavoriteClicked: (Workflow) -> Unit
 ) {
-    var showMenu by remember { mutableStateOf(false) }
 
-    // Drag and Drop implementation
-    val dragAndDropSource = remember {
-        object : DragAndDropTarget {
-            override fun onDrop(event: DragAndDropEvent): Boolean {
-                return false
-            }
-        }
-    }
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = if (item.isIndented) 32.dp else 0.dp)
             .dragAndDropSource(
+                drawDragDecoration = {
+                    drawRect(color = androidx.compose.ui.graphics.Color.Gray)
+                },
                 transferData = {
                     DragAndDropTransferData(
-                        ClipData.newPlainText("workflowId", item.workflow.id)
+                        clipData = ClipData.newPlainText("workflowId", item.workflow.id),
+                        flags = android.view.View.DRAG_FLAG_GLOBAL
                     )
                 }
             )
@@ -216,6 +210,9 @@ fun DraggableWorkflowItemRow(
                 indication = LocalIndication.current,
                 onClick = { onEditClicked(item.workflow) }
             ),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
@@ -224,49 +221,57 @@ fun DraggableWorkflowItemRow(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Favorite Icon
-            IconButton(onClick = { onFavoriteClicked(item.workflow) }) {
-                Icon(
-                    imageVector = if (item.workflow.isFavorite) Icons.Default.Star else Icons.Default.StarBorder,
-                    contentDescription = "Favorite",
-                    tint = if (item.workflow.isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
+            Icon(
+                imageVector = Icons.Default.List,
+                contentDescription = null,
+                modifier = Modifier.padding(end = 16.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = item.workflow.name,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 if (item.workflow.description.isNotBlank()) {
                     Text(
                         text = item.workflow.description,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 2,
+                        maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
             }
             
-            // Run Button
             IconButton(onClick = { onRunClicked(item.workflow) }) {
-                Icon(
-                    imageVector = Icons.Default.PlayArrow,
-                    contentDescription = "Run Workflow",
-                    tint = MaterialTheme.colorScheme.primary
-                )
+                Icon(Icons.Default.PlayArrow, contentDescription = "Run")
             }
-
-            // More Menu
+            
+            var showMenu by remember { mutableStateOf(false) }
             Box {
                 IconButton(onClick = { showMenu = true }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "More Options")
+                    Icon(Icons.Default.MoreVert, contentDescription = "Options")
                 }
                 DropdownMenu(
                     expanded = showMenu,
                     onDismissRequest = { showMenu = false }
                 ) {
+                    DropdownMenuItem(
+                        text = { Text(if (item.workflow.isFavorite) "Unfavorite" else "Favorite") },
+                        onClick = {
+                            showMenu = false
+                            onFavoriteClicked(item.workflow)
+                        },
+                        leadingIcon = {
+                            Icon(
+                                if (item.workflow.isFavorite) Icons.Default.Star else Icons.Default.StarBorder,
+                                contentDescription = null,
+                                tint = if (item.workflow.isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    )
                     DropdownMenuItem(
                         text = { Text("Edit") },
                         onClick = {
