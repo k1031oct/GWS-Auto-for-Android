@@ -327,3 +327,10 @@ val executor = executorMap[module.type]?.get()
 - **Compose clickable互換性修正**: CalendarScreen内の全clickable要素に`indication = null`を明示的に指定
 - **ハイライトカラー統一適用**: Color.ktに`DefaultPrimaryDark/Light`を追加し、Theme.ktでデフォルトカラーも統一的に扱えるように修正
 - **角丸デザイン**: `RoundedCornerShape(0.dp)`で鋭角デザインを実装済み
+- **UIテーマ適用の拡張**:
+  - **MainActivity**: Bottom Navigationにハイライトカラー適用(白テキスト/アイコン、ハイライトインジケーター)、FAB背景色適用
+  - **WorkflowEditorActivity**: ActionBar、Save Button、FAB、TextInputLayout(枠線とヒントラベル)、Cancel Button、ModuleAdapterへのハイライトカラー適用
+  - **ModuleAdapter**: モジュールアイコン、トグルスイッチ、アクションボタンへのハイライトカラー適用
+  - **ModuleSettingsDialogFragment**: 動的生成されるTextInputLayout、Buttonへのハイライトカラー適用(`currentHighlightColor`プロパティ経由)
+  - **SearchFragment/TagAdapter**: タグ追加Chip buttonへのハイライトカラー適用
+  - **SettingsActivity**: Toolbarへのハイライトカラー適用

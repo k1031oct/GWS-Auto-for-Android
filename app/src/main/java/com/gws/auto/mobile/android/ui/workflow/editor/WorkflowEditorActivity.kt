@@ -291,6 +291,11 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
         binding.workflowNameLayout.setHintTextColor(colorStateList)
         binding.workflowDescriptionLayout.setHintTextColor(colorStateList)
         
+        // Reset cursor color to default (white in dark mode, black in light mode)
+        val defaultTextColor = if (isDarkTheme) android.graphics.Color.WHITE else android.graphics.Color.BLACK
+        binding.workflowNameEditor.setTextColor(defaultTextColor)
+        binding.workflowDescriptionEditor.setTextColor(defaultTextColor)
+        
         // Apply to Cancel Button (text color)
         binding.cancelButton.setTextColor(colorInt)
         

@@ -134,10 +134,13 @@ class MainActivity : AppCompatActivity() {
         val colorInt = color.toArgb()
         val highlightColorStateList = ColorStateList.valueOf(colorInt)
         val whiteColorStateList = ColorStateList.valueOf(Color.WHITE)
+        val blackColorStateList = ColorStateList.valueOf(Color.BLACK)
 
         // Bottom Navigation Styling
-        binding.bottomNav.itemIconTintList = whiteColorStateList
-        binding.bottomNav.itemTextColor = whiteColorStateList
+        // Icons: always black
+        binding.bottomNav.itemIconTintList = blackColorStateList
+        // Text: black in light theme, white in dark theme
+        binding.bottomNav.itemTextColor = if (isDarkTheme) whiteColorStateList else blackColorStateList
         binding.bottomNav.itemActiveIndicatorColor = highlightColorStateList
 
         // FAB Styling
@@ -271,12 +274,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showExitConfirmationDialog() {
-        AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(this)
             .setTitle(getString(R.string.exit_confirmation_title))
             .setMessage(getString(R.string.exit_confirmation_message))
             .setPositiveButton(getString(R.string.exit)) { _, _ -> finish() }
             .setNegativeButton(getString(R.string.cancel), null)
-            .show()
+            .create()
+        
+        dialog.show()
+        
+        // Apply theme-based text colors to dialog buttons
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val isDarkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+        val textColor = if (isDarkTheme) android.graphics.Color.WHITE else android.graphics.Color.BLACK
+        
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(textColor)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(textColor)
     }
 
     private fun showSettingsMenu(anchor: View) {
