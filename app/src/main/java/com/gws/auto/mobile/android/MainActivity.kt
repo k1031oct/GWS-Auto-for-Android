@@ -16,6 +16,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
+import android.content.res.ColorStateList
+import android.content.res.Configuration
+import android.graphics.Color
+import androidx.core.content.ContextCompat
+import androidx.compose.ui.graphics.toArgb
+import com.gws.auto.mobile.android.ui.theme.*
 import androidx.core.os.LocaleListCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
@@ -84,6 +90,7 @@ class MainActivity : AppCompatActivity() {
         setupActionButtons()
         setupBackButtonHandler()
         observeViewModel()
+        observeSettings()
     }
 
     override fun onResume() {
@@ -103,6 +110,38 @@ class MainActivity : AppCompatActivity() {
             "Dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
+    }
+
+    private fun observeSettings() {
+        settingsRepository.highlightColor
+            .onEach { colorName ->
+                applyHighlightColor(colorName)
+            }
+            .launchIn(lifecycleScope)
+    }
+
+    private fun applyHighlightColor(colorName: String) {
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val isDarkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+
+        val color = when (colorName) {
+            "forest" -> if (isDarkTheme) ForestPrimaryDark else ForestPrimaryLight
+            "ocean" -> if (isDarkTheme) OceanPrimaryDark else OceanPrimaryLight
+            "sakura" -> if (isDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight
+            else -> if (isDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight
+        }
+
+        val colorInt = color.toArgb()
+        val highlightColorStateList = ColorStateList.valueOf(colorInt)
+        val whiteColorStateList = ColorStateList.valueOf(Color.WHITE)
+
+        // Bottom Navigation Styling
+        binding.bottomNav.itemIconTintList = whiteColorStateList
+        binding.bottomNav.itemTextColor = whiteColorStateList
+        binding.bottomNav.itemActiveIndicatorColor = highlightColorStateList
+
+        // FAB Styling
+        binding.fabMain.backgroundTintList = highlightColorStateList
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {

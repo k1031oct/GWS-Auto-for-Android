@@ -22,12 +22,19 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.UUID
+import android.graphics.drawable.ColorDrawable
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.content.res.Configuration
+import com.gws.auto.mobile.android.ui.theme.*
+import androidx.compose.ui.graphics.toArgb
 
 @AndroidEntryPoint
 class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragment.ModuleParameterListener {
 
     private lateinit var binding: ActivityWorkflowEditorBinding
     private val viewModel: WorkflowEditorViewModel by viewModels()
+    private val themeViewModel: ThemeViewModel by viewModels()
     private lateinit var moduleAdapter: ModuleAdapter
     private lateinit var libraryAdapter: ModuleLibraryAdapter
     private lateinit var folderAdapter: FolderAdapter
@@ -59,6 +66,7 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
         setupFolderRecyclerView()
         setupDragAndDrop()
         observeViewModel()
+        observeTheme()
 
         binding.fabAddModule.visibility = View.GONE
 
@@ -246,6 +254,46 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
                 }
             }
         }
+    }
+
+    private fun observeTheme() {
+        lifecycleScope.launch {
+            themeViewModel.highlightColor.collectLatest { colorName ->
+                applyHighlightColor(colorName)
+            }
+        }
+    }
+
+    private fun applyHighlightColor(colorName: String) {
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val isDarkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+
+        val color = when (colorName) {
+            "forest" -> if (isDarkTheme) ForestPrimaryDark else ForestPrimaryLight
+            "ocean" -> if (isDarkTheme) OceanPrimaryDark else OceanPrimaryLight
+            "sakura" -> if (isDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight
+            else -> if (isDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight
+        }
+
+        val colorInt = color.toArgb()
+        val colorStateList = ColorStateList.valueOf(colorInt)
+
+        // Apply to ActionBar
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(colorInt))
+
+        // Apply to Buttons
+        binding.saveButton.backgroundTintList = colorStateList
+        binding.fabAddModule.backgroundTintList = colorStateList
+        
+        // Apply to TextInputLayouts (input field borders when focused)
+        binding.workflowNameLayout.setBoxStrokeColorStateList(colorStateList)
+        binding.workflowDescriptionLayout.setBoxStrokeColorStateList(colorStateList)
+        
+        // Apply to Cancel Button (text color)
+        binding.cancelButton.setTextColor(colorInt)
+        
+        // Apply to ModuleAdapter (icons and switches)
+        moduleAdapter.highlightColor = colorInt
     }
 
     private fun saveWorkflow() {

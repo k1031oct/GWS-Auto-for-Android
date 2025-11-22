@@ -253,6 +253,77 @@ val executor = executorMap[module.type]?.get()
 
 ---
 
+## 6. UI テーマとハイライトカラー (Theme & Highlight Color)
+
+### 6.1 ハイライトカラー適用フロー
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **SettingsRepository.saveHighlightColor** | `highlightColor: String` | ハイライトカラー設定保存 | Unit | |
+| └─ `dataStore.edit { it[HIGHLIGHT_COLOR_KEY] = highlightColor }` | `preferences` | DataStore書き込み | Unit | |
+| **SettingsRepository.highlightColor** | None | ハイライトカラー設定取得 | `Flow<String>` | |
+| └─ `dataStore.data.map { it[HIGHLIGHT_COLOR_KEY] ?: "default" }` | None | DataStore読み込み | Flow | デフォルト値 |
+| **ThemeViewModel.highlightColor** | None | UI状態管理 | `StateFlow<String>` | |
+| └─ `repository.highlightColor.stateIn` | `scope` | Flow→StateFlow変換 | StateFlow | |
+
+### 6.2 テーマ適用ロジック
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **GWSAutoForAndroidTheme** | `theme: String, highlightColor: String` | Material Theme設定 | @Composable | |
+| ├─ `isDarkTheme` | `theme` | "Light"/"Dark"/"System"判定 | Boolean | システム設定考慮 |
+| ├─ `baseColorScheme` | `isDarkTheme` | DarkColorScheme/LightColorScheme選択 | ColorScheme | |
+| └─ **highlightColorカラースキーム適用** | `highlightColor` | primaryカラーのオーバーライド | ColorScheme | |
+| &nbsp;&nbsp;&nbsp;├─ `"forest"` | None | ForestPrimaryDark/Light適用 | ColorScheme.copy() | |
+| &nbsp;&nbsp;&nbsp;├─ `"ocean"` | None | OceanPrimaryDark/Light適用 | ColorScheme.copy() | |
+| &nbsp;&nbsp;&nbsp;├─ `"sakura"` | None | SakuraPrimaryDark/Light適用 | ColorScheme.copy() | |
+| &nbsp;&nbsp;&nbsp;└─ `"default"` | None | DefaultPrimaryDark/Light適用 | ColorScheme.copy() | Sharp Neon |
+
+### 6.3 Compose UI での clickable 修飾子処理
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **CalendarScreen - clickable要素** | `onClick: () -> Unit` | クリック処理 | Modifier | |
+| ├─ `Modifier.clickable` | `indication = null, interactionSource` | PlatformRipple互換性エラー回避 | Modifier | IndicationNodeFactory要求 |
+| └─ `remember { MutableInteractionSource() }` | None | インタラクション状態管理 | MutableInteractionSource | |
+
+**課題と解決策**:
+- Material 3の`PlatformRipple`は`IndicationNodeFactory`を実装していないため、`clickable`修飾子でエラーが発生
+- 解決: `indication = null`を明示的に指定してrippleエフェクトを無効化
+
+---
+
+## 7. Dagger Hilt による依存性注入 (Dependency Injection)
+
+### 7.1 ModuleExecutor Map Injection
+
+```kotlin
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class WorkflowModule {
+    @Binds
+    @IntoMap
+    @StringKey("gmail_send")
+    abstract fun bindGmailSendModule(executor: GmailSendModuleExecutor): ModuleExecutor
+    
+    // ... 19個のModuleExecutor bindings
+}
+```
+
+**使用例**:
+```kotlin
+@Inject lateinit var executorMap: Map<String, @JvmSuppressWildcards Provider<ModuleExecutor>>
+val executor = executorMap[module.type]?.get()
+```
+
+---
+
 ## まとめ
 
-このドキュメントは、Tsunaguアプリケーションの全データフローを網羅的に記述しています。認証からワークフロー実行、各Google APIとの統合、ローカルデータ管理、エラーハンドリングまで、開発とメンテナンスの指針として活用できます。
+このドキュメントは、Tsunaguアプリケーションの全データフローを網羅的に記述しています。認証からワークフロー実行、各Google APIとの統合、ローカルデータ管理、エラーハンドリング、UIテーマ管理まで、開発とメンテナンスの指針として活用できます。
+
+### 最近の更新 (2025-11-22)
+
+- **Compose clickable互換性修正**: CalendarScreen内の全clickable要素に`indication = null`を明示的に指定
+- **ハイライトカラー統一適用**: Color.ktに`DefaultPrimaryDark/Light`を追加し、Theme.ktでデフォルトカラーも統一的に扱えるように修正
+- **角丸デザイン**: `RoundedCornerShape(0.dp)`で鋭角デザインを実装済み

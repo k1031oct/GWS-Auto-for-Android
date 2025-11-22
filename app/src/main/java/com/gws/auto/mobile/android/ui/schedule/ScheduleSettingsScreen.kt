@@ -103,7 +103,7 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel, onSave: () -> U
     }
 
     // --- Screen Content ---
-    GWSAutoForAndroidTheme {
+    // GWSAutoForAndroidTheme removed to allow outer theme (from Activity) to take effect
         Scaffold(
             topBar = {
                 TopAppBar(title = { Text(if (viewModel.uiState.value.selectedWorkflowId.isNotBlank()) "スケジュール編集" else "スケジュール新規作成") })
@@ -266,7 +266,8 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel, onSave: () -> U
                 }
             }
         }
-    }
+
+    // } removed
 }
 
 @Composable

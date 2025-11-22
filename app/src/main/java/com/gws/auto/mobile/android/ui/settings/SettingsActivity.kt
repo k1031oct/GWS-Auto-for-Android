@@ -12,11 +12,19 @@ import com.gws.auto.mobile.android.ui.settings.account.AccountConnectionsFragmen
 import com.gws.auto.mobile.android.ui.settings.app.AppSettingsFragment
 import com.gws.auto.mobile.android.ui.settings.tag.TagManagementFragment
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.gws.auto.mobile.android.ui.theme.*
+import androidx.compose.ui.graphics.toArgb
+import android.content.res.Configuration
+import kotlinx.coroutines.launch
+import com.gws.auto.mobile.android.ui.theme.ThemeViewModel
 
 @AndroidEntryPoint
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
+    private val themeViewModel: ThemeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +63,26 @@ class SettingsActivity : AppCompatActivity() {
                     .commit()
             }
         }
+
+        lifecycleScope.launch {
+            themeViewModel.highlightColor.collect { colorName ->
+                applyHighlightColor(colorName)
+            }
+        }
+    }
+
+    private fun applyHighlightColor(colorName: String) {
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val isDarkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+
+        val color = when (colorName) {
+            "forest" -> if (isDarkTheme) ForestPrimaryDark else ForestPrimaryLight
+            "ocean" -> if (isDarkTheme) OceanPrimaryDark else OceanPrimaryLight
+            "sakura" -> if (isDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight
+            else -> if (isDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight
+        }
+
+        binding.toolbar.setBackgroundColor(color.toArgb())
     }
 
     private fun getTitleForFragment(key: String?): String {

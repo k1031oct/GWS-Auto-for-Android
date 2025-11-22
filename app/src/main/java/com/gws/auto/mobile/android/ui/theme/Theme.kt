@@ -102,19 +102,39 @@ fun GWSAutoForAndroidTheme(
     val colorScheme = when (highlightColor) {
         "forest" -> baseColorScheme.copy(
             primary = if (useDarkTheme) ForestPrimaryDark else ForestPrimaryLight,
-            primaryContainer = if (useDarkTheme) ForestPrimaryDark else ForestPrimaryLight
+            primaryContainer = if (useDarkTheme) ForestPrimaryDark else ForestPrimaryLight,
+            secondary = if (useDarkTheme) ForestPrimaryDark else ForestPrimaryLight,
+            secondaryContainer = if (useDarkTheme) ForestPrimaryDark else ForestPrimaryLight,
+            tertiary = if (useDarkTheme) ForestPrimaryDark else ForestPrimaryLight,
+            tertiaryContainer = if (useDarkTheme) ForestPrimaryDark else ForestPrimaryLight,
+            outline = if (useDarkTheme) ForestPrimaryDark else ForestPrimaryLight
         )
         "ocean" -> baseColorScheme.copy(
             primary = if (useDarkTheme) OceanPrimaryDark else OceanPrimaryLight,
-            primaryContainer = if (useDarkTheme) OceanPrimaryDark else OceanPrimaryLight
+            primaryContainer = if (useDarkTheme) OceanPrimaryDark else OceanPrimaryLight,
+            secondary = if (useDarkTheme) OceanPrimaryDark else OceanPrimaryLight,
+            secondaryContainer = if (useDarkTheme) OceanPrimaryDark else OceanPrimaryLight,
+            tertiary = if (useDarkTheme) OceanPrimaryDark else OceanPrimaryLight,
+            tertiaryContainer = if (useDarkTheme) OceanPrimaryDark else OceanPrimaryLight,
+            outline = if (useDarkTheme) OceanPrimaryDark else OceanPrimaryLight
         )
         "sakura" -> baseColorScheme.copy(
             primary = if (useDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight,
-            primaryContainer = if (useDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight
+            primaryContainer = if (useDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight,
+            secondary = if (useDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight,
+            secondaryContainer = if (useDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight,
+            tertiary = if (useDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight,
+            tertiaryContainer = if (useDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight,
+            outline = if (useDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight
         )
         else -> baseColorScheme.copy( // "default" - Sharp Neon colors
             primary = if (useDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight,
-            primaryContainer = if (useDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight
+            primaryContainer = if (useDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight,
+            secondary = if (useDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight,
+            secondaryContainer = if (useDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight,
+            tertiary = if (useDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight,
+            tertiaryContainer = if (useDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight,
+            outline = if (useDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight
         )
     }
 

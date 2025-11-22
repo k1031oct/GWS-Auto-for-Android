@@ -124,16 +124,7 @@ fun CalendarScreen(
     }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(id = R.string.schedule_fragment_title)) },
-                actions = {
-                    IconButton(onClick = { context.startActivity(Intent(context, ScheduleSettingsActivity::class.java)) }) {
-                        Icon(Icons.Default.Settings, contentDescription = stringResource(id = R.string.settings_title))
-                    }
-                }
-            )
-        }
+        // TopAppBar removed as per user request (redundant with FAB)
     ) {
  paddingValues ->
         BottomSheetScaffold(

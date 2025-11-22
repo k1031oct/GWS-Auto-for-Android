@@ -4075,7 +4075,6 @@ id androidx_credential_pendingCredentialRequest
 id androidx_window_activity_scope
 id animateToEnd
 id animateToStart
-id announcement_button
 id announcement_content
 id announcement_recycler_view
 id announcement_title
@@ -4140,7 +4139,6 @@ id clockwise
 id closest
 id coil_request_manager
 id collapseActionView
-id color_indicator
 id common_auth_webview
 id common_auth_webview_progressbar
 id compose_prefetch_scheduler
@@ -4223,19 +4221,14 @@ id enterAlways
 id enterAlwaysCollapsed
 id entireSpace
 id errorTextView
-id error_count_day_change_text
-id error_count_month_change_text
-id error_count_text
 id escape
 id event_time
 id event_title
-id execution_count_text
 id execution_status
 id execution_time
 id exitUntilCollapsed
 id expand_activities_button
 id expanded_menu
-id export_history_button
 id fab_add_module
 id fab_main
 id fade
@@ -4251,7 +4244,6 @@ id fingerprint_description
 id fingerprint_error
 id fingerprint_icon
 id fingerprint_subtitle
-id first_day_of_week_spinner
 id fitCenter
 id fitEnd
 id fitStart
@@ -4281,7 +4273,6 @@ id hide_graphics_layer_in_inspector_tag
 id hide_ime_id
 id hide_in_inspector_tag
 id hideable
-id highlight_color_spinner
 id history_item_container
 id history_recycler_view
 id home
@@ -4312,7 +4303,6 @@ id item_touch_helper_previous_elevation
 id jumpToEnd
 id jumpToStart
 id labeled
-id language_spinner
 id layout
 id left
 id leftToRight
@@ -4368,14 +4358,9 @@ id middle
 id mini
 id module_card
 id module_enabled_switch
-id module_error_rate_chart
 id module_icon
 id module_name
-id module_name_text
-id module_ranking_chart
 id module_recycler_view
-id module_stats_table
-id module_stats_title
 id module_type
 id monday_button
 id month_grid
@@ -4488,7 +4473,6 @@ id preferences_header
 id preferences_sliding_pane_layout
 id pressed
 id privacy_policy_button
-id profile_image
 id progressBar
 id progress_bar
 id progress_circular
@@ -4500,7 +4484,6 @@ id rating_button
 id ratio
 id rectangles
 id recycler_view
-id refresh_button
 id report_drawn
 id retreat
 id reverseSawtooth
@@ -4559,7 +4542,6 @@ id showCustom
 id showHome
 id showTitle
 id sign_in_button
-id sign_out_button
 id sin
 id skipCollapsed
 id skip_button
@@ -4600,8 +4582,6 @@ id stretch
 id subjectText
 id submenuarrow
 id submit_area
-id summary_grid
-id summary_title
 id sunday_button
 id supportScrollUp
 id switchWidget
@@ -4613,7 +4593,6 @@ id tag_accessibility_clickable_spans
 id tag_accessibility_heading
 id tag_accessibility_pane_title
 id tag_compat_insets_dispatch
-id tag_management_button
 id tag_name
 id tag_name_input
 id tag_name_text
@@ -4648,7 +4627,6 @@ id theme_dark_radio
 id theme_group
 id theme_light_radio
 id theme_radio_group
-id theme_spinner
 id theme_system_radio
 id time
 id time_text
@@ -4662,12 +4640,6 @@ id toolbar
 id top
 id topPanel
 id top_center
-id total_duration_day_change_text
-id total_duration_month_change_text
-id total_duration_text
-id total_executions_day_change_text
-id total_executions_month_change_text
-id total_executions_text
 id touch_outside
 id transitionToEnd
 id transitionToStart
@@ -4694,7 +4666,6 @@ id uniform
 id unlabeled
 id unread_indicator
 id up
-id usage_count_text
 id useLogo
 id user_avatar
 id user_email
@@ -4723,15 +4694,10 @@ id wizard_view_pager
 id workflow_description
 id workflow_description_editor
 id workflow_description_layout
-id workflow_error_rate_chart
 id workflow_name
 id workflow_name_editor
 id workflow_name_layout
 id workflow_name_text
-id workflow_ranking_chart
-id workflow_recycler_view
-id workflow_stats_table
-id workflow_stats_title
 id workflow_status
 id workflow_trigger
 id wrap
@@ -4900,8 +4866,6 @@ layout fingerprint_dialog_layout
 layout fragment_about_app
 layout fragment_account_connections
 layout fragment_announcement
-layout fragment_app_settings
-layout fragment_dashboard
 layout fragment_history
 layout fragment_licenses
 layout fragment_main_settings
@@ -4914,7 +4878,6 @@ layout fragment_theme_settings
 layout fragment_wizard_locale
 layout fragment_wizard_theme
 layout fragment_wizard_week_start
-layout fragment_workflow
 layout http_auth_dialog
 layout image_frame
 layout ime_base_split_test_activity
@@ -4942,7 +4905,6 @@ layout list_item_history_header
 layout list_item_history_log
 layout list_item_module
 layout list_item_module_library
-layout list_item_module_stat
 layout list_item_schedule
 layout list_item_search_history
 layout list_item_setting
@@ -4951,7 +4913,6 @@ layout list_item_tag
 layout list_item_timeline
 layout list_item_timeline_event
 layout list_item_workflow
-layout list_item_workflow_stat
 layout m3_alert_dialog
 layout m3_alert_dialog_actions
 layout m3_alert_dialog_title

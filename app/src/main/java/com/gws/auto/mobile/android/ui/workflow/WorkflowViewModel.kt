@@ -52,8 +52,9 @@ class WorkflowViewModel @Inject constructor(
 
         val result = mutableListOf<WorkflowListItem>()
         folders.forEach { folder ->
-            result.add(WorkflowListItem.FolderItem(folder))
-            if (folder.id in expandedIds) {
+            val isExpanded = folder.id in expandedIds
+            result.add(WorkflowListItem.FolderItem(folder, isExpanded))
+            if (isExpanded) {
                 val workflowsInFolder = folder.workflowIds.mapNotNull { workflowMap[it] }
                 result.addAll(workflowsInFolder.map { WorkflowListItem.WorkflowItem(it, isIndented = true) })
             }

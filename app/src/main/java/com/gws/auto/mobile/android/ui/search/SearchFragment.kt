@@ -23,6 +23,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import com.gws.auto.mobile.android.ui.theme.*
+import android.content.res.Configuration
+import androidx.compose.ui.graphics.toArgb
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
@@ -34,6 +39,7 @@ class SearchFragment : Fragment() {
     private val mainSharedViewModel: MainSharedViewModel by viewModels({ requireActivity() })
     private val workflowViewModel: WorkflowViewModel by viewModels({ requireActivity() })
     private val historyViewModel: HistoryViewModel by viewModels({ requireActivity() })
+    private val themeViewModel: ThemeViewModel by viewModels()
 
     private lateinit var tagAdapter: TagAdapter
     private lateinit var historyAdapter: SearchHistoryAdapter
@@ -107,6 +113,21 @@ class SearchFragment : Fragment() {
         viewModel.searchHistory.onEach { history ->
             historyAdapter.submitList(history)
         }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            themeViewModel.highlightColor.collectLatest { colorName ->
+                val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                val isDarkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+
+                val color = when (colorName) {
+                    "forest" -> if (isDarkTheme) ForestPrimaryDark else ForestPrimaryLight
+                    "ocean" -> if (isDarkTheme) OceanPrimaryDark else OceanPrimaryLight
+                    "sakura" -> if (isDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight
+                    else -> if (isDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight
+                }
+                tagAdapter.highlightColor = color.toArgb()
+            }
+        }
     }
 
     private fun setupClickListeners() {

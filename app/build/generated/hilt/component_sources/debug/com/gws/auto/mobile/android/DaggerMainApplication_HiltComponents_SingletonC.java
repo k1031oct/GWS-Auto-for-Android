@@ -6,7 +6,6 @@ import android.view.View;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -29,7 +28,6 @@ import com.gws.auto.mobile.android.data.repository.TagRepository;
 import com.gws.auto.mobile.android.data.repository.WorkflowFolderRepository;
 import com.gws.auto.mobile.android.data.repository.WorkflowRepository;
 import com.gws.auto.mobile.android.di.ApiModule_ProvideFirebaseAuthFactory;
-import com.gws.auto.mobile.android.di.ApiModule_ProvideGoogleSignInClientFactory;
 import com.gws.auto.mobile.android.di.ApiModule_ProvideOkHttpClientFactory;
 import com.gws.auto.mobile.android.di.ApiModule_ProvideOutlookApiServiceFactory;
 import com.gws.auto.mobile.android.di.DatabaseModule_ProvideAppDatabaseFactory;
@@ -533,7 +531,7 @@ public final class DaggerMainApplication_HiltComponents_SingletonC {
     @CanIgnoreReturnValue
     private AppSettingsFragment injectAppSettingsFragment2(AppSettingsFragment instance3) {
       AppSettingsFragment_MembersInjector.injectSettingsRepository(instance3, singletonCImpl.settingsRepositoryProvider.get());
-      AppSettingsFragment_MembersInjector.injectGoogleSignInClient(instance3, singletonCImpl.provideGoogleSignInClientProvider.get());
+      AppSettingsFragment_MembersInjector.injectHistoryRepository(instance3, singletonCImpl.historyRepositoryProvider.get());
       return instance3;
     }
 
@@ -879,8 +877,6 @@ public final class DaggerMainApplication_HiltComponents_SingletonC {
 
     Provider<FirebaseAuth> provideFirebaseAuthProvider;
 
-    Provider<GoogleSignInClient> provideGoogleSignInClientProvider;
-
     Provider<CalendarApiService> calendarApiServiceProvider;
 
     Provider<CalendarCreateEventModule> calendarCreateEventModuleProvider;
@@ -1001,42 +997,41 @@ public final class DaggerMainApplication_HiltComponents_SingletonC {
       this.settingsRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<SettingsRepository>(singletonCImpl, 2));
       this.googleApiAuthorizerProvider = DoubleCheck.provider(new SwitchingProvider<GoogleApiAuthorizer>(singletonCImpl, 3));
       this.provideFirebaseAuthProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseAuth>(singletonCImpl, 4));
-      this.provideGoogleSignInClientProvider = DoubleCheck.provider(new SwitchingProvider<GoogleSignInClient>(singletonCImpl, 5));
-      this.calendarApiServiceProvider = DoubleCheck.provider(new SwitchingProvider<CalendarApiService>(singletonCImpl, 8));
-      this.calendarCreateEventModuleProvider = new SwitchingProvider<>(singletonCImpl, 7);
-      this.chatApiServiceProvider = DoubleCheck.provider(new SwitchingProvider<ChatApiService>(singletonCImpl, 10));
-      this.chatPostModuleProvider = new SwitchingProvider<>(singletonCImpl, 9);
-      this.copyPasteSheetValuesModuleProvider = new SwitchingProvider<>(singletonCImpl, 11);
-      this.duplicateSpreadsheetModuleProvider = new SwitchingProvider<>(singletonCImpl, 12);
-      this.sheetsAppendRowModuleProvider = new SwitchingProvider<>(singletonCImpl, 13);
-      this.sheetsClearValuesModuleProvider = new SwitchingProvider<>(singletonCImpl, 14);
-      this.sheetsCreateNewModuleProvider = new SwitchingProvider<>(singletonCImpl, 15);
-      this.sheetsSetValueModuleProvider = new SwitchingProvider<>(singletonCImpl, 16);
-      this.createGmailDraftModuleProvider = new SwitchingProvider<>(singletonCImpl, 17);
-      this.gmailSendEmailModuleProvider = new SwitchingProvider<>(singletonCImpl, 18);
-      this.driveCopyFileModuleProvider = new SwitchingProvider<>(singletonCImpl, 19);
-      this.driveCreateFolderModuleProvider = new SwitchingProvider<>(singletonCImpl, 20);
-      this.driveMoveFileModuleProvider = new SwitchingProvider<>(singletonCImpl, 21);
-      this.microsoftApiAuthorizerProvider = DoubleCheck.provider(new SwitchingProvider<MicrosoftApiAuthorizer>(singletonCImpl, 24));
-      this.provideOkHttpClientProvider = DoubleCheck.provider(new SwitchingProvider<OkHttpClient>(singletonCImpl, 25));
-      this.provideOutlookApiServiceProvider = DoubleCheck.provider(new SwitchingProvider<OutlookApiService>(singletonCImpl, 23));
-      this.outlookSendEmailModuleProvider = new SwitchingProvider<>(singletonCImpl, 22);
+      this.calendarApiServiceProvider = DoubleCheck.provider(new SwitchingProvider<CalendarApiService>(singletonCImpl, 7));
+      this.calendarCreateEventModuleProvider = new SwitchingProvider<>(singletonCImpl, 6);
+      this.chatApiServiceProvider = DoubleCheck.provider(new SwitchingProvider<ChatApiService>(singletonCImpl, 9));
+      this.chatPostModuleProvider = new SwitchingProvider<>(singletonCImpl, 8);
+      this.copyPasteSheetValuesModuleProvider = new SwitchingProvider<>(singletonCImpl, 10);
+      this.duplicateSpreadsheetModuleProvider = new SwitchingProvider<>(singletonCImpl, 11);
+      this.sheetsAppendRowModuleProvider = new SwitchingProvider<>(singletonCImpl, 12);
+      this.sheetsClearValuesModuleProvider = new SwitchingProvider<>(singletonCImpl, 13);
+      this.sheetsCreateNewModuleProvider = new SwitchingProvider<>(singletonCImpl, 14);
+      this.sheetsSetValueModuleProvider = new SwitchingProvider<>(singletonCImpl, 15);
+      this.createGmailDraftModuleProvider = new SwitchingProvider<>(singletonCImpl, 16);
+      this.gmailSendEmailModuleProvider = new SwitchingProvider<>(singletonCImpl, 17);
+      this.driveCopyFileModuleProvider = new SwitchingProvider<>(singletonCImpl, 18);
+      this.driveCreateFolderModuleProvider = new SwitchingProvider<>(singletonCImpl, 19);
+      this.driveMoveFileModuleProvider = new SwitchingProvider<>(singletonCImpl, 20);
+      this.microsoftApiAuthorizerProvider = DoubleCheck.provider(new SwitchingProvider<MicrosoftApiAuthorizer>(singletonCImpl, 23));
+      this.provideOkHttpClientProvider = DoubleCheck.provider(new SwitchingProvider<OkHttpClient>(singletonCImpl, 24));
+      this.provideOutlookApiServiceProvider = DoubleCheck.provider(new SwitchingProvider<OutlookApiService>(singletonCImpl, 22));
+      this.outlookSendEmailModuleProvider = new SwitchingProvider<>(singletonCImpl, 21);
+      this.slackPostModuleProvider = new SwitchingProvider<>(singletonCImpl, 25);
     }
 
     @SuppressWarnings("unchecked")
     private void initialize2(final ApplicationContextModule applicationContextModuleParam) {
-      this.slackPostModuleProvider = new SwitchingProvider<>(singletonCImpl, 26);
-      this.defineVariableModuleProvider = new SwitchingProvider<>(singletonCImpl, 27);
-      this.getRelativeDateModuleProvider = new SwitchingProvider<>(singletonCImpl, 28);
-      this.logMessageModuleProvider = new SwitchingProvider<>(singletonCImpl, 29);
-      this.toastNotificationModuleProvider = new SwitchingProvider<>(singletonCImpl, 30);
-      this.workflowRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<WorkflowRepository>(singletonCImpl, 31));
-      this.localWorkflowEngineProvider = new SwitchingProvider<>(singletonCImpl, 6);
+      this.defineVariableModuleProvider = new SwitchingProvider<>(singletonCImpl, 26);
+      this.getRelativeDateModuleProvider = new SwitchingProvider<>(singletonCImpl, 27);
+      this.logMessageModuleProvider = new SwitchingProvider<>(singletonCImpl, 28);
+      this.toastNotificationModuleProvider = new SwitchingProvider<>(singletonCImpl, 29);
+      this.workflowRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<WorkflowRepository>(singletonCImpl, 30));
+      this.localWorkflowEngineProvider = new SwitchingProvider<>(singletonCImpl, 5);
       this.bindWorkflowEngineProvider = DoubleCheck.provider((Provider) (localWorkflowEngineProvider));
-      this.scheduleRepositoryImplProvider = new SwitchingProvider<>(singletonCImpl, 32);
+      this.scheduleRepositoryImplProvider = new SwitchingProvider<>(singletonCImpl, 31);
       this.bindScheduleRepositoryProvider = DoubleCheck.provider((Provider) (scheduleRepositoryImplProvider));
-      this.tagRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<TagRepository>(singletonCImpl, 33));
-      this.searchHistoryRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<SearchHistoryRepository>(singletonCImpl, 34));
+      this.tagRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<TagRepository>(singletonCImpl, 32));
+      this.searchHistoryRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<SearchHistoryRepository>(singletonCImpl, 33));
     }
 
     @Override
@@ -1087,94 +1082,91 @@ public final class DaggerMainApplication_HiltComponents_SingletonC {
           case 4: // com.google.firebase.auth.FirebaseAuth
           return (T) ApiModule_ProvideFirebaseAuthFactory.provideFirebaseAuth();
 
-          case 5: // com.google.android.gms.auth.api.signin.GoogleSignInClient
-          return (T) ApiModule_ProvideGoogleSignInClientFactory.provideGoogleSignInClient(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
-
-          case 6: // com.gws.auto.mobile.android.domain.engine.LocalWorkflowEngine
+          case 5: // com.gws.auto.mobile.android.domain.engine.LocalWorkflowEngine
           return (T) new LocalWorkflowEngine(singletonCImpl.moduleExecutorProvider(), singletonCImpl.historyRepositoryProvider.get(), singletonCImpl.workflowRepositoryProvider.get());
 
-          case 7: // com.gws.auto.mobile.android.domain.engine.modules.CalendarCreateEventModule
+          case 6: // com.gws.auto.mobile.android.domain.engine.modules.CalendarCreateEventModule
           return (T) new CalendarCreateEventModule(singletonCImpl.calendarApiServiceProvider.get());
 
-          case 8: // com.gws.auto.mobile.android.domain.service.CalendarApiService
+          case 7: // com.gws.auto.mobile.android.domain.service.CalendarApiService
           return (T) new CalendarApiService(singletonCImpl.googleApiAuthorizerProvider.get());
 
-          case 9: // com.gws.auto.mobile.android.domain.engine.modules.ChatPostModule
+          case 8: // com.gws.auto.mobile.android.domain.engine.modules.ChatPostModule
           return (T) new ChatPostModule(singletonCImpl.chatApiServiceProvider.get());
 
-          case 10: // com.gws.auto.mobile.android.data.remote.ChatApiService
+          case 9: // com.gws.auto.mobile.android.data.remote.ChatApiService
           return (T) new ChatApiService(singletonCImpl.googleApiAuthorizerProvider.get());
 
-          case 11: // com.gws.auto.mobile.android.domain.engine.modules.CopyPasteSheetValuesModule
+          case 10: // com.gws.auto.mobile.android.domain.engine.modules.CopyPasteSheetValuesModule
           return (T) new CopyPasteSheetValuesModule(singletonCImpl.sheetsApiService());
 
-          case 12: // com.gws.auto.mobile.android.domain.engine.modules.DuplicateSpreadsheetModule
+          case 11: // com.gws.auto.mobile.android.domain.engine.modules.DuplicateSpreadsheetModule
           return (T) new DuplicateSpreadsheetModule(singletonCImpl.driveApiService());
 
-          case 13: // com.gws.auto.mobile.android.domain.engine.modules.SheetsAppendRowModule
+          case 12: // com.gws.auto.mobile.android.domain.engine.modules.SheetsAppendRowModule
           return (T) new SheetsAppendRowModule(singletonCImpl.sheetsApiService());
 
-          case 14: // com.gws.auto.mobile.android.domain.engine.modules.SheetsClearValuesModule
+          case 13: // com.gws.auto.mobile.android.domain.engine.modules.SheetsClearValuesModule
           return (T) new SheetsClearValuesModule(singletonCImpl.sheetsApiService());
 
-          case 15: // com.gws.auto.mobile.android.domain.engine.modules.SheetsCreateNewModule
+          case 14: // com.gws.auto.mobile.android.domain.engine.modules.SheetsCreateNewModule
           return (T) new SheetsCreateNewModule(singletonCImpl.sheetsApiService());
 
-          case 16: // com.gws.auto.mobile.android.domain.engine.modules.SheetsSetValueModule
+          case 15: // com.gws.auto.mobile.android.domain.engine.modules.SheetsSetValueModule
           return (T) new SheetsSetValueModule(singletonCImpl.sheetsApiService());
 
-          case 17: // com.gws.auto.mobile.android.domain.engine.modules.CreateGmailDraftModule
+          case 16: // com.gws.auto.mobile.android.domain.engine.modules.CreateGmailDraftModule
           return (T) new CreateGmailDraftModule(singletonCImpl.gmailApiService());
 
-          case 18: // com.gws.auto.mobile.android.domain.engine.modules.GmailSendEmailModule
+          case 17: // com.gws.auto.mobile.android.domain.engine.modules.GmailSendEmailModule
           return (T) new GmailSendEmailModule(singletonCImpl.gmailApiService());
 
-          case 19: // com.gws.auto.mobile.android.domain.engine.modules.DriveCopyFileModule
+          case 18: // com.gws.auto.mobile.android.domain.engine.modules.DriveCopyFileModule
           return (T) new DriveCopyFileModule(singletonCImpl.driveApiService());
 
-          case 20: // com.gws.auto.mobile.android.domain.engine.modules.DriveCreateFolderModule
+          case 19: // com.gws.auto.mobile.android.domain.engine.modules.DriveCreateFolderModule
           return (T) new DriveCreateFolderModule(singletonCImpl.driveApiService());
 
-          case 21: // com.gws.auto.mobile.android.domain.engine.modules.DriveMoveFileModule
+          case 20: // com.gws.auto.mobile.android.domain.engine.modules.DriveMoveFileModule
           return (T) new DriveMoveFileModule(singletonCImpl.driveApiService());
 
-          case 22: // com.gws.auto.mobile.android.domain.engine.modules.OutlookSendEmailModule
+          case 21: // com.gws.auto.mobile.android.domain.engine.modules.OutlookSendEmailModule
           return (T) new OutlookSendEmailModule(singletonCImpl.provideOutlookApiServiceProvider.get());
 
-          case 23: // com.gws.auto.mobile.android.data.remote.OutlookApiService
+          case 22: // com.gws.auto.mobile.android.data.remote.OutlookApiService
           return (T) ApiModule_ProvideOutlookApiServiceFactory.provideOutlookApiService(singletonCImpl.microsoftApiAuthorizerProvider.get(), singletonCImpl.provideOkHttpClientProvider.get());
 
-          case 24: // com.gws.auto.mobile.android.domain.service.MicrosoftApiAuthorizer
+          case 23: // com.gws.auto.mobile.android.domain.service.MicrosoftApiAuthorizer
           return (T) new MicrosoftApiAuthorizer(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 25: // okhttp3.OkHttpClient
+          case 24: // okhttp3.OkHttpClient
           return (T) ApiModule_ProvideOkHttpClientFactory.provideOkHttpClient();
 
-          case 26: // com.gws.auto.mobile.android.domain.engine.modules.SlackPostModule
+          case 25: // com.gws.auto.mobile.android.domain.engine.modules.SlackPostModule
           return (T) new SlackPostModule(singletonCImpl.provideOkHttpClientProvider.get());
 
-          case 27: // com.gws.auto.mobile.android.domain.engine.modules.DefineVariableModule
+          case 26: // com.gws.auto.mobile.android.domain.engine.modules.DefineVariableModule
           return (T) new DefineVariableModule();
 
-          case 28: // com.gws.auto.mobile.android.domain.engine.modules.GetRelativeDateModule
+          case 27: // com.gws.auto.mobile.android.domain.engine.modules.GetRelativeDateModule
           return (T) new GetRelativeDateModule();
 
-          case 29: // com.gws.auto.mobile.android.domain.engine.modules.LogMessageModule
+          case 28: // com.gws.auto.mobile.android.domain.engine.modules.LogMessageModule
           return (T) new LogMessageModule();
 
-          case 30: // com.gws.auto.mobile.android.domain.engine.modules.ToastNotificationModule
+          case 29: // com.gws.auto.mobile.android.domain.engine.modules.ToastNotificationModule
           return (T) new ToastNotificationModule(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 31: // com.gws.auto.mobile.android.data.repository.WorkflowRepository
+          case 30: // com.gws.auto.mobile.android.data.repository.WorkflowRepository
           return (T) new WorkflowRepository(singletonCImpl.workflowDao());
 
-          case 32: // com.gws.auto.mobile.android.data.repository.ScheduleRepositoryImpl
+          case 31: // com.gws.auto.mobile.android.data.repository.ScheduleRepositoryImpl
           return (T) new ScheduleRepositoryImpl(singletonCImpl.scheduleDao(), ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.calendarApiServiceProvider.get(), singletonCImpl.googleApiAuthorizerProvider.get());
 
-          case 33: // com.gws.auto.mobile.android.data.repository.TagRepository
+          case 32: // com.gws.auto.mobile.android.data.repository.TagRepository
           return (T) new TagRepository(singletonCImpl.tagDao());
 
-          case 34: // com.gws.auto.mobile.android.data.repository.SearchHistoryRepository
+          case 33: // com.gws.auto.mobile.android.data.repository.SearchHistoryRepository
           return (T) new SearchHistoryRepository(singletonCImpl.searchHistoryDao());
 
           default: throw new AssertionError(id);

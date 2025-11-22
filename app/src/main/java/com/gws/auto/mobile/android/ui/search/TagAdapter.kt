@@ -10,12 +10,20 @@ import com.gws.auto.mobile.android.databinding.ListItemTagBinding
 import com.gws.auto.mobile.android.domain.model.DisplayTag
 import com.gws.auto.mobile.android.domain.model.FilterTag
 import com.gws.auto.mobile.android.domain.model.Tag
+import android.content.res.ColorStateList
+import android.graphics.Color
 
 class TagAdapter(
     private val onTagClicked: (DisplayTag) -> Unit,
     private val onTagLongClicked: (Tag) -> Unit, // Long click only for real tags
     private val onAddTagClicked: () -> Unit
 ) : ListAdapter<DisplayTag, RecyclerView.ViewHolder>(DisplayTagDiffCallback()) {
+
+    var highlightColor: Int? = null
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     companion object {
         private const val VIEW_TYPE_TAG = 0
@@ -44,7 +52,7 @@ class TagAdapter(
             }
             VIEW_TYPE_ADD -> {
                 val binding = ListItemAddTagBinding.inflate(inflater, parent, false)
-                AddTagViewHolder(binding, onAddTagClicked)
+                AddTagViewHolder(binding, onAddTagClicked, highlightColor)
             }
             VIEW_TYPE_FILTER -> {
                 val binding = ListItemTagBinding.inflate(inflater, parent, false) // Reuse tag layout
@@ -89,10 +97,18 @@ class TagAdapter(
 
     class AddTagViewHolder(
         binding: ListItemAddTagBinding,
-        private val onAddTagClicked: () -> Unit
+        private val onAddTagClicked: () -> Unit,
+        highlightColor: Int?
     ) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener { onAddTagClicked() }
+            if (highlightColor != null) {
+                // Assuming the root is the chip/button or we want to tint the icon
+                // Since we don't see the XML, we'll try setting background tint if it's a button/chip
+                // or image tint if it has an icon accessible via binding (but we don't see binding fields)
+                // Let's assume root background tint for now as it's likely a Chip or MaterialButton
+                binding.root.backgroundTintList = ColorStateList.valueOf(highlightColor)
+            }
         }
     }
 }
