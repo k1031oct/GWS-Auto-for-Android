@@ -26,8 +26,10 @@ import androidx.compose.ui.draganddrop.DragAndDropTarget
 import androidx.compose.ui.draganddrop.DragAndDropTransferData
 import androidx.compose.ui.draganddrop.mimeTypes
 import androidx.compose.ui.draganddrop.toAndroidDragEvent
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.domain.model.Workflow
 import com.gws.auto.mobile.android.domain.model.WorkflowFolder
 import com.gws.auto.mobile.android.domain.model.WorkflowListItem
@@ -62,7 +64,7 @@ fun WorkflowScreen(
         AlertDialog(
             onDismissRequest = { showDeleteWorkflowDialog = null },
             title = { Text(showDeleteWorkflowDialog!!.name) },
-            text = { Text("このワークフローを本当に削除しますか？") },
+            text = { Text(stringResource(R.string.workflow_delete_confirmation)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -85,7 +87,7 @@ fun WorkflowScreen(
         AlertDialog(
             onDismissRequest = { showDeleteFolderDialog = null },
             title = { Text(showDeleteFolderDialog!!.name) },
-            text = { Text("このフォルダを本当に削除しますか？ (中のワークフローは削除されません)") },
+            text = { Text(stringResource(R.string.folder_delete_confirmation)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -107,12 +109,12 @@ fun WorkflowScreen(
     if (showCreateFolderDialog) {
         AlertDialog(
             onDismissRequest = { showCreateFolderDialog = false },
-            title = { Text("Create Folder") },
+            title = { Text(stringResource(R.string.create_folder_title)) },
             text = {
                 OutlinedTextField(
                     value = newFolderName,
                     onValueChange = { newFolderName = it },
-                    label = { Text("Folder Name") },
+                    label = { Text(stringResource(R.string.folder_name_label)) },
                     singleLine = true
                 )
             },
@@ -126,7 +128,7 @@ fun WorkflowScreen(
                         showCreateFolderDialog = false
                     }
                 ) {
-                    Text("Create")
+                    Text(stringResource(R.string.create))
                 }
             },
             dismissButton = {
@@ -136,7 +138,7 @@ fun WorkflowScreen(
                         newFolderName = ""
                     }
                 ) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )
@@ -265,7 +267,7 @@ fun DraggableWorkflowItemRow(
                     onDismissRequest = { showMenu = false }
                 ) {
                     DropdownMenuItem(
-                        text = { Text(if (item.workflow.isFavorite) "Unfavorite" else "Favorite") },
+                        text = { Text(if (item.workflow.isFavorite) stringResource(R.string.unfavorite) else stringResource(R.string.favorite)) },
                         onClick = {
                             showMenu = false
                             onFavoriteClicked(item.workflow)
@@ -279,7 +281,7 @@ fun DraggableWorkflowItemRow(
                         }
                     )
                     DropdownMenuItem(
-                        text = { Text("Edit") },
+                        text = { Text(stringResource(R.string.edit)) },
                         onClick = {
                             showMenu = false
                             onEditClicked(item.workflow)
@@ -287,7 +289,7 @@ fun DraggableWorkflowItemRow(
                         leadingIcon = { Icon(Icons.Default.Edit, contentDescription = null) }
                     )
                     DropdownMenuItem(
-                        text = { Text("Delete") },
+                        text = { Text(stringResource(R.string.delete)) },
                         onClick = {
                             showMenu = false
                             onDeleteClicked(item.workflow)
@@ -384,7 +386,7 @@ fun DropTargetFolderItemRow(
                     onDismissRequest = { showMenu = false }
                 ) {
                     DropdownMenuItem(
-                        text = { Text("Delete Folder") },
+                        text = { Text(stringResource(R.string.delete_folder)) },
                         onClick = {
                             showMenu = false
                             onFolderDeleteClicked(item.folder)
@@ -460,7 +462,7 @@ fun RootDropZoneRow(
                 tint = if (isDraggingOver) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = "ルートレベル（フォルダから取り出す）",
+                text = stringResource(R.string.root_level_drop_zone),
                 style = MaterialTheme.typography.bodyMedium,
                 color = if (isDraggingOver) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.weight(1f)
@@ -484,6 +486,6 @@ fun AddItemRow(onAddClicked: () -> Unit) {
     ) {
         Icon(Icons.Default.Add, contentDescription = null)
         Spacer(modifier = Modifier.width(8.dp))
-        Text("Add New Workflow")
+        Text(stringResource(R.string.add_new_workflow))
     }
 }

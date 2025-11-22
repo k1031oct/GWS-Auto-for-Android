@@ -164,11 +164,11 @@ fun CalendarContent(
     val isLoading by viewModel.isLoading.collectAsState()
 
     val daysOfWeek = remember(firstDayOfWeekSetting) {
-        val week = DayOfWeek.values()
         if (firstDayOfWeekSetting.equals("Monday", ignoreCase = true)) {
             listOf(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
         } else {
-            week.toList()
+            // Sunday start
+            listOf(DayOfWeek.SUNDAY, DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY)
         }
     }
 

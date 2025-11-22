@@ -43,8 +43,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.ui.theme.GWSAutoForAndroidTheme
 import java.time.Instant
 import java.time.LocalTime
@@ -190,31 +192,77 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel, onSave: () -> U
                     }
                     "週毎" -> {
                         Text("曜日を選択")
-                        Column(modifier = Modifier.fillMaxWidth()) {
-                            val days = listOf("月", "火", "水", "木", "金", "土", "日")
-                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-                                days.take(4).forEach { day ->
-                                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable { viewModel.toggleWeeklyDay(day) }) {
-                                        Checkbox(
-                                            checked = uiState.weeklyDays.contains(day),
-                                            onCheckedChange = { _ -> viewModel.toggleWeeklyDay(day) }
-                                        )
-                                        Text(day)
-                                    }
-                                }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        // First row: Monday to Thursday
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            // Monday
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Checkbox(
+                                    checked = uiState.weeklyDays.contains("月"),
+                                    onCheckedChange = { viewModel.toggleWeeklyDay("月") }
+                                )
+                                Text("月", style = MaterialTheme.typography.bodySmall)
                             }
-                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
-                                days.drop(4).forEach { day ->
-                                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable { viewModel.toggleWeeklyDay(day) }) {
-                                        Checkbox(
-                                            checked = uiState.weeklyDays.contains(day),
-                                            onCheckedChange = { _ -> viewModel.toggleWeeklyDay(day) }
-                                        )
-                                        Text(day)
-                                    }
-                                    Spacer(modifier = Modifier.width(16.dp)) // Add some spacing
-                                }
+                            // Tuesday
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Checkbox(
+                                    checked = uiState.weeklyDays.contains("火"),
+                                    onCheckedChange = { viewModel.toggleWeeklyDay("火") }
+                                )
+                                Text("火", style = MaterialTheme.typography.bodySmall)
                             }
+                            // Wednesday
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Checkbox(
+                                    checked = uiState.weeklyDays.contains("水"),
+                                    onCheckedChange = { viewModel.toggleWeeklyDay("水") }
+                                )
+                                Text("水", style = MaterialTheme.typography.bodySmall)
+                            }
+                            // Thursday
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Checkbox(
+                                    checked = uiState.weeklyDays.contains("木"),
+                                    onCheckedChange = { viewModel.toggleWeeklyDay("木") }
+                                )
+                                Text("木", style = MaterialTheme.typography.bodySmall)
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(4.dp))
+                        // Second row: Friday to Sunday
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            // Friday
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Checkbox(
+                                    checked = uiState.weeklyDays.contains("金"),
+                                    onCheckedChange = { viewModel.toggleWeeklyDay("金") }
+                                )
+                                Text("金", style = MaterialTheme.typography.bodySmall)
+                            }
+                            // Saturday
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Checkbox(
+                                    checked = uiState.weeklyDays.contains("土"),
+                                    onCheckedChange = { viewModel.toggleWeeklyDay("土") }
+                                )
+                                Text("土", style = MaterialTheme.typography.bodySmall)
+                            }
+                            // Sunday
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Checkbox(
+                                    checked = uiState.weeklyDays.contains("日"),
+                                    onCheckedChange = { viewModel.toggleWeeklyDay("日") }
+                                )
+                                Text("日", style = MaterialTheme.typography.bodySmall)
+                            }
+                            // Balance the row
+                            Spacer(modifier = Modifier.weight(1f))
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         OutlinedButton(onClick = { showTimePicker = true }, modifier = Modifier.fillMaxWidth()) {

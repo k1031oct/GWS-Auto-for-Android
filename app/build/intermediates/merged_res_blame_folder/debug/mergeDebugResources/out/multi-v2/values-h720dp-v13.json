@@ -14,6 +14,21 @@
                     }
                 }
             ]
+        },
+        {
+            "outputFile": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-5:\\values-h720dp-v13\\values-h720dp-v13.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\k1031\\.gradle\\caches\\8.13\\transforms\\fb108d4b0547ffb21035c742390f5335\\transformed\\appcompat-1.7.1\\res\\values-h720dp-v13\\values-h720dp-v13.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "66",
+                        "endOffsets": "117"
+                    }
+                }
+            ]
         }
     ]
 }

@@ -1,6 +1,22 @@
 {
     "logs": [
         {
+            "outputFile": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-5:\\values-night-v33\\values-night-v33.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\k1031\\.gradle\\caches\\8.13\\transforms\\54db161faf62804998cd93f8ad225902\\transformed\\jetified-core-splashscreen-1.2.0\\res\\values-night-v33\\values-night-v33.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "4",
+                        "endColumns": "12",
+                        "endOffsets": "215"
+                    }
+                }
+            ]
+        },
+        {
             "outputFile": "com.gws.auto.mobile.android.app-mergeDebugResources-5:/values-night-v33/values-night-v33.xml",
             "map": [
                 {

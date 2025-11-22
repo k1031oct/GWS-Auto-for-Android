@@ -207,4 +207,47 @@
     <string name="no_history_prompt_no_workflow">No history. Create a workflow to get started.</string>
     <string name="no_history_prompt_with_workflow">No history. Run a workflow to see its execution.</string>
     <string name="sign_in_prompt_message">To access this feature, please sign in to your account.</string>
+    
+    <!-- Schedule Settings -->
+    <string name="schedule_edit_title">Edit Schedule</string>
+    <string name="schedule_create_title">Create Schedule</string>
+    <string name="schedule_workflow_label">Workflow</string>
+    <string name="schedule_repeat_label">Repeat</string>
+    <string name="schedule_type_hourly">Hourly</string>
+    <string name="schedule_type_daily">Daily</string>
+    <string name="schedule_type_weekly">Weekly</string>
+    <string name="schedule_type_monthly">Monthly</string>
+    <string name="schedule_type_yearly">Yearly</string>
+    <string name="schedule_interval_label">Interval: %1$d hours</string>
+    <string name="schedule_select_days">Select days</string>
+    <string name="schedule_select_dates">Select dates (multiple)</string>
+    <string name="schedule_date_label">Date</string>
+    <string name="save">Save</string>
+    <string name="ok">OK</string>
+    
+    <!-- Weekdays short -->
+    <string name="weekday_mon_short">Mon</string>
+    <string name="weekday_tue_short">Tue</string>
+    <string name="weekday_wed_short">Wed</string>
+    <string name="weekday_thu_short">Thu</string>
+    <string name="weekday_fri_short">Fri</string>
+    <string name="weekday_sat_short">Sat</string>
+    <string name="weekday_sun_short">Sun</string>
+    
+    <!-- Workflow Screen -->
+    <string name="workflow_delete_confirmation">Are you sure you want to delete this workflow?</string>
+    <string name="folder_delete_confirmation">Are you sure you want to delete this folder? (Workflows inside will not be deleted)</string>
+    <string name="create_folder_title">Create Folder</string>
+    <string name="folder_name_label">Folder Name</string>
+    <string name="favorite">Favorite</string>
+    <string name="unfavorite">Unfavorite</string>
+    <string name="edit">Edit</string>
+    <string name="root_level_drop_zone">Root Level (Remove from folder)</string>
+    <string name="run">Run</string>
+    <string name="options">Options</string>
+    <string name="delete_folder">Delete Folder</string>
+    
+    <!-- Calendar Screen -->
+    <string name="type_label">Type: %1$s</string>
 </resources>
+

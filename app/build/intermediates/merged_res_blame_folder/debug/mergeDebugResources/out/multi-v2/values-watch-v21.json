@@ -1,6 +1,22 @@
 {
     "logs": [
         {
+            "outputFile": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-5:\\values-watch-v21\\values-watch-v21.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\k1031\\.gradle\\caches\\8.13\\transforms\\fb108d4b0547ffb21035c742390f5335\\transformed\\appcompat-1.7.1\\res\\values-watch-v21\\values-watch-v21.xml",
+                    "from": {
+                        "startLines": "2,6,10",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,271,499",
+                        "endLines": "5,9,13",
+                        "endColumns": "12,12,12",
+                        "endOffsets": "266,494,724"
+                    }
+                }
+            ]
+        },
+        {
             "outputFile": "com.gws.auto.mobile.android.app-mergeDebugResources-5:/values-watch-v21/values-watch-v21.xml",
             "map": [
                 {

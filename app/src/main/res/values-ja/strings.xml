@@ -154,5 +154,48 @@
     <string name="dashboard_workflow_error_rate">ワークフローエラー率</string>
     <string name="dashboard_module_error_rate">モジュールエラー率</string>
     <string name="dashboard_executions">実行</string>
+    
+    <!-- Schedule Settings -->
+    <string name="schedule_edit_title">スケジュール編集</string>
+    <string name="schedule_create_title">スケジュール新規作成</string>
+    <string name="schedule_workflow_label">ワークフロー</string>
+    <string name="schedule_repeat_label">繰り返し</string>
+    <string name="schedule_type_hourly">時間毎</string>
+    <string name="schedule_type_daily">日毎</string>
+    <string name="schedule_type_weekly">週毎</string>
+    <string name="schedule_type_monthly">月毎</string>
+    <string name="schedule_type_yearly">年毎</string>
+    <string name="schedule_interval_label">間隔: %1$d 時間</string>
+    <string name="schedule_select_days">曜日を選択</string>
+    <string name="schedule_select_dates">日付を選択 (複数選択可)</string>
+    <string name="schedule_date_label">日付</string>
+    <string name="save">保存</string>
+    <string name="ok">OK</string>
+    
+    <!-- Weekdays short -->
+    <string name="weekday_mon_short">月</string>
+    <string name="weekday_tue_short">火</string>
+    <string name="weekday_wed_short">水</string>
+    <string name="weekday_thu_short">木</string>
+    <string name="weekday_fri_short">金</string>
+    <string name="weekday_sat_short">土</string>
+    <string name="weekday_sun_short">日</string>
+    
+    <!-- Workflow Screen -->
+    <string name="workflow_delete_confirmation">このワークフローを本当に削除しますか？</string>
+    <string name="folder_delete_confirmation">このフォルダを本当に削除しますか？ (中のワークフローは削除されません)</string>
+    <string name="create_folder_title">フォルダ作成</string>
+    <string name="folder_name_label">フォルダ名</string>
+    <string name="create">作成</string>
+    <string name="favorite">お気に入り</string>
+    <string name="unfavorite">お気に入り解除</string>
+    <string name="edit">編集</string>
+    <string name="root_level_drop_zone">ルートレベル（フォルダから取り出す）</string>
+    <string name="run">実行</string>
+    <string name="options">オプション</string>
+    <string name="delete_folder">フォルダを削除</string>
+    
+    <!-- Calendar Screen -->
+    <string name="type_label">種類: %1$s</string>
 
 </resources>
