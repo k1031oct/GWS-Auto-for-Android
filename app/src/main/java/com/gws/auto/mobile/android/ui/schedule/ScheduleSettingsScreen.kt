@@ -10,7 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
@@ -109,84 +110,90 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel, onSave: () -> U
                 TopAppBar(title = { Text(if (viewModel.uiState.value.selectedWorkflowId.isNotBlank()) "スケジュール編集" else "スケジュール新規作成") })
             }
         ) {
-            LazyColumn(modifier = Modifier.padding(it).padding(16.dp)) {
-                item {
-                    ExposedDropdownMenuBox(
-                        expanded = isWorkflowMenuExpanded,
-                        onExpandedChange = { isWorkflowMenuExpanded = !isWorkflowMenuExpanded },
-                    ) {
-                        OutlinedTextField(
-                            modifier = Modifier.menuAnchor().fillMaxWidth(),
-                            readOnly = true,
-                            value = workflows.find { wf -> wf.id == uiState.selectedWorkflowId }?.name ?: "",
-                            onValueChange = {},
-                            label = { Text("ワークフロー") },
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isWorkflowMenuExpanded) },
-                        )
-                        ExposedDropdownMenu(expanded = isWorkflowMenuExpanded, onDismissRequest = { isWorkflowMenuExpanded = false }) {
-                            workflows.forEach { workflow ->
-                                DropdownMenuItem(
-                                    text = { Text(workflow.name) },
-                                    onClick = {
-                                        viewModel.onWorkflowSelected(workflow.id)
-                                        isWorkflowMenuExpanded = false
-                                    },
-                                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                                )
-                            }
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    ExposedDropdownMenuBox(
-                        expanded = isScheduleTypeMenuExpanded,
-                        onExpandedChange = { isScheduleTypeMenuExpanded = !isScheduleTypeMenuExpanded },
-                    ) {
-                        OutlinedTextField(
-                            modifier = Modifier.menuAnchor().fillMaxWidth(),
-                            readOnly = true,
-                            value = uiState.scheduleType,
-                            onValueChange = {},
-                            label = { Text("繰り返し") },
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isScheduleTypeMenuExpanded) },
-                        )
-                        ExposedDropdownMenu(expanded = isScheduleTypeMenuExpanded, onDismissRequest = { isScheduleTypeMenuExpanded = false }) {
-                            listOf("時間毎", "日毎", "週毎", "月毎", "年毎").forEach { type ->
-                                DropdownMenuItem(
-                                    text = { Text(type) },
-                                    onClick = {
-                                        viewModel.onScheduleTypeChange(type)
-                                        isScheduleTypeMenuExpanded = false
-                                    },
-                                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                                )
-                            }
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // --- Conditional UI ---
-                    when (uiState.scheduleType) {
-                        "時間毎" -> {
-                            Text("間隔: ${uiState.hourlyInterval} 時間")
-                            Slider(
-                                value = uiState.hourlyInterval.toFloat(),
-                                onValueChange = { value -> viewModel.setHourlyInterval(value.toInt()) },
-                                valueRange = 1f..24f,
-                                steps = 23
+            Column(
+                modifier = Modifier
+                    .padding(it)
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                ExposedDropdownMenuBox(
+                    expanded = isWorkflowMenuExpanded,
+                    onExpandedChange = { isWorkflowMenuExpanded = !isWorkflowMenuExpanded },
+                ) {
+                    OutlinedTextField(
+                        modifier = Modifier.menuAnchor().fillMaxWidth(),
+                        readOnly = true,
+                        value = workflows.find { wf -> wf.id == uiState.selectedWorkflowId }?.name ?: "",
+                        onValueChange = {},
+                        label = { Text("ワークフロー") },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isWorkflowMenuExpanded) },
+                    )
+                    ExposedDropdownMenu(expanded = isWorkflowMenuExpanded, onDismissRequest = { isWorkflowMenuExpanded = false }) {
+                        workflows.forEach { workflow ->
+                            DropdownMenuItem(
+                                text = { Text(workflow.name) },
+                                onClick = {
+                                    viewModel.onWorkflowSelected(workflow.id)
+                                    isWorkflowMenuExpanded = false
+                                },
+                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                             )
                         }
-                        "日毎" -> {
-                            OutlinedButton(onClick = { showTimePicker = true }, modifier = Modifier.fillMaxWidth()) {
-                                Text(uiState.dailyTime.format(DateTimeFormatter.ofPattern("HH:mm")))
-                            }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                ExposedDropdownMenuBox(
+                    expanded = isScheduleTypeMenuExpanded,
+                    onExpandedChange = { isScheduleTypeMenuExpanded = !isScheduleTypeMenuExpanded },
+                ) {
+                    OutlinedTextField(
+                        modifier = Modifier.menuAnchor().fillMaxWidth(),
+                        readOnly = true,
+                        value = uiState.scheduleType,
+                        onValueChange = {},
+                        label = { Text("繰り返し") },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isScheduleTypeMenuExpanded) },
+                    )
+                    ExposedDropdownMenu(expanded = isScheduleTypeMenuExpanded, onDismissRequest = { isScheduleTypeMenuExpanded = false }) {
+                        listOf("時間毎", "日毎", "週毎", "月毎", "年毎").forEach { type ->
+                            DropdownMenuItem(
+                                text = { Text(type) },
+                                onClick = {
+                                    viewModel.onScheduleTypeChange(type)
+                                    isScheduleTypeMenuExpanded = false
+                                },
+                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                            )
                         }
-                        "週毎" -> {
-                            Text("曜日を選択")
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // --- Conditional UI ---
+                when (uiState.scheduleType) {
+                    "時間毎" -> {
+                        Text("間隔: ${uiState.hourlyInterval} 時間")
+                        Slider(
+                            value = uiState.hourlyInterval.toFloat(),
+                            onValueChange = { value -> viewModel.setHourlyInterval(value.toInt()) },
+                            valueRange = 1f..24f,
+                            steps = 23
+                        )
+                    }
+                    "日毎" -> {
+                        OutlinedButton(onClick = { showTimePicker = true }, modifier = Modifier.fillMaxWidth()) {
+                            Text(uiState.dailyTime.format(DateTimeFormatter.ofPattern("HH:mm")))
+                        }
+                    }
+                    "週毎" -> {
+                        Text("曜日を選択")
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            val days = listOf("月", "火", "水", "木", "金", "土", "日")
                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-                                listOf("月", "火", "水", "木", "金", "土", "日").forEach { day ->
+                                days.take(4).forEach { day ->
                                     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable { viewModel.toggleWeeklyDay(day) }) {
                                         Checkbox(
                                             checked = uiState.weeklyDays.contains(day),
@@ -196,72 +203,84 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel, onSave: () -> U
                                     }
                                 }
                             }
-                            Spacer(modifier = Modifier.height(8.dp))
-                            OutlinedButton(onClick = { showTimePicker = true }, modifier = Modifier.fillMaxWidth()) {
-                                Text(uiState.weeklyTime.format(DateTimeFormatter.ofPattern("HH:mm")))
-                            }
-                        }
-                        "月毎" -> {
-                            var isMonthlyDayMenuExpanded by remember { mutableStateOf(false) }
-                            Text("日付を選択 (複数選択可)")
-                            ExposedDropdownMenuBox(
-                                expanded = isMonthlyDayMenuExpanded,
-                                onExpandedChange = { isMonthlyDayMenuExpanded = !isMonthlyDayMenuExpanded },
-                            ) {
-                                OutlinedTextField(
-                                    modifier = Modifier.menuAnchor().fillMaxWidth(),
-                                    readOnly = true,
-                                    value = uiState.monthlyDays.sorted().joinToString(", "),
-                                    onValueChange = {},
-                                    label = { Text("日付") },
-                                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isMonthlyDayMenuExpanded) },
-                                )
-                                ExposedDropdownMenu(
-                                    expanded = isMonthlyDayMenuExpanded,
-                                    onDismissRequest = { isMonthlyDayMenuExpanded = false }
-                                ) {
-                                    (1..31).forEach { day ->
-                                        DropdownMenuItem(
-                                            text = { Text(day.toString()) },
-                                            onClick = { viewModel.toggleMonthlyDay(day) },
-                                            trailingIcon = {
-                                                if (uiState.monthlyDays.contains(day)) {
-                                                    Icon(Icons.Default.Check, contentDescription = "Selected")
-                                                }
-                                            }
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+                                days.drop(4).forEach { day ->
+                                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable { viewModel.toggleWeeklyDay(day) }) {
+                                        Checkbox(
+                                            checked = uiState.weeklyDays.contains(day),
+                                            onCheckedChange = { _ -> viewModel.toggleWeeklyDay(day) }
                                         )
+                                        Text(day)
                                     }
+                                    Spacer(modifier = Modifier.width(16.dp)) // Add some spacing
                                 }
                             }
-                            Spacer(modifier = Modifier.height(8.dp))
-                            OutlinedButton(onClick = { showTimePicker = true }, modifier = Modifier.fillMaxWidth()) {
-                                Text(uiState.monthlyTime.format(DateTimeFormatter.ofPattern("HH:mm")))
-                            }
                         }
-                        "年毎" -> {
-                            OutlinedButton(onClick = { showDatePicker = true }, modifier = Modifier.fillMaxWidth()) {
-                                Text("${uiState.yearlyMonth}月 ${uiState.yearlyDayOfMonth}日")
-                            }
-                            Spacer(modifier = Modifier.height(8.dp))
-                            OutlinedButton(onClick = { showTimePicker = true }, modifier = Modifier.fillMaxWidth()) {
-                                Text(uiState.yearlyTime.format(DateTimeFormatter.ofPattern("HH:mm")))
-                            }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedButton(onClick = { showTimePicker = true }, modifier = Modifier.fillMaxWidth()) {
+                            Text(uiState.weeklyTime.format(DateTimeFormatter.ofPattern("HH:mm")))
                         }
                     }
-
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                        OutlinedButton(onClick = onCancel) {
-                            Text("キャンセル")
-                        }
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Button(
-                            onClick = { viewModel.saveSchedule(); onSave() },
-                            enabled = uiState.selectedWorkflowId.isNotBlank()
+                    "月毎" -> {
+                        var isMonthlyDayMenuExpanded by remember { mutableStateOf(false) }
+                        Text("日付を選択 (複数選択可)")
+                        ExposedDropdownMenuBox(
+                            expanded = isMonthlyDayMenuExpanded,
+                            onExpandedChange = { isMonthlyDayMenuExpanded = !isMonthlyDayMenuExpanded },
                         ) {
-                            Text("保存")
+                            OutlinedTextField(
+                                modifier = Modifier.menuAnchor().fillMaxWidth(),
+                                readOnly = true,
+                                value = uiState.monthlyDays.sorted().joinToString(", "),
+                                onValueChange = {},
+                                label = { Text("日付") },
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isMonthlyDayMenuExpanded) },
+                            )
+                            ExposedDropdownMenu(
+                                expanded = isMonthlyDayMenuExpanded,
+                                onDismissRequest = { isMonthlyDayMenuExpanded = false }
+                            ) {
+                                (1..31).forEach { day ->
+                                    DropdownMenuItem(
+                                        text = { Text(day.toString()) },
+                                        onClick = { viewModel.toggleMonthlyDay(day) },
+                                        trailingIcon = {
+                                            if (uiState.monthlyDays.contains(day)) {
+                                                Icon(Icons.Default.Check, contentDescription = "Selected")
+                                            }
+                                        }
+                                    )
+                                }
+                            }
                         }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedButton(onClick = { showTimePicker = true }, modifier = Modifier.fillMaxWidth()) {
+                            Text(uiState.monthlyTime.format(DateTimeFormatter.ofPattern("HH:mm")))
+                        }
+                    }
+                    "年毎" -> {
+                        OutlinedButton(onClick = { showDatePicker = true }, modifier = Modifier.fillMaxWidth()) {
+                            Text("${uiState.yearlyMonth}月 ${uiState.yearlyDayOfMonth}日")
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedButton(onClick = { showTimePicker = true }, modifier = Modifier.fillMaxWidth()) {
+                            Text(uiState.yearlyTime.format(DateTimeFormatter.ofPattern("HH:mm")))
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    OutlinedButton(onClick = onCancel) {
+                        Text("キャンセル")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(
+                        onClick = { viewModel.saveSchedule(); onSave() },
+                        enabled = uiState.selectedWorkflowId.isNotBlank()
+                    ) {
+                        Text("保存")
                     }
                 }
             }

@@ -39,77 +39,95 @@ class DashboardViewModel @Inject constructor(
 
     private val _refreshTrigger = MutableStateFlow(Unit)
 
-    // Intermediate flow for period statistics
-    private val periodStatsFlow: Flow<PeriodStats> = combine(
-        getStatsForMonth(LocalDate.now()),
-        getStatsForMonth(LocalDate.now().minusMonths(1)),
-        getStatsForDay(LocalDate.now()),
-        getStatsForDay(LocalDate.now().minusDays(1))
-    ) { statsMonth, statsPrevMonth, statsDay, statsPrevDay ->
-        PeriodStats(statsMonth, statsPrevMonth, statsDay, statsPrevDay)
-    }.stateIn(viewModelScope, SharingStarted.Lazily, PeriodStats(StatsSummary(0, 0, 0), StatsSummary(0, 0, 0), StatsSummary(0, 0, 0), StatsSummary(0, 0, 0)))
+    private val _searchQuery = MutableStateFlow("")
 
-    // Intermediate flow for repository data
-    private val repoDataFlow: Flow<RepositoryData> = combine(
-        historyRepository.getWorkflowExecutionCounts(),
-        workflowRepository.getAllWorkflows(),
-        historyRepository.getAllHistory()
-    ) { workflowCounts, allWorkflows, allHistory ->
-        RepositoryData(workflowCounts, allWorkflows, allHistory)
-    }.stateIn(viewModelScope, SharingStarted.Lazily, RepositoryData(emptyList(), emptyList(), emptyList()))
+    fun setSearchQuery(query: String) {
+        _searchQuery.value = query
+    }
 
+    // Final combined UI state
     // Final combined UI state
     val uiState: StateFlow<DashboardUiState> = combine(
         _refreshTrigger,
-        periodStatsFlow,
-        repoDataFlow
-    ) { _, periodStats, repoData ->
-        val moduleStats = calculateModuleStats(repoData.allWorkflows, repoData.allHistory)
+        historyRepository.getAllHistory(),
+        workflowRepository.getAllWorkflows(),
+        _searchQuery
+    ) { _, allHistory, allWorkflows, query ->
+        
+        val filteredHistory = if (query.isBlank()) {
+            allHistory
+        } else {
+            val workflowMap = allWorkflows.associateBy { it.id }
+            allHistory.filter { history ->
+                val workflow = workflowMap[history.workflowId]
+                val matchName = history.workflowName.contains(query, ignoreCase = true)
+                val matchModule = workflow?.modules?.any { it.type.contains(query, ignoreCase = true) } == true
+                matchName || matchModule
+            }
+        }
+
+        val now = LocalDate.now()
+        val statsMonth = calculateStatsForPeriod(filteredHistory, now.withDayOfMonth(1), now.plusMonths(1).withDayOfMonth(1))
+        val statsPrevMonth = calculateStatsForPeriod(filteredHistory, now.minusMonths(1).withDayOfMonth(1), now.withDayOfMonth(1))
+        val statsDay = calculateStatsForPeriod(filteredHistory, now, now.plusDays(1))
+        val statsPrevDay = calculateStatsForPeriod(filteredHistory, now.minusDays(1), now)
+        
+        val moduleStats = calculateModuleStats(allWorkflows, filteredHistory)
+        
+        // Recalculate workflow counts based on filtered history
+        val workflowCounts = filteredHistory.groupingBy { it.workflowName }
+            .eachCount()
+            .map { (name, count) -> WorkflowExecutionCount(name, count) }
+            .sortedByDescending { it.executionCount }
+            .take(10)
 
         DashboardUiState(
             // Monthly Stats
-            totalCountMonth = periodStats.statsMonth.totalCount,
-            errorCountMonth = periodStats.statsMonth.errorCount,
-            totalDurationMonth = periodStats.statsMonth.totalDuration,
-            totalCountMonthChange = calculateChange(periodStats.statsMonth.totalCount.toLong(), periodStats.statsPrevMonth.totalCount.toLong()),
-            errorCountMonthChange = calculateChange(periodStats.statsMonth.errorCount.toLong(), periodStats.statsPrevMonth.errorCount.toLong()),
-            totalDurationMonthChange = calculateChange(periodStats.statsMonth.totalDuration, periodStats.statsPrevMonth.totalDuration),
+            totalCountMonth = statsMonth.totalCount,
+            errorCountMonth = statsMonth.errorCount,
+            totalDurationMonth = statsMonth.totalDuration,
+            totalCountMonthChange = calculateChange(statsMonth.totalCount.toLong(), statsPrevMonth.totalCount.toLong()),
+            errorCountMonthChange = calculateChange(statsMonth.errorCount.toLong(), statsPrevMonth.errorCount.toLong()),
+            totalDurationMonthChange = calculateChange(statsMonth.totalDuration, statsPrevMonth.totalDuration),
 
             // Daily Stats
-            totalCountDay = periodStats.statsDay.totalCount,
-            errorCountDay = periodStats.statsDay.errorCount,
-            totalDurationDay = periodStats.statsDay.totalDuration,
-            totalCountDayChange = calculateChange(periodStats.statsDay.totalCount.toLong(), periodStats.statsPrevDay.totalCount.toLong()),
-            errorCountDayChange = calculateChange(periodStats.statsDay.errorCount.toLong(), periodStats.statsPrevDay.errorCount.toLong()),
-            totalDurationDayChange = calculateChange(periodStats.statsDay.totalDuration, periodStats.statsPrevDay.totalDuration),
+            totalCountDay = statsDay.totalCount,
+            errorCountDay = statsDay.errorCount,
+            totalDurationDay = statsDay.totalDuration,
+            totalCountDayChange = calculateChange(statsDay.totalCount.toLong(), statsPrevDay.totalCount.toLong()),
+            errorCountDayChange = calculateChange(statsDay.errorCount.toLong(), statsPrevDay.errorCount.toLong()),
+            totalDurationDayChange = calculateChange(statsDay.totalDuration, statsPrevDay.totalDuration),
 
             // Workflow Stats
-            workflowExecutionCounts = repoData.workflowCounts,
+            workflowExecutionCounts = workflowCounts,
 
             // Module Stats
-            moduleUsageCount = repoData.allHistory.size,
-            moduleErrorCount = repoData.allHistory.count { it.status != "Success" },
+            moduleUsageCount = filteredHistory.size,
+            moduleErrorCount = filteredHistory.count { it.status != "Success" },
             moduleStats = moduleStats
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.Lazily,
-        initialValue = DashboardUiState() // Provide a safe initial state
+        initialValue = DashboardUiState()
     )
 
     fun refresh() {
         _refreshTrigger.value = Unit
     }
 
-    private fun getStatsForMonth(date: LocalDate): Flow<StatsSummary> = historyRepository.getStatsForPeriod(
-        date.withDayOfMonth(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-        date.plusMonths(1).withDayOfMonth(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-    ).stateIn(viewModelScope, SharingStarted.Lazily, StatsSummary(0, 0, 0))
+    private fun calculateStatsForPeriod(history: List<History>, start: LocalDate, end: LocalDate): StatsSummary {
+        val startMilli = start.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val endMilli = end.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
-    private fun getStatsForDay(date: LocalDate): Flow<StatsSummary> = historyRepository.getStatsForPeriod(
-        date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-        date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-    ).stateIn(viewModelScope, SharingStarted.Lazily, StatsSummary(0, 0, 0))
+        val periodHistory = history.filter { it.executedAt.time in startMilli until endMilli }
+
+        return StatsSummary(
+            totalCount = periodHistory.size,
+            errorCount = periodHistory.count { it.status == "Failure" },
+            totalDuration = periodHistory.sumOf { it.durationMs }
+        )
+    }
 
     private fun calculateChange(current: Long, previous: Long): Float {
         if (previous == 0L) return 0f

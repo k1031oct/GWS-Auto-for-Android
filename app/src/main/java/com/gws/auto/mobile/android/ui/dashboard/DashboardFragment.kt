@@ -19,7 +19,10 @@ import com.gws.auto.mobile.android.ui.settings.SettingsActivity
 import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.ui.theme.GWSAutoForAndroidTheme
 import com.gws.auto.mobile.android.ui.theme.ThemeViewModel
+import com.gws.auto.mobile.android.ui.MainSharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DashboardFragment : Fragment() {
@@ -27,6 +30,7 @@ class DashboardFragment : Fragment() {
     private val viewModel: DashboardViewModel by viewModels()
     private val themeViewModel: ThemeViewModel by activityViewModels()
     private val announcementViewModel: AnnouncementViewModel by activityViewModels()
+    private val mainSharedViewModel: MainSharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,6 +63,15 @@ class DashboardFragment : Fragment() {
                         )
                     }
                 }
+            }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewLifecycleOwner.lifecycleScope.launch {
+            mainSharedViewModel.searchQuery.collect { query ->
+                viewModel.setSearchQuery(query)
             }
         }
     }

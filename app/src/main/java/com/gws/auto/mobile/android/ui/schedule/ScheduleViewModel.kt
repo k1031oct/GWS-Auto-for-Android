@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gws.auto.mobile.android.data.repository.ScheduleRepository
 import com.gws.auto.mobile.android.data.repository.SettingsRepository
+import com.gws.auto.mobile.android.data.repository.WorkflowRepository
 import com.gws.auto.mobile.android.domain.model.Holiday
 import com.gws.auto.mobile.android.domain.model.Schedule
 import com.gws.auto.mobile.android.domain.model.ScheduleType
@@ -42,6 +43,7 @@ private fun mapJapaneseDayToDayOfWeek(japaneseDay: String): DayOfWeek? {
 @HiltViewModel
 class ScheduleViewModel @Inject constructor(
     private val scheduleRepository: ScheduleRepository,
+    private val workflowRepository: WorkflowRepository,
     settingsRepository: SettingsRepository,
     private val googleApiAuthorizer: GoogleApiAuthorizer
 ) : ViewModel() {
@@ -52,12 +54,27 @@ class ScheduleViewModel @Inject constructor(
     private val _currentDate = MutableStateFlow(LocalDate.now())
     val currentDate: StateFlow<LocalDate> = _currentDate
 
+    private val _searchQuery = MutableStateFlow("")
+
+    fun setSearchQuery(query: String) {
+        _searchQuery.value = query
+    }
+
     val allSchedules: StateFlow<List<Schedule>> = scheduleRepository.getSchedulesFlow()
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
-    val schedulesForSelectedDate: StateFlow<List<Schedule>> = combine(_currentDate, allSchedules) { date, schedules ->
+    val schedulesForSelectedDate: StateFlow<List<Schedule>> = combine(
+        _currentDate, 
+        allSchedules,
+        workflowRepository.getAllWorkflows(),
+        _searchQuery
+    ) { date, schedules, workflows, query ->
+        val workflowMap = workflows.associateBy { it.id }
         schedules.filter { schedule ->
-            when (schedule.scheduleType) {
+            val workflow = workflowMap[schedule.workflowId]
+            val matchesQuery = query.isBlank() || (workflow?.name?.contains(query, ignoreCase = true) == true)
+
+            val matchesDate = when (schedule.scheduleType) {
                 ScheduleType.HOURLY -> true
                 ScheduleType.DAILY -> true
                 ScheduleType.WEEKLY -> {
@@ -68,6 +85,7 @@ class ScheduleViewModel @Inject constructor(
                 ScheduleType.YEARLY -> schedule.yearlyMonth == date.monthValue && schedule.yearlyDayOfMonth == date.dayOfMonth
                 else -> false
             }
+            matchesQuery && matchesDate
         }
     }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 

@@ -274,6 +274,7 @@
     <string name="sync_disabled">Sync is currently disabled.</string>
     <string name="sync_enabled_with">Sync enabled with: %1$s</string>
     <string name="tag_name_hint">Tag name</string>
+    <string name="tags">Tags</string>
     <string name="theme">Theme</string>
     <string name="theme_dark">Dark</string>
     <string name="theme_light">Light</string>

@@ -16,7 +16,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.databinding.FragmentHistoryBinding
 import com.gws.auto.mobile.android.ui.workflow.WorkflowViewModel
+import com.gws.auto.mobile.android.ui.MainSharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.fragment.app.activityViewModels
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
@@ -27,6 +29,7 @@ class HistoryFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: HistoryViewModel by viewModels()
     private val workflowViewModel: WorkflowViewModel by viewModels()
+    private val mainSharedViewModel: MainSharedViewModel by activityViewModels()
     private lateinit var historyAdapter: HistoryAdapter
 
     override fun onCreateView(
@@ -82,6 +85,12 @@ class HistoryFragment : Fragment() {
     }
 
     private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            mainSharedViewModel.searchQuery.collect { query ->
+                viewModel.setSearchQuery(query)
+            }
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 binding.progressBar.visibility = View.VISIBLE

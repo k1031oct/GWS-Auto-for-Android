@@ -2,15 +2,19 @@ package com.gws.auto.mobile.android.ui.workflow.editor
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gws.auto.mobile.android.data.repository.TagRepository
 import com.gws.auto.mobile.android.data.repository.WorkflowRepository
 import com.gws.auto.mobile.android.domain.engine.WorkflowEngine
 import com.gws.auto.mobile.android.domain.model.ExecutionResult
 import com.gws.auto.mobile.android.domain.model.Module
+import com.gws.auto.mobile.android.domain.model.Tag
 import com.gws.auto.mobile.android.domain.model.Workflow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -19,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class WorkflowEditorViewModel @Inject constructor(
     private val workflowRepository: WorkflowRepository,
+    private val tagRepository: TagRepository,
     private val workflowEngine: WorkflowEngine
 ) : ViewModel() {
 
@@ -31,12 +36,19 @@ class WorkflowEditorViewModel @Inject constructor(
     private val _singleModuleExecutionResult = MutableStateFlow<ExecutionResult?>(null)
     val singleModuleExecutionResult: StateFlow<ExecutionResult?> = _singleModuleExecutionResult.asStateFlow()
 
+    val availableTags: StateFlow<List<Tag>> = tagRepository.getAllTags()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    private val _selectedTags = MutableStateFlow<List<String>>(emptyList())
+    val selectedTags: StateFlow<List<String>> = _selectedTags.asStateFlow()
+
     fun loadWorkflow(workflowId: String) {
         viewModelScope.launch {
             val workflow = workflowRepository.getWorkflowById(workflowId)
             _workflow.value = workflow
             workflow?.let {
                 _modules.value = it.modules
+                _selectedTags.value = it.tags
             }
         }
     }
@@ -83,20 +95,36 @@ class WorkflowEditorViewModel @Inject constructor(
         _singleModuleExecutionResult.value = null
     }
 
+    fun addTagToWorkflow(tagName: String) {
+        if (!_selectedTags.value.contains(tagName)) {
+            _selectedTags.value = _selectedTags.value + tagName
+        }
+        // Also ensure the tag exists in the repository
+        viewModelScope.launch {
+            tagRepository.addTag(Tag(name = tagName))
+        }
+    }
+
+    fun removeTagFromWorkflow(tagName: String) {
+        _selectedTags.value = _selectedTags.value - tagName
+    }
+
     suspend fun saveWorkflow(name: String, description: String) {
         val currentWorkflow = _workflow.value
         val workflow = if (currentWorkflow != null) {
             currentWorkflow.copy(
                 name = name,
                 description = description,
-                modules = _modules.value
+                modules = _modules.value,
+                tags = _selectedTags.value
             )
         } else {
             Workflow(
                 id = UUID.randomUUID().toString(),
                 name = name,
                 description = description,
-                modules = _modules.value
+                modules = _modules.value,
+                tags = _selectedTags.value
             )
         }
         workflowRepository.saveWorkflow(workflow)

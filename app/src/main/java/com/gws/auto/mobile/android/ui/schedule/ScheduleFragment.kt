@@ -15,12 +15,16 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.gws.auto.mobile.android.ui.theme.GWSAutoForAndroidTheme
 import com.gws.auto.mobile.android.ui.theme.ThemeViewModel
+import com.gws.auto.mobile.android.ui.MainSharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ScheduleFragment : Fragment() {
 
     private val viewModel: ScheduleViewModel by viewModels()
+    private val mainSharedViewModel: MainSharedViewModel by activityViewModels()
     private val themeViewModel: ThemeViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -42,6 +46,15 @@ class ScheduleFragment : Fragment() {
                         CalendarScreen(viewModel = viewModel)
                     }
                 }
+            }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewLifecycleOwner.lifecycleScope.launch {
+            mainSharedViewModel.searchQuery.collect { query ->
+                viewModel.setSearchQuery(query)
             }
         }
     }

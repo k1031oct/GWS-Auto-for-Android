@@ -43,6 +43,7 @@ class SearchFragment : Fragment() {
 
     private lateinit var tagAdapter: TagAdapter
     private lateinit var historyAdapter: SearchHistoryAdapter
+    private lateinit var suggestionAdapter: SearchSuggestionAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
@@ -77,6 +78,17 @@ class SearchFragment : Fragment() {
         )
         binding.historyRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.historyRecyclerView.adapter = historyAdapter
+
+        suggestionAdapter = SearchSuggestionAdapter { suggestion ->
+            val query = when (suggestion) {
+                is SearchSuggestion.WorkflowItem -> suggestion.workflow.name
+                is SearchSuggestion.FolderItem -> suggestion.folder.name
+                is SearchSuggestion.TagItem -> suggestion.tag.name
+            }
+            mainSharedViewModel.setSearchQuery(query)
+            viewModel.addSearchHistory(query)
+            requireActivity().findViewById<View>(R.id.search_fragment_container).visibility = View.GONE
+        }
     }
 
     private fun handleTagClick(tag: DisplayTag) {
@@ -113,6 +125,25 @@ class SearchFragment : Fragment() {
         viewModel.searchHistory.onEach { history ->
             historyAdapter.submitList(history)
         }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            mainSharedViewModel.searchQuery.collectLatest { query ->
+                viewModel.setSearchQuery(query)
+                if (query.isBlank()) {
+                    binding.historyRecyclerView.adapter = historyAdapter
+                    binding.clearHistoryButton.visibility = View.VISIBLE
+                } else {
+                    binding.historyRecyclerView.adapter = suggestionAdapter
+                    binding.clearHistoryButton.visibility = View.GONE
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.searchSuggestions.collectLatest { suggestions ->
+                suggestionAdapter.submitList(suggestions)
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             themeViewModel.highlightColor.collectLatest { colorName ->

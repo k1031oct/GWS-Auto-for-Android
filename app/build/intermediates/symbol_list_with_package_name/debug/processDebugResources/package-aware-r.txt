@@ -4062,6 +4062,7 @@ id actions
 id activity_chooser_view_content
 id add
 id add_tag_button
+id add_tag_chip
 id adjust_height
 id adjust_width
 id advance
@@ -4582,6 +4583,7 @@ id stretch
 id subjectText
 id submenuarrow
 id submit_area
+id suggestion_icon
 id sunday_button
 id supportScrollUp
 id switchWidget
@@ -4592,6 +4594,7 @@ id tag_accessibility_actions
 id tag_accessibility_clickable_spans
 id tag_accessibility_heading
 id tag_accessibility_pane_title
+id tag_chip_group
 id tag_compat_insets_dispatch
 id tag_name
 id tag_name_input
@@ -4601,6 +4604,7 @@ id tag_on_receive_content_listener
 id tag_on_receive_content_mime_types
 id tag_recycler_view
 id tag_screen_reader_focusable
+id tag_section
 id tag_state_description
 id tag_system_bar_state_monitor
 id tag_transition_group
@@ -5513,6 +5517,7 @@ string sync_disabled
 string sync_enabled_with
 string tab
 string tag_name_hint
+string tags
 string template_percent
 string theme
 string theme_dark

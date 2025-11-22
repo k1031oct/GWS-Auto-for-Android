@@ -4,6 +4,10 @@
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\list_item_history_log.xml"
     },
     {
+        "merged": "com.gws.auto.mobile.android.app-mergeDebugResources-6:/layout/list_item_search_history.xml",
+        "source": "com.gws.auto.mobile.android.app-main-9:/layout/list_item_search_history.xml"
+    },
+    {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-6:\\layout\\list_item_calendar_day.xml",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\list_item_calendar_day.xml"
     },
@@ -122,10 +126,6 @@
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-6:\\layout\\list_item_file.xml",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\list_item_file.xml"
-    },
-    {
-        "merged": "com.gws.auto.mobile.android.app-mergeDebugResources-6:/layout/fragment_dashboard.xml",
-        "source": "com.gws.auto.mobile.android.app-main-9:/layout/fragment_dashboard.xml"
     },
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-6:\\layout\\fragment_settings.xml",

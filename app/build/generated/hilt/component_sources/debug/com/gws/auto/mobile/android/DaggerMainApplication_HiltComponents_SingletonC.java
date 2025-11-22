@@ -767,10 +767,10 @@ public final class DaggerMainApplication_HiltComponents_SingletonC {
           return (T) new ScheduleSettingsViewModel(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.bindScheduleRepositoryProvider.get(), singletonCImpl.settingsRepositoryProvider.get(), singletonCImpl.workflowRepositoryProvider.get(), viewModelCImpl.savedStateHandle);
 
           case 5: // com.gws.auto.mobile.android.ui.schedule.ScheduleViewModel
-          return (T) new ScheduleViewModel(singletonCImpl.bindScheduleRepositoryProvider.get(), singletonCImpl.settingsRepositoryProvider.get(), singletonCImpl.googleApiAuthorizerProvider.get());
+          return (T) new ScheduleViewModel(singletonCImpl.bindScheduleRepositoryProvider.get(), singletonCImpl.workflowRepositoryProvider.get(), singletonCImpl.settingsRepositoryProvider.get(), singletonCImpl.googleApiAuthorizerProvider.get());
 
           case 6: // com.gws.auto.mobile.android.ui.search.SearchViewModel
-          return (T) new SearchViewModel(singletonCImpl.tagRepositoryProvider.get(), singletonCImpl.searchHistoryRepositoryProvider.get());
+          return (T) new SearchViewModel(singletonCImpl.tagRepositoryProvider.get(), singletonCImpl.searchHistoryRepositoryProvider.get(), singletonCImpl.workflowRepositoryProvider.get(), viewModelCImpl.workflowFolderRepository());
 
           case 7: // com.gws.auto.mobile.android.ui.settings.tag.TagManagementViewModel
           return (T) new TagManagementViewModel(singletonCImpl.tagRepositoryProvider.get());
@@ -782,7 +782,7 @@ public final class DaggerMainApplication_HiltComponents_SingletonC {
           return (T) new WizardViewModel(singletonCImpl.settingsRepositoryProvider.get());
 
           case 10: // com.gws.auto.mobile.android.ui.workflow.editor.WorkflowEditorViewModel
-          return (T) new WorkflowEditorViewModel(singletonCImpl.workflowRepositoryProvider.get(), singletonCImpl.bindWorkflowEngineProvider.get());
+          return (T) new WorkflowEditorViewModel(singletonCImpl.workflowRepositoryProvider.get(), singletonCImpl.tagRepositoryProvider.get(), singletonCImpl.bindWorkflowEngineProvider.get());
 
           case 11: // com.gws.auto.mobile.android.ui.workflow.WorkflowViewModel
           return (T) new WorkflowViewModel(singletonCImpl.workflowRepositoryProvider.get(), viewModelCImpl.workflowFolderRepository(), singletonCImpl.searchHistoryRepositoryProvider.get());

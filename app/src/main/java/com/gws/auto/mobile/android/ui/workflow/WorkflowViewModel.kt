@@ -43,24 +43,43 @@ class WorkflowViewModel @Inject constructor(
         val workflowMap = workflows.associateBy { it.id }
         val allWorkflowIdsInFolders = folders.flatMap { it.workflowIds }.toSet()
 
-        val topLevelWorkflows = workflows.filter { it.id !in allWorkflowIdsInFolders }
-
-        val filteredWorkflows = topLevelWorkflows.filter {
-            (query.isBlank() || it.name.contains(query, ignoreCase = true)) &&
-            (!isFavoriteFilterActive || it.isFavorite)
+        val isWorkflowMatch: (Workflow) -> Boolean = { workflow ->
+            val matchesQuery = query.isBlank() ||
+                    workflow.name.contains(query, ignoreCase = true) ||
+                    workflow.tags.any { it.contains(query, ignoreCase = true) }
+            val matchesFavorite = !isFavoriteFilterActive || workflow.isFavorite
+            matchesQuery && matchesFavorite
         }
 
+        val topLevelWorkflows = workflows.filter { it.id !in allWorkflowIdsInFolders }
+        val filteredTopLevel = topLevelWorkflows.filter(isWorkflowMatch)
+
         val result = mutableListOf<WorkflowListItem>()
+        
         folders.forEach { folder ->
-            val isExpanded = folder.id in expandedIds
-            result.add(WorkflowListItem.FolderItem(folder, isExpanded))
-            if (isExpanded) {
-                val workflowsInFolder = folder.workflowIds.mapNotNull { workflowMap[it] }
-                result.addAll(workflowsInFolder.map { WorkflowListItem.WorkflowItem(it, isIndented = true) })
+            val workflowsInFolder = folder.workflowIds.mapNotNull { workflowMap[it] }
+            val matchingWorkflows = workflowsInFolder.filter(isWorkflowMatch)
+            val folderMatches = query.isBlank() || folder.name.contains(query, ignoreCase = true)
+
+            if (folderMatches || matchingWorkflows.isNotEmpty()) {
+                // Auto-expand if searching and matches found inside, otherwise respect user expansion
+                val isExpanded = if (query.isNotBlank()) true else folder.id in expandedIds
+                
+                result.add(WorkflowListItem.FolderItem(folder, isExpanded))
+                if (isExpanded) {
+                    // If folder matches by name, show all workflows in it (respecting favorite filter)
+                    // Otherwise show only matching workflows
+                    val itemsToShow = if (folderMatches && query.isNotBlank()) {
+                         workflowsInFolder.filter { !isFavoriteFilterActive || it.isFavorite }
+                    } else {
+                        matchingWorkflows
+                    }
+                    result.addAll(itemsToShow.map { WorkflowListItem.WorkflowItem(it, isIndented = true) })
+                }
             }
         }
 
-        result.addAll(filteredWorkflows.map { WorkflowListItem.WorkflowItem(it) })
+        result.addAll(filteredTopLevel.map { WorkflowListItem.WorkflowItem(it) })
         result.add(WorkflowListItem.AddItem)
         result
 

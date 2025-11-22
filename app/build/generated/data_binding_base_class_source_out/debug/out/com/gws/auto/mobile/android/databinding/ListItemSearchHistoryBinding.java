@@ -4,6 +4,7 @@ package com.gws.auto.mobile.android.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -22,10 +23,14 @@ public final class ListItemSearchHistoryBinding implements ViewBinding {
   @NonNull
   public final TextView queryText;
 
-  private ListItemSearchHistoryBinding(@NonNull LinearLayout rootView,
-      @NonNull TextView queryText) {
+  @NonNull
+  public final ImageView suggestionIcon;
+
+  private ListItemSearchHistoryBinding(@NonNull LinearLayout rootView, @NonNull TextView queryText,
+      @NonNull ImageView suggestionIcon) {
     this.rootView = rootView;
     this.queryText = queryText;
+    this.suggestionIcon = suggestionIcon;
   }
 
   @Override
@@ -61,7 +66,13 @@ public final class ListItemSearchHistoryBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ListItemSearchHistoryBinding((LinearLayout) rootView, queryText);
+      id = R.id.suggestion_icon;
+      ImageView suggestionIcon = ViewBindings.findChildViewById(rootView, id);
+      if (suggestionIcon == null) {
+        break missingId;
+      }
+
+      return new ListItemSearchHistoryBinding((LinearLayout) rootView, queryText, suggestionIcon);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

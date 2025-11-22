@@ -316,6 +316,10 @@
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\mipmap-anydpi-v26\\ic_launcher.xml"
     },
     {
+        "merged": "com.gws.auto.mobile.android.app-debug-7:/layout_list_item_search_history.xml.flat",
+        "source": "com.gws.auto.mobile.android.app-main-9:/layout/list_item_search_history.xml"
+    },
+    {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\layout_list_item_history_log.xml.flat",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\list_item_history_log.xml"
     },

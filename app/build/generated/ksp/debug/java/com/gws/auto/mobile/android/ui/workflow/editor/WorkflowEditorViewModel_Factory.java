@@ -1,5 +1,6 @@
 package com.gws.auto.mobile.android.ui.workflow.editor;
 
+import com.gws.auto.mobile.android.data.repository.TagRepository;
 import com.gws.auto.mobile.android.data.repository.WorkflowRepository;
 import com.gws.auto.mobile.android.domain.engine.WorkflowEngine;
 import dagger.internal.DaggerGenerated;
@@ -28,27 +29,32 @@ import javax.annotation.processing.Generated;
 public final class WorkflowEditorViewModel_Factory implements Factory<WorkflowEditorViewModel> {
   private final Provider<WorkflowRepository> workflowRepositoryProvider;
 
+  private final Provider<TagRepository> tagRepositoryProvider;
+
   private final Provider<WorkflowEngine> workflowEngineProvider;
 
   private WorkflowEditorViewModel_Factory(Provider<WorkflowRepository> workflowRepositoryProvider,
+      Provider<TagRepository> tagRepositoryProvider,
       Provider<WorkflowEngine> workflowEngineProvider) {
     this.workflowRepositoryProvider = workflowRepositoryProvider;
+    this.tagRepositoryProvider = tagRepositoryProvider;
     this.workflowEngineProvider = workflowEngineProvider;
   }
 
   @Override
   public WorkflowEditorViewModel get() {
-    return newInstance(workflowRepositoryProvider.get(), workflowEngineProvider.get());
+    return newInstance(workflowRepositoryProvider.get(), tagRepositoryProvider.get(), workflowEngineProvider.get());
   }
 
   public static WorkflowEditorViewModel_Factory create(
       Provider<WorkflowRepository> workflowRepositoryProvider,
+      Provider<TagRepository> tagRepositoryProvider,
       Provider<WorkflowEngine> workflowEngineProvider) {
-    return new WorkflowEditorViewModel_Factory(workflowRepositoryProvider, workflowEngineProvider);
+    return new WorkflowEditorViewModel_Factory(workflowRepositoryProvider, tagRepositoryProvider, workflowEngineProvider);
   }
 
   public static WorkflowEditorViewModel newInstance(WorkflowRepository workflowRepository,
-      WorkflowEngine workflowEngine) {
-    return new WorkflowEditorViewModel(workflowRepository, workflowEngine);
+      TagRepository tagRepository, WorkflowEngine workflowEngine) {
+    return new WorkflowEditorViewModel(workflowRepository, tagRepository, workflowEngine);
   }
 }

@@ -27,15 +27,22 @@ class HistoryViewModel @Inject constructor(
     private val _isBookmarkFilterActive = MutableStateFlow(false)
     val isBookmarkFilterActive: StateFlow<Boolean> = _isBookmarkFilterActive
 
+    private val _searchQuery = MutableStateFlow("")
+
+    fun setSearchQuery(query: String) {
+        _searchQuery.value = query
+    }
+
     val uiState: StateFlow<List<HistoryListItem>> = combine(
         historyRepository.getAllHistory(),
         _expandedIds,
-        _isBookmarkFilterActive
-    ) { histories, expandedIds, isBookmarkFilterActive ->
-        val filteredHistories = if (isBookmarkFilterActive) {
-            histories.filter { it.isBookmarked }
-        } else {
-            histories
+        _isBookmarkFilterActive,
+        _searchQuery
+    ) { histories, expandedIds, isBookmarkFilterActive, query ->
+        val filteredHistories = histories.filter { history ->
+            val matchesBookmark = !isBookmarkFilterActive || history.isBookmarked
+            val matchesQuery = query.isBlank() || history.workflowName.contains(query, ignoreCase = true)
+            matchesBookmark && matchesQuery
         }
 
         val flatList = mutableListOf<HistoryListItem>()

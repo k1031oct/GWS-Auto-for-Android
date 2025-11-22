@@ -146,6 +146,7 @@
     <string name="language">Language</string>
     <string name="theme">Theme</string>
     <string name="highlight_color">Highlight Color</string>
+    <string name="tags">Tags</string>
     <string name="manage_tags">Manage Tags</string>
     <string name="add_a_new_tag">Add a New Tag</string>
     <string name="profile_image_description">Profile Image</string>

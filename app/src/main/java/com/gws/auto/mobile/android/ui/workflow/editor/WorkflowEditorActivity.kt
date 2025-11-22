@@ -28,6 +28,9 @@ import android.graphics.Color
 import android.content.res.Configuration
 import com.gws.auto.mobile.android.ui.theme.*
 import androidx.compose.ui.graphics.toArgb
+import com.google.android.material.chip.Chip
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 
 @AndroidEntryPoint
 class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragment.ModuleParameterListener {
@@ -64,8 +67,12 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
         setupRecyclerView()
         setupLibraryRecyclerView()
         setupFolderRecyclerView()
+        setupFolderRecyclerView()
+        setupTagSection()
         setupDragAndDrop()
         observeViewModel()
+        observeViewModel()
+        observeTags()
         observeTheme()
 
         binding.fabAddModule.visibility = View.GONE
@@ -201,6 +208,80 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
         binding.folderRecyclerView.apply {
             adapter = folderAdapter
             layoutManager = LinearLayoutManager(this@WorkflowEditorActivity, LinearLayoutManager.HORIZONTAL, false)
+        }
+        binding.folderRecyclerView.apply {
+            adapter = folderAdapter
+            layoutManager = LinearLayoutManager(this@WorkflowEditorActivity, LinearLayoutManager.HORIZONTAL, false)
+        }
+    }
+
+    private fun setupTagSection() {
+        binding.addTagChip.setOnClickListener {
+            showAddTagDialog()
+        }
+    }
+
+    private fun showAddTagDialog() {
+        val availableTags = viewModel.availableTags.value.map { it.name }
+        val selectedTags = viewModel.selectedTags.value
+        val suggestions = availableTags.filter { !selectedTags.contains(it) }
+
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, suggestions)
+        val textView = AutoCompleteTextView(this).apply {
+            setAdapter(adapter)
+            threshold = 1
+            hint = getString(R.string.tag_name_hint)
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle(R.string.add_tag_title)
+            .setView(textView)
+            .setPositiveButton(R.string.add) { _, _ ->
+                val tagName = textView.text.toString().trim()
+                if (tagName.isNotEmpty()) {
+                    viewModel.addTagToWorkflow(tagName)
+                }
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun observeTags() {
+        lifecycleScope.launch {
+            viewModel.selectedTags.collectLatest { tags ->
+                updateTagChips(tags)
+            }
+        }
+    }
+
+    private fun updateTagChips(tags: List<String>) {
+        // Remove all chips except the "Add Tag" chip (which is the last one in XML, but let's check ID)
+        val chipGroup = binding.tagChipGroup
+        val addTagChip = binding.addTagChip
+        
+        // Remove all views except addTagChip
+        val viewsToRemove = mutableListOf<View>()
+        for (i in 0 until chipGroup.childCount) {
+            val child = chipGroup.getChildAt(i)
+            if (child.id != R.id.add_tag_chip) {
+                viewsToRemove.add(child)
+            }
+        }
+        viewsToRemove.forEach { chipGroup.removeView(it) }
+
+        // Add new chips before the addTagChip
+        tags.forEach { tagName ->
+            val chip = Chip(this).apply {
+                text = tagName
+                isCloseIconVisible = true
+                setOnCloseIconClickListener {
+                    viewModel.removeTagFromWorkflow(tagName)
+                }
+            }
+            // Add at index 0 to keep "Add Tag" at the end (assuming it's currently at index 0 if empty, or last)
+            // Actually, simply adding view adds to the end. We want "Add Tag" to be last.
+            // So we add before "Add Tag".
+            chipGroup.addView(chip, chipGroup.indexOfChild(addTagChip))
         }
     }
 

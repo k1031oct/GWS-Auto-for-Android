@@ -126,6 +126,7 @@ id about_app
 id action_edit
 id action_settings
 id add_tag_button
+id add_tag_chip
 id announcement_content
 id announcement_recycler_view
 id announcement_title
@@ -216,13 +217,16 @@ id sign_in_button
 id skip_button
 id status
 id status_chip
+id suggestion_icon
 id sunday_button
 id sync_status_text
 id system_button
+id tag_chip_group
 id tag_name
 id tag_name_input
 id tag_name_text
 id tag_recycler_view
+id tag_section
 id theme_dark_radio
 id theme_group
 id theme_light_radio
@@ -459,6 +463,7 @@ string sunday
 string sync_disabled
 string sync_enabled_with
 string tag_name_hint
+string tags
 string theme
 string theme_dark
 string theme_light
