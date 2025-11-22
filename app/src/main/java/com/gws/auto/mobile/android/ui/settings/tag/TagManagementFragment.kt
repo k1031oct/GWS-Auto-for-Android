@@ -14,6 +14,12 @@ import com.gws.auto.mobile.android.domain.model.Tag
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import android.content.res.ColorStateList
+import android.content.res.Configuration
+import androidx.compose.ui.graphics.toArgb
+import com.gws.auto.mobile.android.ui.theme.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TagManagementFragment : Fragment() {
@@ -22,6 +28,7 @@ class TagManagementFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: TagManagementViewModel by viewModels()
+    private val themeViewModel: ThemeViewModel by viewModels()
     private lateinit var tagAdapter: TagAdapter
 
     override fun onCreateView(
@@ -38,6 +45,7 @@ class TagManagementFragment : Fragment() {
         setupRecyclerView()
         setupViews()
         observeViewModel()
+        observeTheme()
     }
 
     private fun setupRecyclerView() {
@@ -85,6 +93,23 @@ class TagManagementFragment : Fragment() {
                 tagAdapter.submitList(tags)
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun observeTheme() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            themeViewModel.highlightColor.collectLatest { colorName ->
+                val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                val isDarkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+
+                val color = when (colorName) {
+                    "forest" -> if (isDarkTheme) ForestPrimaryDark else ForestPrimaryLight
+                    "ocean" -> if (isDarkTheme) OceanPrimaryDark else OceanPrimaryLight
+                    "sakura" -> if (isDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight
+                    else -> if (isDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight
+                }
+                binding.addTagButton.backgroundTintList = ColorStateList.valueOf(color.toArgb())
+            }
+        }
     }
 
     override fun onDestroyView() {

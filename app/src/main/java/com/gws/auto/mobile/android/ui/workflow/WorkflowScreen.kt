@@ -198,16 +198,15 @@ fun DraggableWorkflowItemRow(
             .fillMaxWidth()
             .dragAndDropSource(
                 block = {
-                    detectDragGesturesAfterLongPress(
-                        onDragStart = { offset ->
+                    detectTapGestures(
+                        onLongPress = { offset ->
                             startTransfer(
                                 DragAndDropTransferData(
                                     clipData = ClipData.newPlainText("workflowId", item.workflow.id),
                                     flags = android.view.View.DRAG_FLAG_GLOBAL
                                 )
                             )
-                        },
-                        onDrag = { _, _ -> }
+                        }
                     )
                 }
             )

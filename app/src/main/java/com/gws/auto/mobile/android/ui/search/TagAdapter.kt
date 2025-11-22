@@ -66,6 +66,7 @@ class TagAdapter(
         when (holder) {
             is TagViewHolder -> holder.bind(getItem(position) as Tag)
             is FilterTagViewHolder -> holder.bind(getItem(position) as FilterTag)
+            is AddTagViewHolder -> holder.bind(highlightColor)
         }
     }
 
@@ -96,18 +97,25 @@ class TagAdapter(
     }
 
     class AddTagViewHolder(
-        binding: ListItemAddTagBinding,
+        private val binding: ListItemAddTagBinding,
         private val onAddTagClicked: () -> Unit,
         highlightColor: Int?
     ) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener { onAddTagClicked() }
+            bind(highlightColor)
+        }
+
+        fun bind(highlightColor: Int?) {
             if (highlightColor != null) {
-                // Assuming the root is the chip/button or we want to tint the icon
-                // Since we don't see the XML, we'll try setting background tint if it's a button/chip
-                // or image tint if it has an icon accessible via binding (but we don't see binding fields)
-                // Let's assume root background tint for now as it's likely a Chip or MaterialButton
-                binding.root.backgroundTintList = ColorStateList.valueOf(highlightColor)
+                val chip = binding.root as? com.google.android.material.chip.Chip
+                chip?.chipBackgroundColor = ColorStateList.valueOf(highlightColor)
+                // Also tint the icon to be white for better contrast if the background is dark
+                // For now, let's assume the icon tint should match the text color or be white/black based on theme
+                // But the user only complained about the chip color.
+                // Let's also set the icon tint to white to be safe as highlight colors are usually dark/vibrant
+                chip?.chipIconTint = ColorStateList.valueOf(android.graphics.Color.BLACK)
+                chip?.setTextColor(android.graphics.Color.BLACK)
             }
         }
     }
