@@ -95,6 +95,9 @@
     <string name="country_for_holidays">祝日カレンダーの国</string>
     <string name="language">言語</string>
     <string name="theme">テーマ</string>
+    <string name="theme_change_title">テーマの変更</string>
+    <string name="theme_change_message">テーマを変更するにはアプリケーションを再起動する必要があります。今すぐ再起動しますか?</string>
+    <string name="restart">再起動</string>
     <string name="highlight_color">ハイライトカラー</string>
     <string name="manage_tags">タグの管理</string>
     <string name="add_a_new_tag">新しいタグを追加</string>

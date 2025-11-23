@@ -18,10 +18,10 @@
     <color name="neon_green">#00FF41</color>
     
     <!-- Material Design Light Theme - Sharp Neon Edition -->
-    <color name="md_theme_light_primary">#EEFF41</color> <!-- Pastel Yellow -->
-    <color name="md_theme_light_onPrimary">#121212</color>
-    <color name="md_theme_light_primaryContainer">#EEFF41</color>
-    <color name="md_theme_light_onPrimaryContainer">#121212</color>
+    <color name="md_theme_light_primary">#616161</color> <!-- Medium Grey -->
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#E0E0E0</color> <!-- Light Grey -->
+    <color name="md_theme_light_onPrimaryContainer">#000000</color>
     <color name="md_theme_light_secondary">#80D8FF</color> <!-- Pastel Turquoise -->
     <color name="md_theme_light_onSecondary">#121212</color>
     <color name="md_theme_light_secondaryContainer">#80D8FF</color>
@@ -40,9 +40,9 @@
     <color name="md_theme_light_onSurface">#121212</color>
     <color name="md_theme_light_surfaceVariant">#E0E0E0</color>
     <color name="md_theme_light_onSurfaceVariant">#121212</color>
-    <color name="md_theme_light_outline">#EEFF41</color>
+    <color name="md_theme_light_outline">#9E9E9E</color> <!-- Grey -->
     <color name="md_theme_light_shadow">#000000</color>
     <color name="md_theme_light_inverseSurface">#121212</color>
     <color name="md_theme_light_inverseOnSurface">#FFFFFF</color>
-    <color name="md_theme_light_inversePrimary">#EEFF41</color>
+    <color name="md_theme_light_inversePrimary">#616161</color>
 </resources>
