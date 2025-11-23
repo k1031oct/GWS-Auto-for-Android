@@ -102,6 +102,10 @@ class ThemeSettingsFragment : Fragment() {
             // DataStoreに保存
             settingsRepository.saveTheme(theme)
             
+            // 開いているComposeドロップダウンメニューがクリーンアップされるまで待機
+            // ライフサイクルイベント処理が完了するまでの時間を確保
+            kotlinx.coroutines.delay(200)
+            
             // MainActivityを再起動
             val intent = Intent(requireContext(), MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
