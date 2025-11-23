@@ -75,6 +75,10 @@ class WorkflowViewModel @Inject constructor(
                         matchingWorkflows
                     }
                     result.addAll(itemsToShow.map { WorkflowListItem.WorkflowItem(it, isIndented = true) })
+                    
+                    if (itemsToShow.isEmpty()) {
+                        result.add(WorkflowListItem.EmptyFolderItem(folder.id))
+                    }
                 }
             }
         }

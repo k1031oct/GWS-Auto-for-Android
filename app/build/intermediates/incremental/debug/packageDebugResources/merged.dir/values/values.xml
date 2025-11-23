@@ -192,6 +192,7 @@
     <string name="delete_history_confirmation">Delete this history item?</string>
     <string name="delete_tag_confirmation">Delete this tag?</string>
     <string name="edit">Edit</string>
+    <string name="empty_folder_message">このフォルダは空です</string>
     <string name="execution_status_failure">Failure</string>
     <string name="execution_status_success">Success</string>
     <string name="exit">Exit</string>
@@ -243,6 +244,7 @@
     <string name="profile_image_description">Profile Image</string>
     <string name="project_id" translatable="false">gws-auto-for-android-4db4a</string>
     <string name="refresh">Refresh</string>
+    <string name="remove_from_folder">フォルダから取り出す</string>
     <string name="root_level_drop_zone">Root Level (Remove from folder)</string>
     <string name="run">Run</string>
     <string name="save">Save</string>

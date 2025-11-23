@@ -242,6 +242,8 @@
     <string name="favorite">Favorite</string>
     <string name="unfavorite">Unfavorite</string>
     <string name="edit">Edit</string>
+    <string name="remove_from_folder">フォルダから取り出す</string>
+    <string name="empty_folder_message">このフォルダは空です</string>
     <string name="root_level_drop_zone">Root Level (Remove from folder)</string>
     <string name="run">Run</string>
     <string name="options">Options</string>

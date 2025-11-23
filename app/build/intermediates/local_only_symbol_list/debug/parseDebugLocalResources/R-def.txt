@@ -381,6 +381,7 @@ string delete_folder
 string delete_history_confirmation
 string delete_tag_confirmation
 string edit
+string empty_folder_message
 string execution_status_failure
 string execution_status_success
 string exit
@@ -432,6 +433,7 @@ string previous_month
 string profile_image_description
 string project_id
 string refresh
+string remove_from_folder
 string root_level_drop_zone
 string run
 string save

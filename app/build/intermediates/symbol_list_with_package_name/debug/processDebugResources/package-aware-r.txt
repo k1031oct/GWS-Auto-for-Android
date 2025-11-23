@@ -5171,6 +5171,7 @@ string delete_tag_confirmation
 string dest_title
 string dropdown_menu
 string edit
+string empty_folder_message
 string error_a11y_label
 string error_icon_content_description
 string execution_status_failure
@@ -5437,6 +5438,7 @@ string qr_code_rationale_message
 string range_end
 string range_start
 string refresh
+string remove_from_folder
 string root_level_drop_zone
 string run
 string save
