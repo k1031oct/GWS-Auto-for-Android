@@ -320,7 +320,7 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
 
     private fun setupDefaultUI() {
         val textView = TextView(requireContext()).apply {
-            text = "This module is not configurable yet."
+            text = getString(R.string.module_not_configurable)
         }
         binding.parametersContainer.addView(textView)
         binding.saveButton.setOnClickListener { dismiss() }
