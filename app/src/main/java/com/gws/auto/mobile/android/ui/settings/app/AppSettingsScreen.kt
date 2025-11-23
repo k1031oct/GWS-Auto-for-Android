@@ -334,6 +334,13 @@ private fun SettingDropdown(
 ) {
     var expanded by remember { mutableStateOf(false) }
     
+    // Ensure dropdown is dismissed when composable is disposed (e.g., during activity recreation)
+    DisposableEffect(Unit) {
+        onDispose {
+            expanded = false
+        }
+    }
+    
     // Find display value
     val displayValue = if (valueMapper != null) {
         val index = valueMapper.indexOf(selectedValue)
