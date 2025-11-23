@@ -105,7 +105,7 @@ class TagManagementFragment : Fragment() {
                     "forest" -> if (isDarkTheme) ForestPrimaryDark else ForestPrimaryLight
                     "ocean" -> if (isDarkTheme) OceanPrimaryDark else OceanPrimaryLight
                     "sakura" -> if (isDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight
-                    else -> if (isDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight
+                    else -> if (isDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight
                 }
                 binding.addTagButton.backgroundTintList = ColorStateList.valueOf(color.toArgb())
             }

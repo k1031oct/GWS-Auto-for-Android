@@ -421,7 +421,7 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
             resources.displayMetrics
         ).toInt()
         
-        chip.chipStrokeWidth = strokeWidth
+        chip.chipStrokeWidth = strokeWidth.toFloat()
         
         if (chip.id == R.id.add_tag_chip) {
             chip.chipIconTint = colorStateList
@@ -463,7 +463,7 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
                 val cursorDrawableField = editor.javaClass.getDeclaredField("mCursorDrawable")
                 cursorDrawableField.isAccessible = true
                 val drawables = arrayOfNulls<android.graphics.drawable.Drawable>(2)
-                drawables[0] = androidx.core.content.ContextCompat.getDrawable(this, R.drawable.cursor_drawable) // You might need a basic cursor drawable resource if this fails, but usually we want to tint the existing one. 
+                // drawables[0] = androidx.core.content.ContextCompat.getDrawable(this, R.drawable.cursor_drawable) // TODO: Add cursor_drawable or use system default 
                 // Actually, reflection for older APIs is brittle. Let's stick to Q+ or just basic tinting if possible.
                 // A safer reflection approach for older APIs:
                 // But for this project, let's assume minSdk is high enough or we just support Q+ for this visual tweak.

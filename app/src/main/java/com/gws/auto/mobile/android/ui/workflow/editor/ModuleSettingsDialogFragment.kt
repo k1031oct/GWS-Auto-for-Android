@@ -133,7 +133,7 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
                     "forest" -> if (isDarkTheme) ForestPrimaryDark else ForestPrimaryLight
                     "ocean" -> if (isDarkTheme) OceanPrimaryDark else OceanPrimaryLight
                     "sakura" -> if (isDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight
-                    else -> if (isDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight
+                    else -> if (isDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight
                 }
                 currentHighlightColor = color.toArgb()
                 applyHighlightColorToDialog()

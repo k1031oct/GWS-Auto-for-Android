@@ -24,7 +24,7 @@
     <color name="md_theme_dark_secondaryContainer">#00F0FF</color>
     <color name="md_theme_dark_shadow">#000000</color>
     <color name="md_theme_dark_surface">#121212</color>
-    <color name="md_theme_dark_surfaceVariant">#121212</color>
+    <color name="md_theme_dark_surfaceVariant">#1E1E1E</color>
     <color name="md_theme_dark_tertiary">#FF0099</color>
     <color name="md_theme_dark_tertiaryContainer">#FF0099</color>
     <style name="Base.Theme.GWSAutoForAndroid" parent="Theme.Material3.Dark.NoActionBar">

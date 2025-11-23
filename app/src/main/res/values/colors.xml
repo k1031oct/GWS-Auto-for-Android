@@ -38,7 +38,7 @@
     <color name="md_theme_light_onBackground">#121212</color>
     <color name="md_theme_light_surface">#F5F5F5</color>
     <color name="md_theme_light_onSurface">#121212</color>
-    <color name="md_theme_light_surfaceVariant">#F5F5F5</color>
+    <color name="md_theme_light_surfaceVariant">#E0E0E0</color>
     <color name="md_theme_light_onSurfaceVariant">#121212</color>
     <color name="md_theme_light_outline">#EEFF41</color>
     <color name="md_theme_light_shadow">#000000</color>

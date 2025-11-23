@@ -375,9 +375,9 @@ private fun SettingDropdown(
                     DropdownMenuItem(
                         text = { Text(option) },
                         onClick = {
+                            expanded = false
                             val actualValue = valueMapper?.getOrNull(index) ?: option
                             onSelectionChanged(actualValue)
-                            expanded = false
                         }
                     )
                 }
