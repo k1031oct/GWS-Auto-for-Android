@@ -148,7 +148,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        if (currentFocus != null) {
+        // 検索フラグメントが表示されている時はキーボードを隠さない
+        if (binding.searchFragmentContainer.visibility != View.VISIBLE && currentFocus != null) {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
             currentFocus!!.clearFocus()
