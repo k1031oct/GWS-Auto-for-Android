@@ -11,7 +11,9 @@ import androidx.compose.foundation.draganddrop.dragAndDropTarget
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -199,14 +201,25 @@ fun DraggableWorkflowItemRow(
 ) {
     var isDragging by remember { mutableStateOf(false) }
     val isInFolder = item.isIndented
+    val dropZoneWidth = 120.dp
 
-    val cardWeight by animateFloatAsState(targetValue = if (isDragging && isInFolder) 0.7f else 1f, label = "cardWeight")
-    val dropZoneWeight by animateFloatAsState(targetValue = if (isDragging && isInFolder) 0.3f else 0f, label = "dropZoneWeight")
+    val sourceDragTarget = remember {
+        object : DragAndDropTarget {
+            override fun onDrop(event: DragAndDropEvent): Boolean = false
+            override fun onEnded(event: DragAndDropEvent) {
+                isDragging = false
+            }
+        }
+    }
 
     Row(modifier = Modifier.fillMaxWidth()) {
         Card(
             modifier = Modifier
-                .weight(cardWeight)
+                .weight(1f)
+                .dragAndDropTarget(
+                    shouldStartDragAndDrop = { true },
+                    target = sourceDragTarget
+                )
                 .dragAndDropSource(
                     block = {
                         detectDragGesturesAfterLongPress(
@@ -219,173 +232,171 @@ fun DraggableWorkflowItemRow(
                                     )
                                 )
                             },
-                            onDragEnd = {
-                                isDragging = false
-                            },
-                            onDragCancel = {
-                                isDragging = false
-                            },
                             onDrag = { _, _ -> }
                         )
-                    }
-                )
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = LocalIndication.current,
-                    onClick = { onEditClicked(item.workflow) }
-                ),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.List,
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 16.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = item.workflow.name,
-                        style = MaterialTheme.typography.titleMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        }
                     )
-                    if (item.workflow.description.isNotBlank()) {
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = LocalIndication.current,
+                        onClick = { onEditClicked(item.workflow) }
+                    ),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.List,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 16.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = item.workflow.description,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            text = item.workflow.name,
+                            style = MaterialTheme.typography.titleMedium,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
-                    }
-                }
-                
-                IconButton(onClick = { onRunClicked(item.workflow) }) {
-                    Icon(Icons.Default.PlayArrow, contentDescription = "Run")
-                }
-                
-                var showMenu by remember { mutableStateOf(false) }
-                Box {
-                    IconButton(onClick = { showMenu = true }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "Options")
-                    }
-                    DropdownMenu(
-                        expanded = showMenu,
-                        onDismissRequest = { showMenu = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text(if (item.workflow.isFavorite) stringResource(R.string.unfavorite) else stringResource(R.string.favorite)) },
-                            onClick = {
-                                showMenu = false
-                                onFavoriteClicked(item.workflow)
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    if (item.workflow.isFavorite) Icons.Default.Star else Icons.Default.StarBorder,
-                                    contentDescription = null,
-                                    tint = if (item.workflow.isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.edit)) },
-                            onClick = {
-                                showMenu = false
-                                onEditClicked(item.workflow)
-                            },
-                            leadingIcon = { Icon(Icons.Default.Edit, contentDescription = null) }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.delete)) },
-                            onClick = {
-                                showMenu = false
-                                onDeleteClicked(item.workflow)
-                            },
-                            leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
-                        )
-                    }
-                }
-            }
-        }
-
-        if (isDragging && isInFolder) {
-            var isDropTargetActive by remember { mutableStateOf(false) }
-            val dropTarget = remember {
-                object : DragAndDropTarget {
-                    override fun onDrop(event: DragAndDropEvent): Boolean {
-                        isDropTargetActive = false
-                        val clipData = event.toAndroidDragEvent().clipData
-                        if (clipData != null && clipData.itemCount > 0) {
-                            val workflowId = clipData.getItemAt(0).text.toString()
-                            // Only allow dropping the same item that started the drag (optional check, but good for UX)
-                            if (workflowId == item.workflow.id) {
-                                onMoveToRoot(workflowId)
-                                return true
-                            }
+                        if (item.workflow.description.isNotBlank()) {
+                            Text(
+                                text = item.workflow.description,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
                         }
-                        return false
                     }
-
-                    override fun onEntered(event: DragAndDropEvent) {
-                        isDropTargetActive = true
+                    
+                    IconButton(onClick = { onRunClicked(item.workflow) }) {
+                        Icon(Icons.Default.PlayArrow, contentDescription = "Run")
                     }
-
-                    override fun onExited(event: DragAndDropEvent) {
-                        isDropTargetActive = false
+                    
+                    var showMenu by remember { mutableStateOf(false) }
+                    Box {
+                        IconButton(onClick = { showMenu = true }) {
+                            Icon(Icons.Default.MoreVert, contentDescription = "Options")
+                        }
+                        DropdownMenu(
+                            expanded = showMenu,
+                            onDismissRequest = { showMenu = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(if (item.workflow.isFavorite) stringResource(R.string.unfavorite) else stringResource(R.string.favorite)) },
+                                onClick = {
+                                    showMenu = false
+                                    onFavoriteClicked(item.workflow)
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        if (item.workflow.isFavorite) Icons.Default.Star else Icons.Default.StarBorder,
+                                        contentDescription = null,
+                                        tint = if (item.workflow.isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.edit)) },
+                                onClick = {
+                                    showMenu = false
+                                    onEditClicked(item.workflow)
+                                },
+                                leadingIcon = { Icon(Icons.Default.Edit, contentDescription = null) }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.delete)) },
+                                onClick = {
+                                    showMenu = false
+                                    onDeleteClicked(item.workflow)
+                                },
+                                leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
+                            )
+                        }
                     }
                 }
             }
 
-            Card(
-                modifier = Modifier
-                    .weight(dropZoneWeight)
-                    .height(IntrinsicSize.Max) // Match height of the row
-                    .padding(start = 8.dp)
-                    .dragAndDropTarget(
-                        shouldStartDragAndDrop = { event ->
-                            event.mimeTypes().contains(ClipDescription.MIMETYPE_TEXT_PLAIN)
-                        },
-                        target = dropTarget
-                    ),
-                colors = CardDefaults.cardColors(
-                    containerColor = if (isDropTargetActive) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            AnimatedVisibility(
+                visible = isDragging && isInFolder,
+                enter = expandHorizontally(),
+                exit = shrinkHorizontally()
             ) {
-                Box(
-                    modifier = Modifier.fillMaxSize().padding(8.dp),
-                    contentAlignment = Alignment.Center
+                var isDropTargetActive by remember { mutableStateOf(false) }
+                val dropTarget = remember {
+                    object : DragAndDropTarget {
+                        override fun onDrop(event: DragAndDropEvent): Boolean {
+                            isDropTargetActive = false
+                            val clipData = event.toAndroidDragEvent().clipData
+                            if (clipData != null && clipData.itemCount > 0) {
+                                val workflowId = clipData.getItemAt(0).text.toString()
+                                // Only allow dropping the same item that started the drag (optional check, but good for UX)
+                                if (workflowId == item.workflow.id) {
+                                    onMoveToRoot(workflowId)
+                                    return true
+                                }
+                            }
+                            return false
+                        }
+
+                        override fun onEntered(event: DragAndDropEvent) {
+                            isDropTargetActive = true
+                        }
+
+                        override fun onExited(event: DragAndDropEvent) {
+                            isDropTargetActive = false
+                        }
+                    }
+                }
+
+                Card(
+                    modifier = Modifier
+                        .width(dropZoneWidth)
+                        .height(IntrinsicSize.Max) // Match height of the row
+                        .padding(start = 8.dp)
+                        .dragAndDropTarget(
+                            shouldStartDragAndDrop = { event ->
+                                event.mimeTypes().contains(ClipDescription.MIMETYPE_TEXT_PLAIN)
+                            },
+                            target = dropTarget
+                        ),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (isDropTargetActive) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                    Box(
+                        modifier = Modifier.fillMaxSize().padding(8.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-                            contentDescription = null,
-                            tint = if (isDropTargetActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = stringResource(R.string.remove_from_folder),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = if (isDropTargetActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                        )
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                                contentDescription = null,
+                                tint = if (isDropTargetActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = stringResource(R.string.remove_from_folder),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = if (isDropTargetActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            )
+                        }
                     }
                 }
             }
         }
-    }
 }
 
 @Composable
