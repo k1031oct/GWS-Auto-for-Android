@@ -65,6 +65,8 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var googleApiAuthorizer: GoogleApiAuthorizer
+    
+    private var settingsPopupMenu: PopupMenu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,6 +98,12 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         mainSharedViewModel.setSignedInStatus(googleApiAuthorizer.isSignedIn())
+    }
+    
+    override fun onPause() {
+        super.onPause()
+        settingsPopupMenu?.dismiss()
+        settingsPopupMenu = null
     }
 
     private suspend fun applySettings() {
@@ -309,6 +317,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showSettingsMenu(anchor: View) {
+        settingsPopupMenu?.dismiss()
         val popup = PopupMenu(this, anchor)
         popup.menuInflater.inflate(R.menu.settings_menu, popup.menu)
 
@@ -329,6 +338,10 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+        popup.setOnDismissListener {
+            settingsPopupMenu = null
+        }
+        settingsPopupMenu = popup
         popup.show()
     }
 }

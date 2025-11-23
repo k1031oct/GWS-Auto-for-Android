@@ -1,1 +1,0 @@
--keep,allowobfuscation,allowshrinking class com.gws.auto.mobile.android.ui.wizard.WizardViewModel
