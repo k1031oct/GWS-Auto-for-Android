@@ -29,3 +29,9 @@ release-key.jks
 
 # Temporary files
 temp_key.txt
+temp_*.txt
+filelist.txt
+
+# Log files
+*.log
+build_log*.txt

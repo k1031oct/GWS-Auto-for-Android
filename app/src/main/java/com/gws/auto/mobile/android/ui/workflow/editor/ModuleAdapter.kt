@@ -64,6 +64,9 @@ class ModuleAdapter(
                 // Apply to buttons
                 binding.runModuleButton.imageTintList = colorStateList
                 binding.deleteButton.imageTintList = colorStateList
+                // Apply to timeline lines
+                binding.lineTop.setBackgroundColor(highlightColor)
+                binding.lineBottom.setBackgroundColor(highlightColor)
             }
         }
         

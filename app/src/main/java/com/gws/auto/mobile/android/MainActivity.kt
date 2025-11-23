@@ -145,6 +145,7 @@ class MainActivity : AppCompatActivity() {
 
         // FAB Styling
         binding.fabMain.backgroundTintList = highlightColorStateList
+        binding.fabMain.imageTintList = blackColorStateList
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {

@@ -165,6 +165,7 @@ id folder_name
 id folder_recycler_view
 id history_item_container
 id history_recycler_view
+id library_container
 id library_recycler_view
 id licensesRecyclerView
 id licenses_button

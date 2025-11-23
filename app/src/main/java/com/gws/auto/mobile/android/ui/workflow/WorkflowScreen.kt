@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipDescription
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.draganddrop.DragAndDropSourceScope
 import androidx.compose.foundation.draganddrop.dragAndDropSource
@@ -242,7 +243,7 @@ fun DraggableWorkflowItemRow(
                         onClick = { onEditClicked(item.workflow) }
                     ),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
                 ),
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
@@ -287,7 +288,8 @@ fun DraggableWorkflowItemRow(
                         }
                         DropdownMenu(
                             expanded = showMenu,
-                            onDismissRequest = { showMenu = false }
+                            onDismissRequest = { showMenu = false },
+                            modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
                         ) {
                             DropdownMenuItem(
                                 text = { Text(if (item.workflow.isFavorite) stringResource(R.string.unfavorite) else stringResource(R.string.favorite)) },
@@ -496,7 +498,8 @@ fun DropTargetFolderItemRow(
                 }
                 DropdownMenu(
                     expanded = showMenu,
-                    onDismissRequest = { showMenu = false }
+                    onDismissRequest = { showMenu = false },
+                    modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
                 ) {
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.delete_folder)) },

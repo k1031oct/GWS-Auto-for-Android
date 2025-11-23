@@ -42,6 +42,9 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
   public final RecyclerView folderRecyclerView;
 
   @NonNull
+  public final LinearLayout libraryContainer;
+
+  @NonNull
   public final RecyclerView libraryRecyclerView;
 
   @NonNull
@@ -71,8 +74,9 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
   private ActivityWorkflowEditorBinding(@NonNull ConstraintLayout rootView,
       @NonNull Chip addTagChip, @NonNull LinearLayout buttonBar, @NonNull Button cancelButton,
       @NonNull FloatingActionButton fabAddModule, @NonNull RecyclerView folderRecyclerView,
-      @NonNull RecyclerView libraryRecyclerView, @NonNull RecyclerView moduleRecyclerView,
-      @NonNull Button saveButton, @NonNull ChipGroup tagChipGroup, @NonNull LinearLayout tagSection,
+      @NonNull LinearLayout libraryContainer, @NonNull RecyclerView libraryRecyclerView,
+      @NonNull RecyclerView moduleRecyclerView, @NonNull Button saveButton,
+      @NonNull ChipGroup tagChipGroup, @NonNull LinearLayout tagSection,
       @NonNull TextInputEditText workflowDescriptionEditor,
       @NonNull TextInputLayout workflowDescriptionLayout,
       @NonNull TextInputEditText workflowNameEditor, @NonNull TextInputLayout workflowNameLayout) {
@@ -82,6 +86,7 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
     this.cancelButton = cancelButton;
     this.fabAddModule = fabAddModule;
     this.folderRecyclerView = folderRecyclerView;
+    this.libraryContainer = libraryContainer;
     this.libraryRecyclerView = libraryRecyclerView;
     this.moduleRecyclerView = moduleRecyclerView;
     this.saveButton = saveButton;
@@ -150,6 +155,12 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.library_container;
+      LinearLayout libraryContainer = ViewBindings.findChildViewById(rootView, id);
+      if (libraryContainer == null) {
+        break missingId;
+      }
+
       id = R.id.library_recycler_view;
       RecyclerView libraryRecyclerView = ViewBindings.findChildViewById(rootView, id);
       if (libraryRecyclerView == null) {
@@ -205,8 +216,8 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
       }
 
       return new ActivityWorkflowEditorBinding((ConstraintLayout) rootView, addTagChip, buttonBar,
-          cancelButton, fabAddModule, folderRecyclerView, libraryRecyclerView, moduleRecyclerView,
-          saveButton, tagChipGroup, tagSection, workflowDescriptionEditor,
+          cancelButton, fabAddModule, folderRecyclerView, libraryContainer, libraryRecyclerView,
+          moduleRecyclerView, saveButton, tagChipGroup, tagSection, workflowDescriptionEditor,
           workflowDescriptionLayout, workflowNameEditor, workflowNameLayout);
     }
     String missingId = rootView.getResources().getResourceName(id);

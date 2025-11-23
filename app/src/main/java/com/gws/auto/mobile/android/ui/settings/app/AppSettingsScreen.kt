@@ -4,6 +4,7 @@ import android.app.Activity
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -364,7 +365,8 @@ private fun SettingDropdown(
             
             ExposedDropdownMenu(
                 expanded = expanded,
-                onDismissRequest = { expanded = false }
+                onDismissRequest = { expanded = false },
+                modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 options.forEachIndexed { index, option ->
                     DropdownMenuItem(

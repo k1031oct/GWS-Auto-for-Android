@@ -18,7 +18,9 @@ import com.gws.auto.mobile.android.data.local.db.TagDao;
 import com.gws.auto.mobile.android.data.local.db.WorkflowDao;
 import com.gws.auto.mobile.android.data.local.db.WorkflowFolderDao;
 import com.gws.auto.mobile.android.data.remote.ChatApiService;
+import com.gws.auto.mobile.android.data.remote.OneDriveApiService;
 import com.gws.auto.mobile.android.data.remote.OutlookApiService;
+import com.gws.auto.mobile.android.data.remote.SlackApiService;
 import com.gws.auto.mobile.android.data.repository.HistoryRepository;
 import com.gws.auto.mobile.android.data.repository.ScheduleRepository;
 import com.gws.auto.mobile.android.data.repository.ScheduleRepositoryImpl;
@@ -53,6 +55,11 @@ import com.gws.auto.mobile.android.domain.engine.modules.DuplicateSpreadsheetMod
 import com.gws.auto.mobile.android.domain.engine.modules.GetRelativeDateModule;
 import com.gws.auto.mobile.android.domain.engine.modules.GmailSendEmailModule;
 import com.gws.auto.mobile.android.domain.engine.modules.LogMessageModule;
+import com.gws.auto.mobile.android.domain.engine.modules.OneDriveCopyFileModule;
+import com.gws.auto.mobile.android.domain.engine.modules.OneDriveCreateFolderModule;
+import com.gws.auto.mobile.android.domain.engine.modules.OneDriveMoveFileModule;
+import com.gws.auto.mobile.android.domain.engine.modules.OneDriveUploadFileModule;
+import com.gws.auto.mobile.android.domain.engine.modules.OutlookCreateDraftModule;
 import com.gws.auto.mobile.android.domain.engine.modules.OutlookSendEmailModule;
 import com.gws.auto.mobile.android.domain.engine.modules.SheetsAppendRowModule;
 import com.gws.auto.mobile.android.domain.engine.modules.SheetsClearValuesModule;
@@ -67,6 +74,7 @@ import com.gws.auto.mobile.android.domain.service.GoogleApiAuthorizer;
 import com.gws.auto.mobile.android.domain.service.HistoryCsvExporter;
 import com.gws.auto.mobile.android.domain.service.MicrosoftApiAuthorizer;
 import com.gws.auto.mobile.android.domain.service.SheetsApiService;
+import com.gws.auto.mobile.android.domain.service.SlackAuthService;
 import com.gws.auto.mobile.android.ui.announcement.AnnouncementFragment;
 import com.gws.auto.mobile.android.ui.announcement.AnnouncementViewModel;
 import com.gws.auto.mobile.android.ui.announcement.AnnouncementViewModel_HiltModules;
@@ -915,6 +923,22 @@ public final class DaggerMainApplication_HiltComponents_SingletonC {
 
     Provider<OutlookSendEmailModule> outlookSendEmailModuleProvider;
 
+    Provider<OutlookCreateDraftModule> outlookCreateDraftModuleProvider;
+
+    Provider<OneDriveApiService> oneDriveApiServiceProvider;
+
+    Provider<OneDriveUploadFileModule> oneDriveUploadFileModuleProvider;
+
+    Provider<OneDriveCreateFolderModule> oneDriveCreateFolderModuleProvider;
+
+    Provider<OneDriveCopyFileModule> oneDriveCopyFileModuleProvider;
+
+    Provider<OneDriveMoveFileModule> oneDriveMoveFileModuleProvider;
+
+    Provider<SlackAuthService> slackAuthServiceProvider;
+
+    Provider<SlackApiService> slackApiServiceProvider;
+
     Provider<SlackPostModule> slackPostModuleProvider;
 
     Provider<DefineVariableModule> defineVariableModuleProvider;
@@ -963,7 +987,7 @@ public final class DaggerMainApplication_HiltComponents_SingletonC {
     }
 
     Map<String, javax.inject.Provider<ModuleExecutor>> mapOfStringAndProviderOfModuleExecutor() {
-      return ImmutableMap.<String, javax.inject.Provider<ModuleExecutor>>builderWithExpectedSize(19).put("calendar_create_event", ((Provider) (calendarCreateEventModuleProvider))).put("chat_post", ((Provider) (chatPostModuleProvider))).put("copy_paste_sheet_values", ((Provider) (copyPasteSheetValuesModuleProvider))).put("duplicate_spreadsheet", ((Provider) (duplicateSpreadsheetModuleProvider))).put("sheets_append_row", ((Provider) (sheetsAppendRowModuleProvider))).put("sheets_clear_values", ((Provider) (sheetsClearValuesModuleProvider))).put("sheets_create_new", ((Provider) (sheetsCreateNewModuleProvider))).put("sheets_set_value", ((Provider) (sheetsSetValueModuleProvider))).put("create_gmail_draft", ((Provider) (createGmailDraftModuleProvider))).put("gmail_send_email", ((Provider) (gmailSendEmailModuleProvider))).put("drive_copy_file", ((Provider) (driveCopyFileModuleProvider))).put("drive_create_folder", ((Provider) (driveCreateFolderModuleProvider))).put("drive_move_file", ((Provider) (driveMoveFileModuleProvider))).put("outlook_send_email", ((Provider) (outlookSendEmailModuleProvider))).put("slack_post", ((Provider) (slackPostModuleProvider))).put("define_variable", ((Provider) (defineVariableModuleProvider))).put("get_relative_date", ((Provider) (getRelativeDateModuleProvider))).put("log_message", ((Provider) (logMessageModuleProvider))).put("toast_notification", ((Provider) (toastNotificationModuleProvider))).build();
+      return ImmutableMap.<String, javax.inject.Provider<ModuleExecutor>>builderWithExpectedSize(24).put("calendar_create_event", ((Provider) (calendarCreateEventModuleProvider))).put("chat_post", ((Provider) (chatPostModuleProvider))).put("copy_paste_sheet_values", ((Provider) (copyPasteSheetValuesModuleProvider))).put("duplicate_spreadsheet", ((Provider) (duplicateSpreadsheetModuleProvider))).put("sheets_append_row", ((Provider) (sheetsAppendRowModuleProvider))).put("sheets_clear_values", ((Provider) (sheetsClearValuesModuleProvider))).put("sheets_create_new", ((Provider) (sheetsCreateNewModuleProvider))).put("sheets_set_value", ((Provider) (sheetsSetValueModuleProvider))).put("create_gmail_draft", ((Provider) (createGmailDraftModuleProvider))).put("gmail_send_email", ((Provider) (gmailSendEmailModuleProvider))).put("drive_copy_file", ((Provider) (driveCopyFileModuleProvider))).put("drive_create_folder", ((Provider) (driveCreateFolderModuleProvider))).put("drive_move_file", ((Provider) (driveMoveFileModuleProvider))).put("outlook_send_email", ((Provider) (outlookSendEmailModuleProvider))).put("outlook_create_draft", ((Provider) (outlookCreateDraftModuleProvider))).put("onedrive_upload_file", ((Provider) (oneDriveUploadFileModuleProvider))).put("onedrive_create_folder", ((Provider) (oneDriveCreateFolderModuleProvider))).put("onedrive_copy_file", ((Provider) (oneDriveCopyFileModuleProvider))).put("onedrive_move_file", ((Provider) (oneDriveMoveFileModuleProvider))).put("slack_post", ((Provider) (slackPostModuleProvider))).put("define_variable", ((Provider) (defineVariableModuleProvider))).put("get_relative_date", ((Provider) (getRelativeDateModuleProvider))).put("log_message", ((Provider) (logMessageModuleProvider))).put("toast_notification", ((Provider) (toastNotificationModuleProvider))).build();
     }
 
     ModuleExecutorProvider moduleExecutorProvider() {
@@ -1016,22 +1040,30 @@ public final class DaggerMainApplication_HiltComponents_SingletonC {
       this.provideOkHttpClientProvider = DoubleCheck.provider(new SwitchingProvider<OkHttpClient>(singletonCImpl, 24));
       this.provideOutlookApiServiceProvider = DoubleCheck.provider(new SwitchingProvider<OutlookApiService>(singletonCImpl, 22));
       this.outlookSendEmailModuleProvider = new SwitchingProvider<>(singletonCImpl, 21);
-      this.slackPostModuleProvider = new SwitchingProvider<>(singletonCImpl, 25);
+      this.outlookCreateDraftModuleProvider = new SwitchingProvider<>(singletonCImpl, 25);
     }
 
     @SuppressWarnings("unchecked")
     private void initialize2(final ApplicationContextModule applicationContextModuleParam) {
-      this.defineVariableModuleProvider = new SwitchingProvider<>(singletonCImpl, 26);
-      this.getRelativeDateModuleProvider = new SwitchingProvider<>(singletonCImpl, 27);
-      this.logMessageModuleProvider = new SwitchingProvider<>(singletonCImpl, 28);
-      this.toastNotificationModuleProvider = new SwitchingProvider<>(singletonCImpl, 29);
-      this.workflowRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<WorkflowRepository>(singletonCImpl, 30));
+      this.oneDriveApiServiceProvider = DoubleCheck.provider(new SwitchingProvider<OneDriveApiService>(singletonCImpl, 27));
+      this.oneDriveUploadFileModuleProvider = new SwitchingProvider<>(singletonCImpl, 26);
+      this.oneDriveCreateFolderModuleProvider = new SwitchingProvider<>(singletonCImpl, 28);
+      this.oneDriveCopyFileModuleProvider = new SwitchingProvider<>(singletonCImpl, 29);
+      this.oneDriveMoveFileModuleProvider = new SwitchingProvider<>(singletonCImpl, 30);
+      this.slackAuthServiceProvider = DoubleCheck.provider(new SwitchingProvider<SlackAuthService>(singletonCImpl, 33));
+      this.slackApiServiceProvider = DoubleCheck.provider(new SwitchingProvider<SlackApiService>(singletonCImpl, 32));
+      this.slackPostModuleProvider = new SwitchingProvider<>(singletonCImpl, 31);
+      this.defineVariableModuleProvider = new SwitchingProvider<>(singletonCImpl, 34);
+      this.getRelativeDateModuleProvider = new SwitchingProvider<>(singletonCImpl, 35);
+      this.logMessageModuleProvider = new SwitchingProvider<>(singletonCImpl, 36);
+      this.toastNotificationModuleProvider = new SwitchingProvider<>(singletonCImpl, 37);
+      this.workflowRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<WorkflowRepository>(singletonCImpl, 38));
       this.localWorkflowEngineProvider = new SwitchingProvider<>(singletonCImpl, 5);
       this.bindWorkflowEngineProvider = DoubleCheck.provider((Provider) (localWorkflowEngineProvider));
-      this.scheduleRepositoryImplProvider = new SwitchingProvider<>(singletonCImpl, 31);
+      this.scheduleRepositoryImplProvider = new SwitchingProvider<>(singletonCImpl, 39);
       this.bindScheduleRepositoryProvider = DoubleCheck.provider((Provider) (scheduleRepositoryImplProvider));
-      this.tagRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<TagRepository>(singletonCImpl, 32));
-      this.searchHistoryRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<SearchHistoryRepository>(singletonCImpl, 33));
+      this.tagRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<TagRepository>(singletonCImpl, 40));
+      this.searchHistoryRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<SearchHistoryRepository>(singletonCImpl, 41));
     }
 
     @Override
@@ -1142,31 +1174,55 @@ public final class DaggerMainApplication_HiltComponents_SingletonC {
           case 24: // okhttp3.OkHttpClient
           return (T) ApiModule_ProvideOkHttpClientFactory.provideOkHttpClient();
 
-          case 25: // com.gws.auto.mobile.android.domain.engine.modules.SlackPostModule
-          return (T) new SlackPostModule(singletonCImpl.provideOkHttpClientProvider.get());
+          case 25: // com.gws.auto.mobile.android.domain.engine.modules.OutlookCreateDraftModule
+          return (T) new OutlookCreateDraftModule(singletonCImpl.provideOutlookApiServiceProvider.get());
 
-          case 26: // com.gws.auto.mobile.android.domain.engine.modules.DefineVariableModule
+          case 26: // com.gws.auto.mobile.android.domain.engine.modules.OneDriveUploadFileModule
+          return (T) new OneDriveUploadFileModule(singletonCImpl.oneDriveApiServiceProvider.get());
+
+          case 27: // com.gws.auto.mobile.android.data.remote.OneDriveApiService
+          return (T) new OneDriveApiService(singletonCImpl.microsoftApiAuthorizerProvider.get(), singletonCImpl.provideOkHttpClientProvider.get());
+
+          case 28: // com.gws.auto.mobile.android.domain.engine.modules.OneDriveCreateFolderModule
+          return (T) new OneDriveCreateFolderModule(singletonCImpl.oneDriveApiServiceProvider.get());
+
+          case 29: // com.gws.auto.mobile.android.domain.engine.modules.OneDriveCopyFileModule
+          return (T) new OneDriveCopyFileModule(singletonCImpl.oneDriveApiServiceProvider.get());
+
+          case 30: // com.gws.auto.mobile.android.domain.engine.modules.OneDriveMoveFileModule
+          return (T) new OneDriveMoveFileModule(singletonCImpl.oneDriveApiServiceProvider.get());
+
+          case 31: // com.gws.auto.mobile.android.domain.engine.modules.SlackPostModule
+          return (T) new SlackPostModule(singletonCImpl.slackApiServiceProvider.get());
+
+          case 32: // com.gws.auto.mobile.android.data.remote.SlackApiService
+          return (T) new SlackApiService(singletonCImpl.slackAuthServiceProvider.get(), singletonCImpl.provideOkHttpClientProvider.get());
+
+          case 33: // com.gws.auto.mobile.android.domain.service.SlackAuthService
+          return (T) new SlackAuthService(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 34: // com.gws.auto.mobile.android.domain.engine.modules.DefineVariableModule
           return (T) new DefineVariableModule();
 
-          case 27: // com.gws.auto.mobile.android.domain.engine.modules.GetRelativeDateModule
+          case 35: // com.gws.auto.mobile.android.domain.engine.modules.GetRelativeDateModule
           return (T) new GetRelativeDateModule();
 
-          case 28: // com.gws.auto.mobile.android.domain.engine.modules.LogMessageModule
+          case 36: // com.gws.auto.mobile.android.domain.engine.modules.LogMessageModule
           return (T) new LogMessageModule();
 
-          case 29: // com.gws.auto.mobile.android.domain.engine.modules.ToastNotificationModule
+          case 37: // com.gws.auto.mobile.android.domain.engine.modules.ToastNotificationModule
           return (T) new ToastNotificationModule(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 30: // com.gws.auto.mobile.android.data.repository.WorkflowRepository
+          case 38: // com.gws.auto.mobile.android.data.repository.WorkflowRepository
           return (T) new WorkflowRepository(singletonCImpl.workflowDao());
 
-          case 31: // com.gws.auto.mobile.android.data.repository.ScheduleRepositoryImpl
+          case 39: // com.gws.auto.mobile.android.data.repository.ScheduleRepositoryImpl
           return (T) new ScheduleRepositoryImpl(singletonCImpl.scheduleDao(), ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.calendarApiServiceProvider.get(), singletonCImpl.googleApiAuthorizerProvider.get());
 
-          case 32: // com.gws.auto.mobile.android.data.repository.TagRepository
+          case 40: // com.gws.auto.mobile.android.data.repository.TagRepository
           return (T) new TagRepository(singletonCImpl.tagDao());
 
-          case 33: // com.gws.auto.mobile.android.data.repository.SearchHistoryRepository
+          case 41: // com.gws.auto.mobile.android.data.repository.SearchHistoryRepository
           return (T) new SearchHistoryRepository(singletonCImpl.searchHistoryDao());
 
           default: throw new AssertionError(id);

@@ -4308,6 +4308,7 @@ id layout
 id left
 id leftToRight
 id legacy
+id library_container
 id library_recycler_view
 id license
 id license_activity_scrollview

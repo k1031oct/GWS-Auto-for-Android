@@ -90,6 +90,32 @@ abstract class WorkflowModule {
     @StringKey("outlook_send_email")
     abstract fun bindOutlookSendEmailModule(impl: OutlookSendEmailModule): ModuleExecutor
 
+    @Binds
+    @IntoMap
+    @StringKey("outlook_create_draft")
+    abstract fun bindOutlookCreateDraftModule(impl: OutlookCreateDraftModule): ModuleExecutor
+
+    // Microsoft OneDrive
+    @Binds
+    @IntoMap
+    @StringKey("onedrive_upload_file")
+    abstract fun bindOneDriveUploadFileModule(impl: OneDriveUploadFileModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("onedrive_create_folder")
+    abstract fun bindOneDriveCreateFolderModule(impl: OneDriveCreateFolderModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("onedrive_copy_file")
+    abstract fun bindOneDriveCopyFileModule(impl: OneDriveCopyFileModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("onedrive_move_file")
+    abstract fun bindOneDriveMoveFileModule(impl: OneDriveMoveFileModule): ModuleExecutor
+
     // Slack
     @Binds
     @IntoMap

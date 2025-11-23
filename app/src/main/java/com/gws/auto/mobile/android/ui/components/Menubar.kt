@@ -42,8 +42,10 @@ fun AppMenubar(
                 }
                 DropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = { expanded = false }
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.background(androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant)
                 ) {
+
                     menuItems.forEach { item ->
                         DropdownMenuItem(
                             text = { Text(item) },

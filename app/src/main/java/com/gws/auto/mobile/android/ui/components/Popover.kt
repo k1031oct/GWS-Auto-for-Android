@@ -1,5 +1,6 @@
 package com.gws.auto.mobile.android.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -29,7 +30,9 @@ fun AppPopover(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
+            modifier = Modifier.background(androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant)
         ) {
+
             Column(modifier = Modifier.padding(8.dp)) {
                 content()
             }

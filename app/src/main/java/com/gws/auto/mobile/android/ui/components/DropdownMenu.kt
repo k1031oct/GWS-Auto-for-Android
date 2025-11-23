@@ -1,5 +1,6 @@
 package com.gws.auto.mobile.android.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -29,7 +30,11 @@ fun AppDropdownMenu(
     var expanded by remember { mutableStateOf(false) }
     Box {
         trigger { expanded = true }
-        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.background(androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant)
+        ) {
             menuItems.forEach { item ->
                 DropdownMenuItem(
                     text = { Text(item) },

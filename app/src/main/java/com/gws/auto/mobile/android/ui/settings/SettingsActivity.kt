@@ -88,6 +88,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.toolbar.setBackgroundColor(color.toArgb())
+        binding.toolbar.navigationIcon?.setTint(android.graphics.Color.BLACK)
     }
 
     private fun getTitleForFragment(key: String?): String {

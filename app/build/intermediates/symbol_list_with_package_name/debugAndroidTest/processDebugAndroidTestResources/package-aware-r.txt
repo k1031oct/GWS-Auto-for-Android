@@ -1,3 +1,0 @@
-com.gws.auto.mobile.android.test
-style WhiteBackgroundDialogTheme
-style WhiteBackgroundTheme

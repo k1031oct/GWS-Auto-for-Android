@@ -63,6 +63,13 @@
         <item>Duplicate Spreadsheet</item>
         <item>Copy/Paste Sheet Values</item>
         <item>Post to Google Chat</item>
+        <item>Outlook Send Email</item>
+        <item>Outlook Create Draft</item>
+        <item>OneDrive Upload File</item>
+        <item>OneDrive Create Folder</item>
+        <item>OneDrive Copy File</item>
+        <item>OneDrive Move File</item>
+        <item>Post to Slack</item>
     </string-array>
     <string-array name="module_keys">
         <item>LOG_MESSAGE</item>
@@ -72,6 +79,13 @@
         <item>DUPLICATE_SPREADSHEET</item>
         <item>COPY_PASTE_SHEET_VALUES</item>
         <item>chat_post</item>
+        <item>outlook_send_email</item>
+        <item>outlook_create_draft</item>
+        <item>onedrive_upload_file</item>
+        <item>onedrive_create_folder</item>
+        <item>onedrive_copy_file</item>
+        <item>onedrive_move_file</item>
+        <item>slack_post</item>
     </string-array>
     <string-array name="theme_entries">
         <item>System Default</item>

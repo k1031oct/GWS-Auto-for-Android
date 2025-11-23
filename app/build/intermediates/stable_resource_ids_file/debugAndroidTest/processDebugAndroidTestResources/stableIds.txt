@@ -1,2 +1,0 @@
-com.gws.auto.mobile.android.test:style/WhiteBackgroundTheme = 0x7f010001
-com.gws.auto.mobile.android.test:style/WhiteBackgroundDialogTheme = 0x7f010000

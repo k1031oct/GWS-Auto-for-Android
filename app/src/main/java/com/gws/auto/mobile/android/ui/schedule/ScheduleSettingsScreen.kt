@@ -1,5 +1,6 @@
 package com.gws.auto.mobile.android.ui.schedule
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -131,7 +132,11 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel, onSave: () -> U
                         label = { Text("ワークフロー") },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isWorkflowMenuExpanded) },
                     )
-                    ExposedDropdownMenu(expanded = isWorkflowMenuExpanded, onDismissRequest = { isWorkflowMenuExpanded = false }) {
+                    ExposedDropdownMenu(
+                        expanded = isWorkflowMenuExpanded,
+                        onDismissRequest = { isWorkflowMenuExpanded = false },
+                        modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
+                    ) {
                         workflows.forEach { workflow ->
                             DropdownMenuItem(
                                 text = { Text(workflow.name) },
@@ -159,7 +164,11 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel, onSave: () -> U
                         label = { Text("繰り返し") },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isScheduleTypeMenuExpanded) },
                     )
-                    ExposedDropdownMenu(expanded = isScheduleTypeMenuExpanded, onDismissRequest = { isScheduleTypeMenuExpanded = false }) {
+                    ExposedDropdownMenu(
+                        expanded = isScheduleTypeMenuExpanded,
+                        onDismissRequest = { isScheduleTypeMenuExpanded = false },
+                        modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
+                    ) {
                         listOf("時間毎", "日毎", "週毎", "月毎", "年毎").forEach { type ->
                             DropdownMenuItem(
                                 text = { Text(type) },
@@ -323,8 +332,10 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel, onSave: () -> U
                             )
                             ExposedDropdownMenu(
                                 expanded = isMonthlyDayMenuExpanded,
-                                onDismissRequest = { isMonthlyDayMenuExpanded = false }
+                                onDismissRequest = { isMonthlyDayMenuExpanded = false },
+                                modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
                             ) {
+
                                 (1..31).forEach { day ->
                                     DropdownMenuItem(
                                         text = { Text(day.toString()) },

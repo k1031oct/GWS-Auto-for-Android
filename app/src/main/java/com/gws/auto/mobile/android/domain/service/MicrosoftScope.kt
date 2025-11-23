@@ -13,6 +13,18 @@ object MicrosoftScope {
     const val MAIL_SEND = "https://graph.microsoft.com/Mail.Send"
 
     /**
+     * Grants permission to read and write mail, including creating drafts.
+     * Required for creating email drafts.
+     */
+    const val MAIL_READWRITE = "https://graph.microsoft.com/Mail.ReadWrite"
+
+    /**
+     * Grants permission to read and write files in the user's OneDrive.
+     * Required for OneDrive file operations (upload, copy, move, create folder).
+     */
+    const val FILES_READWRITE = "https://graph.microsoft.com/Files.ReadWrite"
+
+    /**
      * Grants permission to read the user's basic profile information.
      * This is often required for calls to the `/me` endpoint.
      */

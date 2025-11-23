@@ -139,11 +139,16 @@ class DashboardViewModel @Inject constructor(
         val moduleErrors = mutableMapOf<String, Int>()
 
         for (h in history) {
-            val workflow = workflows.find { it.id == h.workflowId }
-            workflow?.modules?.forEach { module ->
-                moduleUsage[module.type] = (moduleUsage[module.type] ?: 0) + 1
-                if (h.status != "Success") { // A simplified assumption
-                    moduleErrors[module.type] = (moduleErrors[module.type] ?: 0) + 1
+            // logsフィールドをパースして各モジュールの実行結果を抽出
+            val moduleResults = parseModuleResultsFromLogs(h.logs)
+            
+            for ((moduleType, isSuccess) in moduleResults) {
+                // 使用回数をカウント
+                moduleUsage[moduleType] = (moduleUsage[moduleType] ?: 0) + 1
+                
+                // 失敗した場合のみエラーカウント
+                if (!isSuccess) {
+                    moduleErrors[moduleType] = (moduleErrors[moduleType] ?: 0) + 1
                 }
             }
         }
@@ -151,5 +156,60 @@ class DashboardViewModel @Inject constructor(
         return moduleUsage.map { (name, usage) ->
             ModuleStat(name, usage, moduleErrors.getOrDefault(name, 0))
         }.sortedByDescending { it.usageCount }
+    }
+
+    /**
+     * History.logsフィールドをパースして、各モジュールの実行結果を抽出する
+     * 
+     * ログフォーマット:
+     * [Step N: module_type]
+     * Output: ...
+     * または
+     * [Step N: module_type] - Skipped (disabled)
+     * または
+     * ERROR: ...
+     * 
+     * @param logs 実行ログ
+     * @return モジュールタイプと成功フラグのマップ (スキップされたモジュールは含まない)
+     */
+    private fun parseModuleResultsFromLogs(logs: String): Map<String, Boolean> {
+        val results = mutableMapOf<String, Boolean>()
+        val lines = logs.lines()
+        
+        var currentModule: String? = null
+        var currentModuleSuccess = true
+        
+        for (line in lines) {
+            // [Step N: module_type] のパターンをチェック
+            val stepMatch = Regex("""\[Step \d+: (.+?)\]""").find(line)
+            if (stepMatch != null) {
+                // 前のモジュールの結果を保存
+                if (currentModule != null) {
+                    results[currentModule] = currentModuleSuccess
+                }
+                
+                // 新しいモジュールの処理開始
+                val moduleType = stepMatch.groupValues[1]
+                
+                // スキップされたモジュールはカウントしない
+                if (line.contains("Skipped (disabled)")) {
+                    currentModule = null
+                    currentModuleSuccess = true
+                } else {
+                    currentModule = moduleType
+                    currentModuleSuccess = true // デフォルトは成功
+                }
+            } else if (currentModule != null && line.contains("ERROR")) {
+                // 現在のモジュールでエラーが発生
+                currentModuleSuccess = false
+            }
+        }
+        
+        // 最後のモジュールの結果を保存
+        if (currentModule != null) {
+            results[currentModule] = currentModuleSuccess
+        }
+        
+        return results
     }
 }

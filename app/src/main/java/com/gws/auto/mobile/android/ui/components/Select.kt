@@ -1,5 +1,6 @@
 package com.gws.auto.mobile.android.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -50,8 +51,10 @@ fun AppSelect(
         )
         ExposedDropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.background(androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant)
         ) {
+
             options.forEach { selectionOption ->
                 DropdownMenuItem(
                     text = { Text(selectionOption) },
