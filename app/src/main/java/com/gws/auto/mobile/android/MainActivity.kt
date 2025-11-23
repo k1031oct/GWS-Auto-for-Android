@@ -100,11 +100,18 @@ class MainActivity : AppCompatActivity() {
 
     private suspend fun applySettings() {
         val languageTag = settingsRepository.language.first()
-        val theme = settingsRepository.theme.first()
+        // Theme is now handled by observeSettings
+        // val theme = settingsRepository.theme.first()
 
         val appLocale = LocaleListCompat.forLanguageTags(languageTag)
         AppCompatDelegate.setApplicationLocales(appLocale)
 
+        // Initial theme application is also handled by observeSettings, 
+        // but we might want to keep it here for immediate application on cold start if needed.
+        // However, observeSettings starts immediately in onCreate, so it should be fine.
+    }
+
+    private fun applyTheme(theme: String) {
         when (theme) {
             "Light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             "Dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -118,6 +125,12 @@ class MainActivity : AppCompatActivity() {
                 applyHighlightColor(colorName)
             }
             .launchIn(lifecycleScope)
+
+        settingsRepository.theme
+            .onEach { theme ->
+                applyTheme(theme)
+            }
+            .launchIn(lifecycleScope)
     }
 
     private fun applyHighlightColor(colorName: String) {
@@ -128,7 +141,8 @@ class MainActivity : AppCompatActivity() {
             "forest" -> if (isDarkTheme) ForestPrimaryDark else ForestPrimaryLight
             "ocean" -> if (isDarkTheme) OceanPrimaryDark else OceanPrimaryLight
             "sakura" -> if (isDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight
-            else -> if (isDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight
+            "neon" -> if (isDarkTheme) NeonPrimaryDark else NeonPrimaryLight
+            else -> if (isDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight
         }
 
         val colorInt = color.toArgb()

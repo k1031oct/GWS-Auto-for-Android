@@ -309,7 +309,8 @@ private fun SettingsSection(
                 "forest" -> Color(0xFF386A1F)
                 "ocean" -> Color(0xFF00696F)
                 "sakura" -> Color(0xFFB14E69)
-                else -> Color(0xFF6750A4) // default
+                "neon" -> Color(0xFFDFFF00)
+                else -> Color(0xFF9E9E9E) // default (Gray)
             }
             Surface(
                 modifier = Modifier

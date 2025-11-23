@@ -102,22 +102,29 @@ fun DashboardScreen(
                 modifier = Modifier.padding(top = 8.dp)
             )
 
-            PieChartComposable(
-                totalCount = uiState.totalCountMonth,
-                errorCount = uiState.errorCountMonth,
-                centerText = stringResource(R.string.dashboard_workflow_error_rate),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-            )
+            if (uiState.workflowExecutionCounts.isEmpty()) {
+                EmptyStatsMessage(message = "No workflow execution history found.\nRun a workflow to see statistics.")
+            } else {
+                PieChartComposable(
+                    totalCount = uiState.totalCountMonth,
+                    errorCount = uiState.errorCountMonth,
+                    centerText = stringResource(R.string.dashboard_workflow_error_rate),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                )
 
-            BarChartComposable(
-                entries = uiState.workflowExecutionCounts.mapIndexed { index, it -> BarEntry(index.toFloat(), it.executionCount.toFloat()) },
-                labels = uiState.workflowExecutionCounts.map { it.workflowName },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp)
-            )
+                BarChartComposable(
+                    entries = uiState.workflowExecutionCounts.mapIndexed { index, it -> BarEntry(index.toFloat(), it.executionCount.toFloat()) },
+                    labels = uiState.workflowExecutionCounts.map { it.workflowName },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp)
+                )
+                
+                // Workflow Stats List
+                WorkflowStatsList(uiState.workflowExecutionCounts)
+            }
 
             // Module Statistics
             Text(
@@ -127,29 +134,47 @@ fun DashboardScreen(
                 modifier = Modifier.padding(top = 8.dp)
             )
 
-            PieChartComposable(
-                totalCount = uiState.moduleUsageCount,
-                errorCount = uiState.moduleErrorCount,
-                centerText = stringResource(R.string.dashboard_module_error_rate),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-            )
+            if (uiState.moduleStats.isEmpty()) {
+                EmptyStatsMessage(message = "No module usage data found.")
+            } else {
+                PieChartComposable(
+                    totalCount = uiState.moduleUsageCount,
+                    errorCount = uiState.moduleErrorCount,
+                    centerText = stringResource(R.string.dashboard_module_error_rate),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                )
 
-            BarChartComposable(
-                entries = uiState.moduleStats.mapIndexed { index, it -> BarEntry(index.toFloat(), it.usageCount.toFloat()) },
-                labels = uiState.moduleStats.map { it.moduleName },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp)
-            )
-
-            // Workflow Stats List
-            WorkflowStatsList(uiState.workflowExecutionCounts)
-
-            // Module Stats List
-            ModuleStatsList(uiState.moduleStats)
+                BarChartComposable(
+                    entries = uiState.moduleStats.mapIndexed { index, it -> BarEntry(index.toFloat(), it.usageCount.toFloat()) },
+                    labels = uiState.moduleStats.map { it.moduleName },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp)
+                )
+                
+                // Module Stats List
+                ModuleStatsList(uiState.moduleStats)
+            }
         }
+    }
+}
+
+@Composable
+fun EmptyStatsMessage(message: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 32.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+        )
     }
 }
 

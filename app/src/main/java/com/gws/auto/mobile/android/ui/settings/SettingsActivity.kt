@@ -84,7 +84,8 @@ class SettingsActivity : AppCompatActivity() {
             "forest" -> if (isDarkTheme) ForestPrimaryDark else ForestPrimaryLight
             "ocean" -> if (isDarkTheme) OceanPrimaryDark else OceanPrimaryLight
             "sakura" -> if (isDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight
-            else -> if (isDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight
+            "neon" -> if (isDarkTheme) NeonPrimaryDark else NeonPrimaryLight
+            else -> if (isDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight
         }
 
         binding.toolbar.setBackgroundColor(color.toArgb())

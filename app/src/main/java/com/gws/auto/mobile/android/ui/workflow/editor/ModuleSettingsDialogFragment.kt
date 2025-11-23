@@ -145,6 +145,8 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
         currentHighlightColor?.let { color ->
             val colorStateList = ColorStateList.valueOf(color)
             binding.saveButton.backgroundTintList = colorStateList
+            binding.saveButton.setTextColor(android.graphics.Color.BLACK)
+            binding.cancelButton.setTextColor(color)
         }
     }
 

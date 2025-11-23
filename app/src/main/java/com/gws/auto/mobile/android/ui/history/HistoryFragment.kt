@@ -116,13 +116,24 @@ class HistoryFragment : Fragment() {
     }
 
     private fun showDeleteConfirmationDialog(headerItem: HistoryListItem.HeaderItem, onCancel: () -> Unit) {
-        AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext())
             .setTitle("Delete History Item")
             .setMessage("Are you sure you want to delete this execution history item?")
             .setPositiveButton("Delete") { _, _ -> viewModel.deleteHistory(headerItem.history) }
             .setNegativeButton(R.string.cancel) { _, _ -> onCancel() }
             .setOnCancelListener { onCancel() }
-            .show()
+            .create()
+
+        dialog.setOnShowListener {
+            val nightModeFlags = resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK
+            val isDarkTheme = nightModeFlags == android.content.res.Configuration.UI_MODE_NIGHT_YES
+            val color = if (isDarkTheme) android.graphics.Color.WHITE else android.graphics.Color.BLACK
+            
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color)
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color)
+        }
+        
+        dialog.show()
     }
 
     override fun onDestroyView() {

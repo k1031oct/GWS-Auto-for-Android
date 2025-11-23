@@ -127,14 +127,23 @@ fun GWSAutoForAndroidTheme(
             tertiaryContainer = if (useDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight,
             outline = if (useDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight
         )
-        else -> baseColorScheme.copy( // "default" - Sharp Neon colors
-            primary = if (useDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight,
-            primaryContainer = if (useDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight,
-            secondary = if (useDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight,
-            secondaryContainer = if (useDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight,
-            tertiary = if (useDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight,
-            tertiaryContainer = if (useDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight,
-            outline = if (useDarkTheme) DefaultPrimaryDark else DefaultPrimaryLight
+        "neon" -> baseColorScheme.copy(
+            primary = if (useDarkTheme) NeonPrimaryDark else NeonPrimaryLight,
+            primaryContainer = if (useDarkTheme) NeonPrimaryDark else NeonPrimaryLight,
+            secondary = if (useDarkTheme) NeonPrimaryDark else NeonPrimaryLight,
+            secondaryContainer = if (useDarkTheme) NeonPrimaryDark else NeonPrimaryLight,
+            tertiary = if (useDarkTheme) NeonPrimaryDark else NeonPrimaryLight,
+            tertiaryContainer = if (useDarkTheme) NeonPrimaryDark else NeonPrimaryLight,
+            outline = if (useDarkTheme) NeonPrimaryDark else NeonPrimaryLight
+        )
+        else -> baseColorScheme.copy( // "default" - Monochrome
+            primary = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight,
+            primaryContainer = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight,
+            secondary = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight,
+            secondaryContainer = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight,
+            tertiary = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight,
+            tertiaryContainer = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight,
+            outline = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight
         )
     }
 

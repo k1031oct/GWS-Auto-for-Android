@@ -54,6 +54,7 @@
 
     <string-array name="highlight_color_entries">
         <item>Default</item>
+        <item>Neon</item>
         <item>Forest</item>
         <item>Ocean</item>
         <item>Sakura</item>
@@ -61,6 +62,7 @@
 
     <string-array name="highlight_color_values">
         <item>default</item>
+        <item>neon</item>
         <item>forest</item>
         <item>ocean</item>
         <item>sakura</item>
