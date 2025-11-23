@@ -2,7 +2,6 @@ package com.gws.auto.mobile.android.ui.workflow.editor
 
 import android.app.Activity
 import android.content.Intent
-import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
@@ -24,7 +23,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
-import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import com.google.api.services.sheets.v4.Sheets
 import com.google.api.services.sheets.v4.SheetsScopes
 import com.google.android.material.textfield.TextInputLayout
@@ -55,7 +53,7 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
     @Inject
     lateinit var googleApiAuthorizer: GoogleApiAuthorizer
     
-    private val themeViewModel: com.gws.auto.mobile.android.ui.theme.ThemeViewModel by viewModels()
+    private val themeViewModel: ThemeViewModel by viewModels()
     private var currentHighlightColor: Int? = null
 
     private val launchers = mutableMapOf<String, ActivityResultLauncher<Intent>>()
@@ -75,7 +73,7 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
     private fun handleFileSelection(uri: Uri, key: String) {
         val (fileId, fileName) = getFileInfoFromUri(uri)
         if (fileId == null || fileName == null) {
-            Toast.makeText(requireContext(), "Failed to resolve file information.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "ファイル情報の解決に失敗しました。", Toast.LENGTH_SHORT).show()
             return
         }
         selectedFiles[key] = Pair(fileId, fileName)
@@ -98,7 +96,7 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
             }
             uri.lastPathSegment?.let { documentId = it.split(":").last() }
         } catch (e: Exception) {
-            Timber.e(e, "Error getting file info from URI")
+            Timber.e(e, "URIからのファイル情報取得エラー")
             return Pair(null, null)
         }
         return Pair(documentId, displayName ?: documentId)
@@ -151,8 +149,8 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
     }
 
     private fun setupDefineVariableUI() {
-        val variableNameInput = createTextInputLayout("Variable Name", module.parameters["variableName"])
-        val valueInput = createTextInputLayout("Value", module.parameters["value"])
+        val variableNameInput = createTextInputLayout("変数名", module.parameters["variableName"])
+        val valueInput = createTextInputLayout("値", module.parameters["value"])
         binding.parametersContainer.addView(variableNameInput)
         binding.parametersContainer.addView(valueInput)
         binding.saveButton.setOnClickListener {
@@ -166,10 +164,10 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
     }
 
     private fun setupGetRelativeDateUI() {
-        val amountInput = createTextInputLayout("Amount", module.parameters["amount"], isNumeric = true)
+        val amountInput = createTextInputLayout("量", module.parameters["amount"], isNumeric = true)
         val unitSpinner = createSpinner(R.array.date_units, module.parameters["unit"])
         val directionSpinner = createSpinner(R.array.date_directions, module.parameters["direction"])
-        val variableNameInput = createTextInputLayout("Variable Name for Result", module.parameters["variableName"])
+        val variableNameInput = createTextInputLayout("結果の変数名", module.parameters["variableName"])
         binding.parametersContainer.addView(amountInput)
         binding.parametersContainer.addView(unitSpinner)
         binding.parametersContainer.addView(directionSpinner)
@@ -187,12 +185,12 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
     }
 
     private fun setupCreateGmailDraftUI() {
-        val toInput = createTextInputLayout("To", module.parameters["to"])
-        val ccInput = createTextInputLayout("Cc", module.parameters["cc"])
-        val bccInput = createTextInputLayout("Bcc", module.parameters["bcc"])
-        val subjectInput = createTextInputLayout("Subject", module.parameters["subject"])
-        val bodyInput = createTextInputLayout("Body", module.parameters["body"], isMultiLine = true)
-        val attachmentPicker = createFilePickerViews("gmailAttachment", "Attach File", module.parameters, "*/*")
+        val toInput = createTextInputLayout("宛先", module.parameters["to"])
+        val ccInput = createTextInputLayout("CC", module.parameters["cc"])
+        val bccInput = createTextInputLayout("BCC", module.parameters["bcc"])
+        val subjectInput = createTextInputLayout("件名", module.parameters["subject"])
+        val bodyInput = createTextInputLayout("本文", module.parameters["body"], isMultiLine = true)
+        val attachmentPicker = createFilePickerViews("gmailAttachment", "ファイルを添付", module.parameters, "*/*")
 
         binding.parametersContainer.addView(toInput)
         binding.parametersContainer.addView(ccInput)
@@ -219,9 +217,9 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
     }
 
     private fun setupDuplicateSpreadsheetUI() {
-        val newFileNameInput = createTextInputLayout("New File Name", module.parameters["newFileName"])
-        val sourcePicker = createFilePickerViews("sourceSheet", "Select Source Sheet", module.parameters, "application/vnd.google-apps.spreadsheet")
-        val destFolderIdInput = createTextInputLayout("Destination Folder ID (Optional)", module.parameters["destinationFolderId"])
+        val newFileNameInput = createTextInputLayout("新しいファイル名", module.parameters["newFileName"])
+        val sourcePicker = createFilePickerViews("sourceSheet", "ソースシートを選択", module.parameters, "application/vnd.google-apps.spreadsheet")
+        val destFolderIdInput = createTextInputLayout("先のフォルダID (任意)", module.parameters["destinationFolderId"])
 
         binding.parametersContainer.addView(sourcePicker)
         binding.parametersContainer.addView(newFileNameInput)
@@ -248,23 +246,23 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
         val destSheetName = module.parameters["destinationSheetName"]
         val sourceRange = module.parameters["sourceRange"]?.split(":") ?: listOf("", "")
         
-        container.addView(createSectionHeader("Source"))
+        container.addView(createSectionHeader("ソース"))
         val sourceSheetSpinner = createSpinner(emptyList(), sourceSheetName).apply { tag = "sourceSheetSheetSpinner" }
-        val sourceRangeStartInput = createTextInputLayout("Start Cell", sourceRange.getOrNull(0))
-        val sourceRangeEndInput = createTextInputLayout("End Cell", sourceRange.getOrNull(1))
-        container.addView(createFilePickerViews("sourceSheet", "Select Source Sheet", module.parameters, "application/vnd.google-apps.spreadsheet"))
+        val sourceRangeStartInput = createTextInputLayout("開始セル", sourceRange.getOrNull(0))
+        val sourceRangeEndInput = createTextInputLayout("終了セル", sourceRange.getOrNull(1))
+        container.addView(createFilePickerViews("sourceSheet", "ソースシートを選択", module.parameters, "application/vnd.google-apps.spreadsheet"))
         container.addView(sourceSheetSpinner)
         container.addView(LinearLayout(requireContext()).apply {
             orientation = LinearLayout.HORIZONTAL
             addView(sourceRangeStartInput, LinearLayout.LayoutParams(0, -2, 1f))
-            addView(createStaticTextView(" : "))
+            addView(createStaticTextView())
             addView(sourceRangeEndInput, LinearLayout.LayoutParams(0, -2, 1f))
         })
         
-        container.addView(createSectionHeader("Destination"))
+        container.addView(createSectionHeader("先"))
         val destSheetSpinner = createSpinner(emptyList(), destSheetName).apply { tag = "destSheetSheetSpinner" }
-        val destStartCellInput = createTextInputLayout("Start Cell (e.g., C5)", module.parameters["destinationStartCell"])
-        container.addView(createFilePickerViews("destSheet", "Select Destination Sheet", module.parameters, "application/vnd.google-apps.spreadsheet"))
+        val destStartCellInput = createTextInputLayout("開始セル (例: C5)", module.parameters["destinationStartCell"])
+        container.addView(createFilePickerViews("destSheet", "先のシートを選択", module.parameters, "application/vnd.google-apps.spreadsheet"))
         container.addView(destSheetSpinner)
         container.addView(destStartCellInput)
 
@@ -272,7 +270,7 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
         module.parameters["destinationFileId"]?.let { fetchSheetNames(it, destSheetSpinner, destSheetName) }
 
         binding.saveButton.setOnClickListener {
-            val params = mutableMapOf(
+            val params = mutableMapOf<String, String?>(
                 "sourceSheetName" to sourceSheetSpinner.selectedItem?.toString(),
                 "sourceRange" to "${sourceRangeStartInput.editText?.text}:${sourceRangeEndInput.editText?.text}",
                 "destinationSheetName" to destSheetSpinner.selectedItem?.toString(),
@@ -296,7 +294,7 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
             try {
                 val account = GoogleSignIn.getLastSignedInAccount(requireContext())
                 if (account == null) {
-                    withContext(Dispatchers.Main) { Toast.makeText(requireContext(), "Not signed in.", Toast.LENGTH_SHORT).show() }
+                    withContext(Dispatchers.Main) { Toast.makeText(requireContext(), "サインインしていません。", Toast.LENGTH_SHORT).show() }
                     return@launch
                 }
                 val credential = GoogleAccountCredential.usingOAuth2(requireContext(), listOf(SheetsScopes.SPREADSHEETS_READONLY))
@@ -312,8 +310,8 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
                     selection?.let { spinner.setSelection(adapter.getPosition(it)) }
                 }
             } catch (e: Exception) {
-                Timber.e(e, "Error fetching sheet names")
-                withContext(Dispatchers.Main) { Toast.makeText(requireContext(), "Failed to fetch sheet names.", Toast.LENGTH_SHORT).show() }
+                Timber.e(e, "シート名の取得エラー")
+                withContext(Dispatchers.Main) { Toast.makeText(requireContext(), "シート名の取得に失敗しました。", Toast.LENGTH_SHORT).show() }
             }
         }
     }
@@ -334,7 +332,7 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
         }
     }
     
-    private fun createStaticTextView(text: String): TextView = TextView(requireContext()).apply { this.text = text; setPadding(8) }
+    private fun createStaticTextView(): TextView = TextView(requireContext()).apply { this.text = " : "; setPadding(8) }
     
     private fun createFilePickerViews(key: String, buttonText: String, initialParams: Map<String, String>, mimeType: String): View {
         val layout = LinearLayout(requireContext()).apply { orientation = LinearLayout.VERTICAL }
@@ -347,7 +345,7 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
         }
         val textView = TextView(requireContext()).apply {
             tag = "${key}Name"
-            text = initialParams["${key}FileName"] ?: "None selected"
+            text = initialParams["${key}FileName"] ?: "選択されていません"
             setPadding(8)
         }
         button.setOnClickListener { openPicker(key, mimeType) }
@@ -358,7 +356,7 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
     
     private fun openPicker(key: String, mimeType: String) {
         if (GoogleSignIn.getLastSignedInAccount(requireContext()) == null) {
-            Toast.makeText(requireContext(), "Please sign in first via the User Info settings.", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "まずユーザー情報設定からサインインしてください。", Toast.LENGTH_LONG).show()
             return
         }
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply {

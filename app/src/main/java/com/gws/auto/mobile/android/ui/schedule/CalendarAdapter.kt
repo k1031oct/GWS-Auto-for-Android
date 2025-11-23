@@ -56,7 +56,7 @@ class CalendarAdapter(
 
                 val holiday = holidays.find { it.date == item.date }
                 if (holiday != null) {
-                    binding.dayText.text = "${item.day}\n${holiday.name}"
+                    binding.dayText.text = itemView.context.getString(R.string.day_with_holiday, item.day, holiday.name)
                     val colorError = ContextCompat.getColor(itemView.context, R.color.md_theme_light_error)
                     binding.dayText.setTextColor(colorError)
                 }

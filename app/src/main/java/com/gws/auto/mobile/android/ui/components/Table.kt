@@ -1,5 +1,8 @@
 package com.gws.auto.mobile.android.ui.components
 
+import androidx.compose.ui.res.stringResource
+import com.gws.auto.mobile.android.R
+
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
@@ -119,9 +122,9 @@ fun GwsTablePreview() {
             Column {
                 GwsTable(
                     header = {
-                        GwsTableHead(text = "Invoice")
-                        GwsTableHead(text = "Status")
-                        GwsTableHead(text = "Amount", modifier = Modifier.padding(end=32.dp)) 
+                        GwsTableHead(text = stringResource(R.string.invoice))
+                        GwsTableHead(text = stringResource(R.string.status))
+                        GwsTableHead(text = stringResource(R.string.amount), modifier = Modifier.padding(end=32.dp)) 
                     }
                 ) {
                     invoices.forEach { (invoice, status, amount) ->
@@ -132,7 +135,7 @@ fun GwsTablePreview() {
                         }
                     }
                 }
-                GwsTableCaption(text = "A list of your recent invoices.")
+                GwsTableCaption(text = stringResource(R.string.invoice_list_caption))
             }
         }
     }

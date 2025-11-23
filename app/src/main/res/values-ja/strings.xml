@@ -116,6 +116,16 @@
     <string name="calendar_previous_month_button">&lt;</string>
     <string name="calendar_next_month_button">&gt;</string>
     <string name="schedule_list_item_workflow">ワークフロー: %1$s</string>
+    <string name="tags">タグ</string>
+    <string name="drop_modules_here">ここにモジュールをドロップ</string>
+    <string name="version_number_placeholder">バージョン</string>
+    <string name="no_history_prompt_no_workflow">履歴がありません</string>
+    <string name="placeholder_time">時間</string>
+    <string name="placeholder_workflow_name">ワークフロー名</string>
+    <string name="placeholder_event_time">イベント時間</string>
+    <string name="placeholder_event_title">イベントタイトル</string>
+    <string name="no">いいえ</string>
+    <string name="yes">はい</string>
     <string name="schedule_list_item_type">タイプ: %1$s</string>
     <string name="timeline_list_item_time_not_available">N/A</string>
     <string name="timeline_list_item_all_day">終日</string>
@@ -125,6 +135,7 @@
     <string name="search_history">履歴を検索</string>
     <string name="delete_all_history">すべての履歴を削除</string>
     <string name="clear_history_button_text">クリア</string>
+    <string name="no_history_prompt_with_workflow">このワークフローの実行履歴はありません</string>
 
     <!-- Table Headers -->
     <string name="header_workflow_name">ワークフロー名</string>
@@ -137,8 +148,6 @@
     <string name="unread_announcement_popup_title">未読のお知らせ</string>
     <string name="unread_announcement_popup_message">新しいお知らせがあります。表示しますか？</string>
     <string name="new_announcement_notification">新しいお知らせがあります。</string>
-    <string name="yes">はい</string>
-    <string name="no">いいえ</string>
 
     <!-- Execution Status -->
     <string name="execution_status_success">成功</string>
@@ -157,7 +166,7 @@
     <string name="dashboard_workflow_error_rate">ワークフローエラー率</string>
     <string name="dashboard_module_error_rate">モジュールエラー率</string>
     <string name="dashboard_executions">実行</string>
-    
+
     <!-- Schedule Settings -->
     <string name="schedule_edit_title">スケジュール編集</string>
     <string name="schedule_create_title">スケジュール新規作成</string>
@@ -174,7 +183,7 @@
     <string name="schedule_date_label">日付</string>
     <string name="save">保存</string>
     <string name="ok">OK</string>
-    
+
     <!-- Weekdays short -->
     <string name="weekday_mon_short">月</string>
     <string name="weekday_tue_short">火</string>
@@ -183,7 +192,7 @@
     <string name="weekday_fri_short">金</string>
     <string name="weekday_sat_short">土</string>
     <string name="weekday_sun_short">日</string>
-    
+
     <!-- Workflow Screen -->
     <string name="workflow_delete_confirmation">このワークフローを本当に削除しますか？</string>
     <string name="folder_delete_confirmation">このフォルダを本当に削除しますか？ (中のワークフローは削除されません)</string>
@@ -197,52 +206,113 @@
     <string name="run">実行</string>
     <string name="options">オプション</string>
     <string name="delete_folder">フォルダを削除</string>
-    
+
     <!-- Calendar Screen -->
     <string name="type_label">種類: %1$s</string>
+    <string name="all_day">終日</string>
 
-    <string name="module_not_configurable">このモジュールは設定できません。</string>
+    <!-- Sign In -->
+    <string name="sign_in_required">サインインが必要です</string>
+    <string name="sign_in_prompt_message">続行するにはサインインしてください</string>
+
+    <!-- Workflow Folders -->
+    <string name="remove_from_folder">フォルダーから削除</string>
+    <string name="empty_folder_message">このフォルダーは空です</string>
+    <string name="module_not_configurable">このモジュールはまだ設定できません。</string>
     <string name="select_parameter">選択: %1$s (%2$s)</string>
     <string name="parameter_with_file">%1$s: %2$s</string>
     <string name="google_account">Google アカウント</string>
-    <string name="sign_in_to_sync">データ同期のために Google アカウントでサインインしてください</string>
+    <string name="sign_in_to_sync">Googleアカウントでサインインしてデータを同期します</string>
     <string name="settings_label">設定</string>
     <string name="data_management">データ管理</string>
-    <string name="workflow_id_label">ワークフロー ID: %1$s</string>
+    <string name="workflow_id_label">ワークフローID: %1$s</string>
     <string name="workflow_label">ワークフロー: %1$s</string>
-    <string name="day_with_holiday">%1$d\n%2$s</string>
+    <string name="day_with_holiday">%1$s\n%2$s</string>
     <string name="close">閉じる</string>
     <string name="close_sheet">シートを閉じる</string>
     <string name="open_sheet">シートを開く</string>
     <string name="default_button">デフォルトボタン</string>
     <string name="destructive">破壊的</string>
-    <string name="secondary">二次的</string>
+    <string name="secondary">二次</string>
     <string name="action">アクション</string>
-    <string name="action_in_popover">ポップオーバー内のアクション</string>
+    <string name="action_in_popover">ポップオーバーでのアクション</string>
     <string name="open_dropdown">ドロップダウンを開く</string>
     <string name="open_popover">ポップオーバーを開く</string>
-    <string name="show_generic_dialog">汎用ダイアログを表示</string>
-    <string name="show_alert_dialog">警告ダイアログを表示</string>
-    <string name="show_dialog">ダイアログを表示</string>
+    <string name="show_generic_dialog">一般的なダイアログの表示</string>
+    <string name="show_alert_dialog">アラートダイアログの表示</string>
+    <string name="show_dialog">ダイアログの表示</string>
     <string name="submit">送信</string>
     <string name="username">ユーザー名</string>
     <string name="password">パスワード</string>
     <string name="badge_default">デフォルト</string>
-    <string name="badge_secondary">二次的</string>
+    <string name="badge_secondary">二次</string>
     <string name="badge_destructive">破壊的</string>
     <string name="badge_outline">アウトライン</string>
-    <string name="used_times">使用回数: %1$d 回</string>
-    <string name="errors_count">エラー数: %1$d</string>
-    <string name="item">項目</string>
-    <string name="enabled_label">有効ラベル</string>
-    <string name="disabled_label">無効ラベル</string>
-    <string name="slider_value">スライダー値: %1$s</string>
+    <string name="used_times">使用済み: %1$d回</string>
+    <string name="errors_count">エラー: %1$d</string>
+    <string name="item">アイテム</string>
+    <string name="enabled_label">有効なラベル</string>
+    <string name="disabled_label">無効なラベル</string>
+    <string name="slider_value">スライダーの値: %1$s</string>
     <string name="footer_button">フッターボタン</string>
-    <string name="long_scrollable_text">これは長いテキストで、コンテナをオーバーフローしスクロールが必要です。</string>
+    <string name="long_scrollable_text">これはコンテナをオーバーフローし、スクロールが必要な長いテキストです。</string>
     <string name="file_name">ファイル名</string>
     <string name="confirm">確認</string>
     <string name="module_library">モジュールライブラリ</string>
-    <string name="select_theme">テーマを選択</string>
-    <string name="sign_in_required">サインインが必要です</string>
-    <string name="sign_in_prompt_message">続行するにはサインインしてください</string>
+    <string name="select_theme">テーマの選択</string>
+    <string name="sign_in_successful">サインインしました</string>
+    <string name="sign_in_failed">サインインに失敗しました: %1$s</string>
+    <string name="unknown_user">不明</string>
+    <string name="export_history_csv">履歴をCSVにエクスポート</string>
+    <string name="history_exported_success">履歴をエクスポートしました</string>
+    <string name="export_failed">エクスポートに失敗しました: %1$s</string>
+    <string name="clear_all">すべて消去</string>
+    <string name="history_cleared">すべての履歴を消去しました</string>
+    <string name="set_parameters_title">%1$s のパラメータ設定</string>
+    <string name="ok">OK</string>
+    <string name="schedule_hourly_format">%1$d時間毎</string>
+    <string name="schedule_daily_format">日毎 %1$s</string>
+    <string name="schedule_weekly_format">週毎 %1$s %2$s</string>
+    <string name="schedule_monthly_format">月毎 %1$s日 %2$s</string>
+    <string name="schedule_yearly_format">年毎 %1$d月%2$d日 %3$s</string>
+    <string name="status_active">ステータス: 有効</string>
+    <string name="status_inactive">ステータス: 無効</string>
+    <string name="delete_item_title">アイテムの削除</string>
+    <string name="delete_item_message">本当にこのアイテムを削除しますか？この操作は取り消せません。</string>
+    <string name="generic_dialog_title">汎用ダイアログ</string>
+    <string name="generic_dialog_message">これはカスタムコンテンツを含む汎用ダイアログです。</string>
+    <string name="sheet_content">シートコンテンツ</string>
+    <string name="email_label">メールアドレス</string>
+    <string name="section_title">セクション %1$d</string>
+    <string name="section_content">これはセクション %1$d のコンテンツです。</string>
+    <string name="default_alert_title">デフォルトアラート</string>
+    <string name="default_alert_message">これはデフォルトのアラートメッセージです。</string>
+    <string name="destructive_alert_title">破壊的アラート</string>
+    <string name="destructive_alert_message">これは破壊的なアラートメッセージです。</string>
+    <string name="selected_date_label">選択された日付: %1$s</string>
+    <string name="none">なし</string>
+    <string name="card_title">カードタイトル</string>
+    <string name="card_description">これはカードの説明です。</string>
+    <string name="card_content">これはカードのメインコンテンツです。ここに任意のコンポーザブルを配置できます。</string>
+    <string name="option_label">オプション %1$d</string>
+    <string name="option_disabled">オプション %1$d (無効)</string>
+    <string name="collapsible_show">折りたたみコンテンツを表示</string>
+    <string name="collapsible_hide">折りたたみコンテンツを非表示</string>
+    <string name="collapsible_content">これは折りたたみまたは展開可能なコンテンツです。</string>
+    <string name="dropdown_item">アイテム %1$d</string>
+    <string name="password_error">パスワードは6文字以上である必要があります。</string>
+    <string name="popover_content">これはポップオーバーのコンテンツです。</string>
+    <string name="select_option_label">オプションを選択</string>
+    <string name="option_a">オプション A</string>
+    <string name="option_b">オプション B</string>
+    <string name="option_c">オプション C</string>
+    <string name="delete">削除</string>
+    <string name="show_default_toast">デフォルトトーストを表示</string>
+    <string name="show_destructive_toast">破壊的トーストを表示</string>
+    <string name="invoice">請求書</string>
+    <string name="status">ステータス</string>
+    <string name="amount">金額</string>
+    <string name="invoice_list_caption">最近の請求書一覧です。</string>
+    <string name="airplane_mode">機内モード</string>
+    <string name="value_format">値: %.2f</string>
 </resources>

@@ -1,5 +1,8 @@
 package com.gws.auto.mobile.android.ui.components
 
+import androidx.compose.ui.res.stringResource
+import com.gws.auto.mobile.android.R
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -51,7 +54,7 @@ fun AppSliderPreview() {
                     value = sliderValue,
                     onValueChange = { sliderValue = it }
                 )
-                Text(text = "Value: %.2f".format(sliderValue))
+                Text(text = stringResource(R.string.value_format, sliderValue))
             }
         }
     }

@@ -1,5 +1,8 @@
 package com.gws.auto.mobile.android.ui.components
 
+import androidx.compose.ui.res.stringResource
+import com.gws.auto.mobile.android.R
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -47,7 +50,7 @@ fun GwsSwitchPreview() {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                GwsLabel(text = "Airplane Mode")
+                GwsLabel(text = stringResource(R.string.airplane_mode))
                 GwsSwitch(
                     checked = isChecked,
                     onCheckedChange = { isChecked = it }

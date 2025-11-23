@@ -7,6 +7,7 @@ import com.gws.auto.mobile.android.data.model.Schedule
 import com.gws.auto.mobile.android.databinding.ListItemTimelineEventBinding
 import com.gws.auto.mobile.android.domain.model.Holiday
 import java.time.format.DateTimeFormatter
+import com.gws.auto.mobile.android.R
 
 class TimelineAdapter(
     private var items: List<Any>
@@ -31,10 +32,10 @@ class TimelineAdapter(
             when (item) {
                 is Schedule -> {
                     binding.eventTime.text = item.time
-                    binding.eventTitle.text = "Workflow: ${item.workflowId}" // Placeholder
+                    binding.eventTitle.text = binding.root.context.getString(R.string.workflow_label, item.workflowId)
                 }
                 is Holiday -> {
-                    binding.eventTime.text = "All Day"
+                    binding.eventTime.text = binding.root.context.getString(R.string.all_day)
                     binding.eventTitle.text = item.name
                 }
                 // Add other event types here (e.g., Google Calendar Events)

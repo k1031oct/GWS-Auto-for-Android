@@ -1,5 +1,8 @@
 package com.gws.auto.mobile.android.ui.components
 
+import androidx.compose.ui.res.stringResource
+import com.gws.auto.mobile.android.R
+
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -54,7 +57,7 @@ fun AppCarouselPreview() {
                             .padding(16.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(text = "Item", style = MaterialTheme.typography.headlineMedium)
+                        Text(text = stringResource(R.string.item), style = MaterialTheme.typography.headlineMedium)
                     }
                 }
             }

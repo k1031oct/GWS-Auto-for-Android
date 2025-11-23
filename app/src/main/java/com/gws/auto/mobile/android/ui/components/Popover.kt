@@ -1,5 +1,8 @@
 package com.gws.auto.mobile.android.ui.components
 
+import androidx.compose.ui.res.stringResource
+import com.gws.auto.mobile.android.R
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,12 +50,12 @@ fun AppPopoverPreview() {
         Surface(modifier = Modifier.padding(32.dp)) {
             AppPopover(
                 trigger = { onClick ->
-                    AppButton(onClick = onClick, text = "Open Popover")
+                    AppButton(onClick = onClick, text = stringResource(R.string.open_popover))
                 },
                 content = {
                     Column {
                         Text("This is the popover content.", style = MaterialTheme.typography.bodyMedium)
-                        AppButton(onClick = { }, text = "Action in Popover")
+                        AppButton(onClick = { }, text = stringResource(R.string.action_in_popover))
                     }
                 }
             )

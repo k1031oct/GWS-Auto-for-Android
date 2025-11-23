@@ -1,5 +1,8 @@
 package com.gws.auto.mobile.android.ui.components
 
+import androidx.compose.ui.res.stringResource
+import com.gws.auto.mobile.android.R
+
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,7 +42,7 @@ fun GwsScrollAreaPreview() {
         Surface(modifier = Modifier.padding(16.dp).height(200.dp)) {
             GwsScrollArea {
                 Text(
-                    text = "This is a long text that will overflow the container and require scrolling. ".repeat(20)
+                    text = stringResource(R.string.long_scrollable_text).repeat(20)
                 )
             }
         }

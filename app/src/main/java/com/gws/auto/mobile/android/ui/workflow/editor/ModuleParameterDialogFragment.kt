@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.gws.auto.mobile.android.domain.model.Module
 import com.gws.auto.mobile.android.ui.filepicker.FilePickerActivity
+import com.gws.auto.mobile.android.R
 
 class ModuleParameterDialogFragment : DialogFragment() {
 
@@ -43,7 +44,7 @@ class ModuleParameterDialogFragment : DialogFragment() {
 
                     if (fileId != null && fileName != null) {
                         moduleParameters[paramName] = fileId
-                        button.text = "$paramName: $fileName"
+                        button.text = getString(R.string.parameter_with_file, paramName, fileName)
                     }
                 }
                 currentFilePickerRequest = null // Clear the request
@@ -64,7 +65,7 @@ class ModuleParameterDialogFragment : DialogFragment() {
             if (filePickerParams.containsKey(paramName)) {
                 val expectedType = filePickerParams[paramName]!!
                 val button = Button(requireContext()).apply {
-                    text = "Select: $paramName ($expectedType)"
+                    text = getString(R.string.select_parameter, paramName, expectedType)
                     setOnClickListener {
                         currentFilePickerRequest = Triple(paramName, expectedType, this)
                         val intent = Intent(requireContext(), FilePickerActivity::class.java).apply {
@@ -82,9 +83,9 @@ class ModuleParameterDialogFragment : DialogFragment() {
         }
 
         return AlertDialog.Builder(requireContext())
-            .setTitle("Set parameters for $moduleType")
+            .setTitle(getString(R.string.set_parameters_title, moduleType))
             .setView(layout)
-            .setPositiveButton("OK") { _, _ ->
+            .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 editTexts.forEach { (key, editText) ->
                     moduleParameters[key] = editText.text.toString()
                 }
@@ -95,7 +96,7 @@ class ModuleParameterDialogFragment : DialogFragment() {
                 )
                 listener?.onModuleParametersSet(module)
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .create()
     }
 

@@ -1,5 +1,8 @@
 package com.gws.auto.mobile.android.ui.components
 
+import androidx.compose.ui.res.stringResource
+import com.gws.auto.mobile.android.R
+
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -71,7 +74,7 @@ fun AppButton(
 @Composable
 fun AppButtonPreview() {
     GWSAutoForAndroidTheme {
-        AppButton(onClick = {}, text = "Default Button")
+        AppButton(onClick = {}, text = stringResource(R.string.default_button))
     }
 }
 
@@ -79,6 +82,6 @@ fun AppButtonPreview() {
 @Composable
 fun AppButtonDestructivePreview() {
     GWSAutoForAndroidTheme {
-        AppButton(onClick = {}, text = "Destructive Button", variant = ButtonVariant.Destructive)
+        AppButton(onClick = {}, text = stringResource(R.string.destructive), variant = ButtonVariant.Destructive)
     }
 }

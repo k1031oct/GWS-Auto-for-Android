@@ -1,5 +1,8 @@
 package com.gws.auto.mobile.android.ui.components
 
+import androidx.compose.ui.res.stringResource
+import com.gws.auto.mobile.android.R
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -82,7 +85,7 @@ fun AppCardPreview() {
                 },
                 footer = {
                     Column(modifier = Modifier.padding(24.dp)) {
-                        AppButton(onClick = { }, text = "Footer Button")
+                        AppButton(onClick = { }, text = stringResource(R.string.footer_button))
                     }
                 }
             )

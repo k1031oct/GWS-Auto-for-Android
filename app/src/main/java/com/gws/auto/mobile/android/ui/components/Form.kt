@@ -1,5 +1,8 @@
 package com.gws.auto.mobile.android.ui.components
 
+import androidx.compose.ui.res.stringResource
+import com.gws.auto.mobile.android.R
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -65,15 +68,15 @@ fun FormPreview() {
         Surface(modifier = Modifier.padding(16.dp)) {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 AppFormItem(
-                    label = { AppFormLabel(text = "Username") },
+                    label = { AppFormLabel(text = stringResource(R.string.username)) },
                     content = { AppInput(value = username, onValueChange = { username = it }) }
                 )
                 AppFormItem(
-                    label = { AppFormLabel(text = "Password") },
+                    label = { AppFormLabel(text = stringResource(R.string.password)) },
                     content = { AppInput(value = password, onValueChange = { password = it }) },
                     errorMessage = if (password.length < 6 && password.isNotEmpty()) "Password must be at least 6 characters." else null
                 )
-                AppButton(onClick = { /* Handle form submission */ }, text = "Submit")
+                AppButton(onClick = { /* Handle form submission */ }, text = stringResource(R.string.submit))
             }
         }
     }

@@ -33,18 +33,18 @@ class ScheduleListAdapter(private val onScheduleClick: (Schedule) -> Unit) :
 
         fun bind(schedule: Schedule) {
             // TODO: Get actual workflow name from workflowId
-            workflowNameTextView.text = "Workflow ID: ${schedule.workflowId}"
+            workflowNameTextView.text = itemView.context.getString(R.string.workflow_id_label, schedule.workflowId)
 
             val typeAndTimeString = when (schedule.scheduleType) {
-                "時間毎" -> "${schedule.hourlyInterval}時間毎"
-                "日毎" -> "日毎 ${schedule.time}"
-                "週毎" -> "週毎 ${schedule.weeklyDays?.joinToString(", ")} ${schedule.time}"
-                "月毎" -> "月毎 ${schedule.monthlyDays?.joinToString(", ")}日 ${schedule.time}"
-                "年毎" -> "年毎 ${schedule.yearlyMonth}月${schedule.yearlyDayOfMonth}日 ${schedule.time}"
+                "時間毎" -> itemView.context.getString(R.string.schedule_hourly_format, schedule.hourlyInterval)
+                "日毎" -> itemView.context.getString(R.string.schedule_daily_format, schedule.time)
+                "週毎" -> itemView.context.getString(R.string.schedule_weekly_format, schedule.weeklyDays?.joinToString(", "), schedule.time)
+                "月毎" -> itemView.context.getString(R.string.schedule_monthly_format, schedule.monthlyDays?.joinToString(", "), schedule.time)
+                "年毎" -> itemView.context.getString(R.string.schedule_yearly_format, schedule.yearlyMonth, schedule.yearlyDayOfMonth, schedule.time)
                 else -> schedule.scheduleType
             }
             typeAndTimeTextView.text = typeAndTimeString
-            statusTextView.text = if (schedule.isEnabled) "Status: Active" else "Status: Inactive"
+            statusTextView.text = if (schedule.isEnabled) itemView.context.getString(R.string.status_active) else itemView.context.getString(R.string.status_inactive)
         }
     }
 }

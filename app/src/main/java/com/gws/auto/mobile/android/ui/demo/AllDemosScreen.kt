@@ -58,6 +58,8 @@ import com.gws.auto.mobile.android.ui.components.BadgeVariant
 import com.gws.auto.mobile.android.ui.components.ButtonVariant
 import com.gws.auto.mobile.android.ui.components.CardHeader
 import kotlinx.coroutines.launch
+import androidx.compose.ui.res.stringResource
+import com.gws.auto.mobile.android.R
 
 @Composable
 fun AllDemosScreen() {
@@ -69,21 +71,21 @@ fun AllDemosScreen() {
         AppAlertDialog(
             onDismissRequest = { showAlertDialog = false },
             onConfirmation = { showAlertDialog = false },
-            dialogTitle = "Delete Item",
-            dialogText = "Are you sure you want to delete this item? This action cannot be undone.",
-            confirmButtonText = "Delete",
-            dismissButtonText = "Cancel"
+            dialogTitle = stringResource(R.string.delete_item_title),
+            dialogText = stringResource(R.string.delete_item_message),
+            confirmButtonText = stringResource(R.string.delete),
+            dismissButtonText = stringResource(R.string.cancel)
         )
     }
 
     if (showGenericDialog) {
         AppDialog(
             onDismissRequest = { showGenericDialog = false },
-            dialogTitle = "Generic Dialog"
+            dialogTitle = stringResource(R.string.generic_dialog_title)
         ) {
             Column {
-                Text("This is a generic dialog with custom content.")
-                AppButton(onClick = { showGenericDialog = false }, text = "Close")
+                Text(stringResource(R.string.generic_dialog_message))
+                AppButton(onClick = { showGenericDialog = false }, text = stringResource(R.string.close))
             }
         }
     }
@@ -95,9 +97,9 @@ fun AllDemosScreen() {
         drawerState = drawerState,
         sheetContent = {
             Column(modifier = Modifier.padding(16.dp)) {
-                Text("Sheet Content")
+                Text(stringResource(R.string.sheet_content))
                 Spacer(modifier = Modifier.height(16.dp))
-                AppButton(onClick = { scope.launch { drawerState.close() } }, text = "Close Sheet")
+                AppButton(onClick = { scope.launch { drawerState.close() } }, text = stringResource(R.string.close_sheet))
             }
         }
     ) {
@@ -122,17 +124,17 @@ fun AllDemosScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(32.dp))
-                AppButton(onClick = { scope.launch { drawerState.open() } }, text = "Open Sheet")
+                AppButton(onClick = { scope.launch { drawerState.open() } }, text = stringResource(R.string.open_sheet))
                 Spacer(modifier = Modifier.height(32.dp))
-                AppButton(onClick = { }, text = "Default Button")
+                AppButton(onClick = { }, text = stringResource(R.string.default_button))
                 Spacer(modifier = Modifier.height(16.dp))
                 AppButton(
                     onClick = { showAlertDialog = true },
-                    text = "Destructive",
+                    text = stringResource(R.string.destructive),
                     variant = ButtonVariant.Destructive
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                AppButton(onClick = { }, text = "Secondary", variant = ButtonVariant.Secondary)
+                AppButton(onClick = { }, text = stringResource(R.string.secondary), variant = ButtonVariant.Secondary)
 
                 Spacer(modifier = Modifier.height(32.dp))
 
@@ -140,32 +142,32 @@ fun AllDemosScreen() {
                 AppInput(
                     value = text,
                     onValueChange = { newText -> text = newText },
-                    label = "Email",
+                    label = stringResource(R.string.email_label),
                     placeholder = "user@example.com"
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Accordion {
-                    AccordionItem(title = "Section 1") {
-                        Text("This is the content of section 1.")
+                    AccordionItem(title = stringResource(R.string.section_title, 1)) {
+                        Text(stringResource(R.string.section_content, 1))
                     }
-                    AccordionItem(title = "Section 2") {
-                        Text("This is the content of section 2. It can be a bit longer to see how it wraps.")
+                    AccordionItem(title = stringResource(R.string.section_title, 2)) {
+                        Text(stringResource(R.string.section_content, 2))
                     }
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
 
                 AppAlert(
-                    title = "Default Alert",
-                    description = "This is a default alert message."
+                    title = stringResource(R.string.default_alert_title),
+                    description = stringResource(R.string.default_alert_message)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 AppAlert(
                     variant = AlertVariant.Destructive,
-                    title = "Destructive Alert",
-                    description = "This is a destructive alert message."
+                    title = stringResource(R.string.destructive_alert_title),
+                    description = stringResource(R.string.destructive_alert_message)
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -179,32 +181,32 @@ fun AllDemosScreen() {
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    AppBadge(text = "Default")
-                    AppBadge(text = "Secondary", variant = BadgeVariant.Secondary)
-                    AppBadge(text = "Destructive", variant = BadgeVariant.Destructive)
-                    AppBadge(text = "Outline", variant = BadgeVariant.Outline)
+                    AppBadge(text = stringResource(R.string.badge_default))
+                    AppBadge(text = stringResource(R.string.badge_secondary), variant = BadgeVariant.Secondary)
+                    AppBadge(text = stringResource(R.string.badge_destructive), variant = BadgeVariant.Destructive)
+                    AppBadge(text = stringResource(R.string.badge_outline), variant = BadgeVariant.Outline)
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
 
                 var selectedDate by remember { mutableStateOf<Long?>(null) }
                 AppCalendar(onDateSelected = { newDate -> selectedDate = newDate })
-                Text("Selected Date: ${selectedDate ?: "None"}")
+                Text(stringResource(R.string.selected_date_label, selectedDate?.toString() ?: stringResource(R.string.none)))
 
                 Spacer(modifier = Modifier.height(32.dp))
 
                 AppCard(
                     header = {
-                        CardHeader(title = "Card Title", description = "This is the card description.")
+                        CardHeader(title = stringResource(R.string.card_title), description = stringResource(R.string.card_description))
                     },
                     content = {
                         Column(modifier = Modifier.padding(horizontal = 24.dp)) {
-                            Text("This is the main content of the card. You can put any Composable here.")
+                            Text(stringResource(R.string.card_content))
                         }
                     },
                     footer = {
                         Column(modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)) {
-                            AppButton(onClick = { }, text = "Action")
+                            AppButton(onClick = { }, text = stringResource(R.string.action))
                         }
                     }
                 )
@@ -220,7 +222,7 @@ fun AllDemosScreen() {
                             .background(item),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(text = "Item", style = MaterialTheme.typography.headlineMedium)
+                        Text(text = stringResource(R.string.item), style = MaterialTheme.typography.headlineMedium)
                     }
                 }
 
@@ -238,17 +240,17 @@ fun AllDemosScreen() {
                     AppCheckbox(
                         checked = checkedState1,
                         onCheckedChange = { isChecked -> checkedState1 = isChecked },
-                        label = "Option 1"
+                        label = stringResource(R.string.option_label, 1)
                     )
                     AppCheckbox(
                         checked = checkedState2,
                         onCheckedChange = { isChecked -> checkedState2 = isChecked },
-                        label = "Option 2"
+                        label = stringResource(R.string.option_label, 2)
                     )
                     AppCheckbox(
                         checked = checkedState3,
                         onCheckedChange = null, // Disabled checkbox
-                        label = "Option 3 (Disabled)",
+                        label = stringResource(R.string.option_disabled, 3),
                         enabled = false
                     )
                 }
@@ -258,25 +260,25 @@ fun AllDemosScreen() {
                 AppCollapsible(
                     trigger = { expanded ->
                         Text(
-                            text = if (expanded) "Hide Collapsible Content" else "Show Collapsible Content",
+                            text = if (expanded) stringResource(R.string.collapsible_hide) else stringResource(R.string.collapsible_show),
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.weight(1f)
                         )
                     },
                     content = {
-                        Text("This is the content that can be collapsed or expanded.")
+                        Text(stringResource(R.string.collapsible_content))
                     }
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                AppButton(onClick = { showGenericDialog = true }, text = "Show Generic Dialog")
+                AppButton(onClick = { showGenericDialog = true }, text = stringResource(R.string.show_generic_dialog))
 
                 Spacer(modifier = Modifier.height(32.dp))
 
                 AppDropdownMenu(
-                    trigger = { AppButton(onClick = { }, text = "Open Dropdown") },
-                    menuItems = listOf("Item 1", "Item 2", "Item 3"),
+                    trigger = { AppButton(onClick = { }, text = stringResource(R.string.open_dropdown)) },
+                    menuItems = listOf(stringResource(R.string.dropdown_item, 1), stringResource(R.string.dropdown_item, 2), stringResource(R.string.dropdown_item, 3)),
                     onMenuItemClick = { item -> println("Dropdown item clicked: $item") }
                 )
 
@@ -287,34 +289,34 @@ fun AllDemosScreen() {
 
                 Column(modifier = Modifier.fillMaxWidth()) {
                     AppFormItem(
-                        label = { AppFormLabel(text = "Username") },
+                        label = { AppFormLabel(text = stringResource(R.string.username)) },
                         content = { AppInput(value = username, onValueChange = { newUsername -> username = newUsername }) }
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     AppFormItem(
-                        label = { AppFormLabel(text = "Password") },
+                        label = { AppFormLabel(text = stringResource(R.string.password)) },
                         content = { AppInput(value = password, onValueChange = { newPassword -> password = newPassword }) },
-                        errorMessage = if (password.length < 6 && password.isNotEmpty()) "Password must be at least 6 characters." else null
+                        errorMessage = if (password.length < 6 && password.isNotEmpty()) stringResource(R.string.password_error) else null
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-                    AppButton(onClick = { /* Handle form submission */ }, text = "Submit")
+                    AppButton(onClick = { /* Handle form submission */ }, text = stringResource(R.string.submit))
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
 
                 AppPopover(
-                    trigger = { AppButton(onClick = { }, text = "Open Popover") },
+                    trigger = { AppButton(onClick = { }, text = stringResource(R.string.open_popover)) },
                     content = {
                         Column {
-                            Text("This is the popover content.")
-                            AppButton(onClick = { }, text = "Action in Popover")
+                            Text(stringResource(R.string.popover_content))
+                            AppButton(onClick = { }, text = stringResource(R.string.action_in_popover))
                         }
                     }
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                val radioOptions = listOf("Option 1", "Option 2", "Option 3")
+                val radioOptions = listOf(stringResource(R.string.option_label, 1), stringResource(R.string.option_label, 2), stringResource(R.string.option_label, 3))
                 var selectedRadio by remember { mutableStateOf(radioOptions[0]) }
                 AppRadioGroup(
                     options = radioOptions,
@@ -328,13 +330,13 @@ fun AllDemosScreen() {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                val selectOptions = listOf("Option A", "Option B", "Option C")
+                val selectOptions = listOf(stringResource(R.string.option_a), stringResource(R.string.option_b), stringResource(R.string.option_c))
                 var selectedOption by remember { mutableStateOf(selectOptions[0]) }
                 AppSelect(
                     options = selectOptions,
                     selectedOption = selectedOption,
                     onOptionSelected = { newSelection -> selectedOption = newSelection },
-                    label = "Select an option"
+                    label = stringResource(R.string.select_option_label)
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -344,7 +346,7 @@ fun AllDemosScreen() {
                 Spacer(modifier = Modifier.height(32.dp))
 
                 var sliderValue by remember { mutableStateOf(0.5f) }
-                Text(text = "Slider Value: ${sliderValue}")
+                Text(text = stringResource(R.string.slider_value, sliderValue))
                 AppSlider(
                     value = sliderValue,
                     onValueChange = { newValue -> sliderValue = newValue }

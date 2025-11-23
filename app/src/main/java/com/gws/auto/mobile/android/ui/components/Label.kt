@@ -1,5 +1,8 @@
 package com.gws.auto.mobile.android.ui.components
 
+import androidx.compose.ui.res.stringResource
+import com.gws.auto.mobile.android.R
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -37,8 +40,8 @@ fun GwsLabelPreview() {
     GWSAutoForAndroidTheme {
         Surface(modifier = Modifier.padding(16.dp)) {
             Column {
-                GwsLabel(text = "Enabled Label")
-                GwsLabel(text = "Disabled Label", enabled = false)
+                GwsLabel(text = stringResource(R.string.enabled_label))
+                GwsLabel(text = stringResource(R.string.disabled_label), enabled = false)
             }
         }
     }

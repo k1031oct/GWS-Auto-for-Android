@@ -98,9 +98,9 @@ private fun GoogleAccountSection() {
                 accountName = account.displayName
                 accountEmail = account.email
                 accountPhotoUrl = account.photoUrl?.toString()
-                Toast.makeText(context, "Sign in successful", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.sign_in_successful), Toast.LENGTH_SHORT).show()
             } catch (e: ApiException) {
-                Toast.makeText(context, "Sign in failed: ${e.statusCode}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.sign_in_failed, e.statusCode), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -110,7 +110,7 @@ private fun GoogleAccountSection() {
     ) {
         // Google Account
         Text(
-            text = "Google Account",
+            text = stringResource(R.string.google_account),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.primary
         )
@@ -118,7 +118,7 @@ private fun GoogleAccountSection() {
         if (isSignedIn) {
             // Signed-in UI
             AccountCard(
-                name = accountName ?: "Unknown",
+                name = accountName ?: stringResource(R.string.unknown_user),
                 email = accountEmail ?: "",
                 initial = accountName?.firstOrNull()?.uppercase() ?: "?"
             )
@@ -130,17 +130,17 @@ private fun GoogleAccountSection() {
                         accountName = null
                         accountEmail = null
                         accountPhotoUrl = null
-                        Toast.makeText(context, "Signed out", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.sign_out), Toast.LENGTH_SHORT).show()
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Sign Out")
+                Text(stringResource(R.string.sign_out))
             }
         } else {
             // Not signed-in UI
             Text(
-                text = "Sign in with your Google account to sync your data",
+                text = stringResource(R.string.sign_in_to_sync),
                 style = MaterialTheme.typography.bodyMedium
             )
             
@@ -151,7 +151,7 @@ private fun GoogleAccountSection() {
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Sign In with Google")
+                Text(stringResource(R.string.sign_in_with_google))
             }
         }
     }
@@ -232,14 +232,14 @@ private fun SettingsSection(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
-            text = "Settings",
+            text = stringResource(R.string.settings_label),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.primary
         )
         
         // First Day of Week
         SettingDropdown(
-            label = "First Day of Week",
+            label = stringResource(R.string.first_day_of_week),
             options = context.resources.getStringArray(R.array.first_day_of_week_entries).toList(),
             selectedValue = firstDayOfWeek,
             onSelectionChanged = { value ->
@@ -252,7 +252,7 @@ private fun SettingsSection(
         val countryEntries = context.resources.getStringArray(R.array.country_entries).toList()
         val countryValues = context.resources.getStringArray(R.array.country_values).toList()
         SettingDropdown(
-            label = "Holiday Country",
+            label = stringResource(R.string.country_for_holidays),
             options = countryEntries,
             selectedValue = holidayCountry,
             valueMapper = countryValues,
@@ -265,7 +265,7 @@ private fun SettingsSection(
         // Language  
         val languageValues = context.resources.getStringArray(R.array.language_values_from_countries).toList()
         SettingDropdown(
-            label = "Language",
+            label = stringResource(R.string.language),
             options = countryEntries, // Reuse country entries for language
             selectedValue = language,
             valueMapper = languageValues,
@@ -279,7 +279,7 @@ private fun SettingsSection(
         val themeEntries = context.resources.getStringArray(R.array.theme_entries).toList()
         val themeValues = context.resources.getStringArray(R.array.theme_values).toList()
         SettingDropdown(
-            label = "Theme",
+            label = stringResource(R.string.theme),
             options = themeEntries,
             selectedValue = theme,
             valueMapper = themeValues,
@@ -294,7 +294,7 @@ private fun SettingsSection(
         val highlightColorValues = context.resources.getStringArray(R.array.highlight_color_values).toList()
         Column {
             SettingDropdown(
-                label = "Highlight Color",
+                label = stringResource(R.string.highlight_color),
                 options = highlightColorEntries,
                 selectedValue = highlightColor,
                 valueMapper = highlightColorValues,
@@ -426,9 +426,9 @@ private fun DataManagementSection(
                     context.contentResolver.openOutputStream(it)?.use { outputStream ->
                         outputStream.write(csvContent.toByteArray())
                     }
-                    Toast.makeText(context, "History exported successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.history_exported_success), Toast.LENGTH_SHORT).show()
                 } catch (e: Exception) {
-                    Toast.makeText(context, "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.export_failed, e.message), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -438,7 +438,7 @@ private fun DataManagementSection(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = "Data Management",
+            text = stringResource(R.string.data_management),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.primary
         )
@@ -452,7 +452,7 @@ private fun DataManagementSection(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Export History to CSV")
+            Text(stringResource(R.string.export_history_csv))
         }
         
         // Clear History Button
@@ -463,7 +463,7 @@ private fun DataManagementSection(
                 contentColor = MaterialTheme.colorScheme.error
             )
         ) {
-            Text("Clear All History")
+            Text(stringResource(R.string.delete_all_history))
         }
         
         // Tag Management Button
@@ -471,7 +471,7 @@ private fun DataManagementSection(
             onClick = onNavigateToTags,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Manage Tags")
+            Text(stringResource(R.string.manage_tags))
         }
     }
     
@@ -479,24 +479,24 @@ private fun DataManagementSection(
     if (showClearHistoryDialog) {
         AlertDialog(
             onDismissRequest = { showClearHistoryDialog = false },
-            title = { Text("Clear All History") },
-            text = { Text("Are you sure you want to delete all execution history? This action cannot be undone.") },
+            title = { Text(stringResource(R.string.clear_history_confirmation_title)) },
+            text = { Text(stringResource(R.string.clear_history_confirmation_message)) },
             confirmButton = {
                 TextButton(
                     onClick = {
                         scope.launch {
                             historyRepository.deleteAllHistory()
-                            Toast.makeText(context, "All history has been cleared", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.history_cleared), Toast.LENGTH_SHORT).show()
                         }
                         showClearHistoryDialog = false
                     }
                 ) {
-                    Text("Clear All", color = MaterialTheme.colorScheme.error)
+                    Text(stringResource(R.string.clear_all), color = MaterialTheme.colorScheme.error)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showClearHistoryDialog = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )

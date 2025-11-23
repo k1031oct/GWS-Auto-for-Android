@@ -1,5 +1,8 @@
 package com.gws.auto.mobile.android.ui.components
 
+import androidx.compose.ui.res.stringResource
+import com.gws.auto.mobile.android.R
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -50,12 +53,12 @@ fun AppSheetPreview() {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text("Sheet Content")
                         Spacer(modifier = Modifier.height(16.dp))
-                        AppButton(onClick = { scope.launch { drawerState.close() } }, text = "Close Sheet")
+                        AppButton(onClick = { scope.launch { drawerState.close() } }, text = stringResource(R.string.close_sheet))
                     }
                 }
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    AppButton(onClick = { scope.launch { drawerState.open() } }, text = "Open Sheet")
+                    AppButton(onClick = { scope.launch { drawerState.open() } }, text = stringResource(R.string.open_sheet))
                 }
             }
         }

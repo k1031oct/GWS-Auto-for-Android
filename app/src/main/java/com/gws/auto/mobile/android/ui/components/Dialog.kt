@@ -1,5 +1,8 @@
 package com.gws.auto.mobile.android.ui.components
 
+import androidx.compose.ui.res.stringResource
+import com.gws.auto.mobile.android.R
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
@@ -44,7 +47,7 @@ fun AppDialogPreview() {
         var showDialog by remember { mutableStateOf(true) }
 
         Surface(modifier = Modifier.padding(16.dp)) {
-            AppButton(onClick = { showDialog = true }, text = "Show Dialog")
+            AppButton(onClick = { showDialog = true }, text = stringResource(R.string.show_dialog))
         }
 
         if (showDialog) {
@@ -54,7 +57,7 @@ fun AppDialogPreview() {
             ) {
                 Column {
                     Text("This is a generic dialog with custom content.")
-                    AppButton(onClick = { showDialog = false }, text = "Close")
+                    AppButton(onClick = { showDialog = false }, text = stringResource(R.string.close))
                 }
             }
         }
