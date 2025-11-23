@@ -41,7 +41,7 @@ public final class AppDatabase_Impl extends AppDatabase {
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(6) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(7) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `workflows` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `modules` TEXT NOT NULL, `status` TEXT NOT NULL, `trigger` TEXT NOT NULL, `tags` TEXT NOT NULL, `isFavorite` INTEGER NOT NULL, PRIMARY KEY(`id`))");
@@ -50,9 +50,9 @@ public final class AppDatabase_Impl extends AppDatabase {
         db.execSQL("CREATE TABLE IF NOT EXISTS `workflow_folders` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `workflowIds` TEXT NOT NULL, PRIMARY KEY(`id`))");
         db.execSQL("CREATE TABLE IF NOT EXISTS `tags` (`name` TEXT NOT NULL, PRIMARY KEY(`name`))");
         db.execSQL("CREATE TABLE IF NOT EXISTS `execution_history` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `workflowId` TEXT NOT NULL, `workflowName` TEXT NOT NULL, `executedAt` INTEGER NOT NULL, `status` TEXT NOT NULL, `logs` TEXT NOT NULL, `durationMs` INTEGER NOT NULL, `isBookmarked` INTEGER NOT NULL)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS `schedules` (`id` TEXT NOT NULL, `workflowId` TEXT NOT NULL, `workflowName` TEXT NOT NULL, `scheduleType` TEXT NOT NULL, `hourlyInterval` INTEGER, `time` TEXT, `weeklyDays` TEXT, `monthlyDays` TEXT, `yearlyMonth` INTEGER, `yearlyDayOfMonth` INTEGER, `lastRun` INTEGER, `nextRun` INTEGER, `isEnabled` INTEGER NOT NULL, PRIMARY KEY(`id`))");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `schedules` (`id` TEXT NOT NULL, `workflowId` TEXT NOT NULL, `workflowName` TEXT NOT NULL, `scheduleType` TEXT NOT NULL, `hourlyInterval` INTEGER, `time` TEXT, `weeklyDays` TEXT, `monthlyDays` TEXT, `yearlyMonth` INTEGER, `yearlyDayOfMonth` INTEGER, `lastRun` INTEGER, `nextRun` INTEGER, `skipHolidays` INTEGER NOT NULL, `isEnabled` INTEGER NOT NULL, PRIMARY KEY(`id`))");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0ed84a2cdda368a247c032d26e46b811')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cce3cbe0fcd910f1fe322329b143f876')");
       }
 
       @Override
@@ -193,7 +193,7 @@ public final class AppDatabase_Impl extends AppDatabase {
                   + " Expected:\n" + _infoExecutionHistory + "\n"
                   + " Found:\n" + _existingExecutionHistory);
         }
-        final HashMap<String, TableInfo.Column> _columnsSchedules = new HashMap<String, TableInfo.Column>(13);
+        final HashMap<String, TableInfo.Column> _columnsSchedules = new HashMap<String, TableInfo.Column>(14);
         _columnsSchedules.put("id", new TableInfo.Column("id", "TEXT", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsSchedules.put("workflowId", new TableInfo.Column("workflowId", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsSchedules.put("workflowName", new TableInfo.Column("workflowName", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
@@ -206,6 +206,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         _columnsSchedules.put("yearlyDayOfMonth", new TableInfo.Column("yearlyDayOfMonth", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsSchedules.put("lastRun", new TableInfo.Column("lastRun", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsSchedules.put("nextRun", new TableInfo.Column("nextRun", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsSchedules.put("skipHolidays", new TableInfo.Column("skipHolidays", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsSchedules.put("isEnabled", new TableInfo.Column("isEnabled", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysSchedules = new HashSet<TableInfo.ForeignKey>(0);
         final HashSet<TableInfo.Index> _indicesSchedules = new HashSet<TableInfo.Index>(0);
@@ -218,7 +219,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "0ed84a2cdda368a247c032d26e46b811", "227022145881d1040c8ab2dd54290df0");
+    }, "cce3cbe0fcd910f1fe322329b143f876", "581285087db073dd1837ab5609dcb51d");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;

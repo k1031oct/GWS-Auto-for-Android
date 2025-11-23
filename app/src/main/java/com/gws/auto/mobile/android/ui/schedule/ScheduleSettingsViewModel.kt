@@ -89,7 +89,8 @@ class ScheduleSettingsViewModel @Inject constructor(
                         yearlyMonth = schedule.yearlyMonth ?: 1,
                         yearlyDayOfMonth = schedule.yearlyDayOfMonth ?: 1,
                         yearlyTime = schedule.time?.let { LocalTime.parse(it) } ?: LocalTime.of(9, 0),
-                        selectedWorkflowId = schedule.workflowId
+                        selectedWorkflowId = schedule.workflowId,
+                        skipHolidays = schedule.skipHolidays
                     )
                 }
             }
@@ -144,6 +145,10 @@ class ScheduleSettingsViewModel @Inject constructor(
         _uiState.update { it.copy(selectedWorkflowId = workflowId) }
     }
 
+    fun toggleSkipHolidays() {
+        _uiState.update { it.copy(skipHolidays = !it.skipHolidays) }
+    }
+
     fun saveSchedule() {
         viewModelScope.launch {
             val state = _uiState.value
@@ -176,6 +181,7 @@ class ScheduleSettingsViewModel @Inject constructor(
                 monthlyDays = if (state.scheduleType == "月毎") state.monthlyDays.toList() else null,
                 yearlyMonth = if (state.scheduleType == "年毎") state.yearlyMonth else null,
                 yearlyDayOfMonth = if (state.scheduleType == "年毎") state.yearlyDayOfMonth else null,
+                skipHolidays = state.skipHolidays
             )
             scheduleRepository.createSchedule(schedule) // createSchedule in repo handles both create and update
             scheduleWork(schedule)
@@ -212,5 +218,6 @@ data class ScheduleSettingsUiState(
     val yearlyDayOfMonth: Int = 1,
     val yearlyTime: LocalTime = LocalTime.of(9, 0),
     val firstDayOfWeek: String = "Sunday",
-    val selectedWorkflowId: String = ""
+    val selectedWorkflowId: String = "",
+    val skipHolidays: Boolean = false
 )

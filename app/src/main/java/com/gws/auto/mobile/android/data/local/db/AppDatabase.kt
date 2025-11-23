@@ -3,6 +3,8 @@ package com.gws.auto.mobile.android.data.local.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.gws.auto.mobile.android.domain.model.History
 import com.gws.auto.mobile.android.domain.model.Module
 import com.gws.auto.mobile.android.domain.model.Schedule
@@ -13,7 +15,7 @@ import com.gws.auto.mobile.android.domain.model.WorkflowFolder
 
 @Database(
     entities = [Workflow::class, Module::class, SearchHistory::class, WorkflowFolder::class, Tag::class, History::class, Schedule::class],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 @TypeConverters(DateConverter::class, ListConverter::class, ScheduleTypeConverter::class)
@@ -28,5 +30,11 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
         const val DATABASE_NAME = "gws-auto-db"
+
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE schedules ADD COLUMN skipHolidays INTEGER NOT NULL DEFAULT 0")
+            }
+        }
     }
 }

@@ -56,7 +56,7 @@ public final class ScheduleDao_Impl implements ScheduleDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR REPLACE INTO `schedules` (`id`,`workflowId`,`workflowName`,`scheduleType`,`hourlyInterval`,`time`,`weeklyDays`,`monthlyDays`,`yearlyMonth`,`yearlyDayOfMonth`,`lastRun`,`nextRun`,`isEnabled`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        return "INSERT OR REPLACE INTO `schedules` (`id`,`workflowId`,`workflowName`,`scheduleType`,`hourlyInterval`,`time`,`weeklyDays`,`monthlyDays`,`yearlyMonth`,`yearlyDayOfMonth`,`lastRun`,`nextRun`,`skipHolidays`,`isEnabled`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -123,15 +123,17 @@ public final class ScheduleDao_Impl implements ScheduleDao {
         } else {
           statement.bindLong(12, entity.getNextRun());
         }
-        final int _tmp_3 = entity.isEnabled() ? 1 : 0;
+        final int _tmp_3 = entity.getSkipHolidays() ? 1 : 0;
         statement.bindLong(13, _tmp_3);
+        final int _tmp_4 = entity.isEnabled() ? 1 : 0;
+        statement.bindLong(14, _tmp_4);
       }
     };
     this.__updateAdapterOfSchedule = new EntityDeletionOrUpdateAdapter<Schedule>(__db) {
       @Override
       @NonNull
       protected String createQuery() {
-        return "UPDATE OR ABORT `schedules` SET `id` = ?,`workflowId` = ?,`workflowName` = ?,`scheduleType` = ?,`hourlyInterval` = ?,`time` = ?,`weeklyDays` = ?,`monthlyDays` = ?,`yearlyMonth` = ?,`yearlyDayOfMonth` = ?,`lastRun` = ?,`nextRun` = ?,`isEnabled` = ? WHERE `id` = ?";
+        return "UPDATE OR ABORT `schedules` SET `id` = ?,`workflowId` = ?,`workflowName` = ?,`scheduleType` = ?,`hourlyInterval` = ?,`time` = ?,`weeklyDays` = ?,`monthlyDays` = ?,`yearlyMonth` = ?,`yearlyDayOfMonth` = ?,`lastRun` = ?,`nextRun` = ?,`skipHolidays` = ?,`isEnabled` = ? WHERE `id` = ?";
       }
 
       @Override
@@ -198,9 +200,11 @@ public final class ScheduleDao_Impl implements ScheduleDao {
         } else {
           statement.bindLong(12, entity.getNextRun());
         }
-        final int _tmp_3 = entity.isEnabled() ? 1 : 0;
+        final int _tmp_3 = entity.getSkipHolidays() ? 1 : 0;
         statement.bindLong(13, _tmp_3);
-        statement.bindString(14, entity.getId());
+        final int _tmp_4 = entity.isEnabled() ? 1 : 0;
+        statement.bindLong(14, _tmp_4);
+        statement.bindString(15, entity.getId());
       }
     };
     this.__preparedStmtOfDeleteScheduleById = new SharedSQLiteStatement(__db) {
@@ -299,6 +303,7 @@ public final class ScheduleDao_Impl implements ScheduleDao {
           final int _cursorIndexOfYearlyDayOfMonth = CursorUtil.getColumnIndexOrThrow(_cursor, "yearlyDayOfMonth");
           final int _cursorIndexOfLastRun = CursorUtil.getColumnIndexOrThrow(_cursor, "lastRun");
           final int _cursorIndexOfNextRun = CursorUtil.getColumnIndexOrThrow(_cursor, "nextRun");
+          final int _cursorIndexOfSkipHolidays = CursorUtil.getColumnIndexOrThrow(_cursor, "skipHolidays");
           final int _cursorIndexOfIsEnabled = CursorUtil.getColumnIndexOrThrow(_cursor, "isEnabled");
           final List<Schedule> _result = new ArrayList<Schedule>(_cursor.getCount());
           while (_cursor.moveToNext()) {
@@ -382,11 +387,15 @@ public final class ScheduleDao_Impl implements ScheduleDao {
             } else {
               _tmpNextRun = _cursor.getLong(_cursorIndexOfNextRun);
             }
-            final boolean _tmpIsEnabled;
+            final boolean _tmpSkipHolidays;
             final int _tmp_4;
-            _tmp_4 = _cursor.getInt(_cursorIndexOfIsEnabled);
-            _tmpIsEnabled = _tmp_4 != 0;
-            _item = new Schedule(_tmpId,_tmpWorkflowId,_tmpWorkflowName,_tmpScheduleType,_tmpHourlyInterval,_tmpTime,_tmpWeeklyDays,_tmpMonthlyDays,_tmpYearlyMonth,_tmpYearlyDayOfMonth,_tmpLastRun,_tmpNextRun,_tmpIsEnabled);
+            _tmp_4 = _cursor.getInt(_cursorIndexOfSkipHolidays);
+            _tmpSkipHolidays = _tmp_4 != 0;
+            final boolean _tmpIsEnabled;
+            final int _tmp_5;
+            _tmp_5 = _cursor.getInt(_cursorIndexOfIsEnabled);
+            _tmpIsEnabled = _tmp_5 != 0;
+            _item = new Schedule(_tmpId,_tmpWorkflowId,_tmpWorkflowName,_tmpScheduleType,_tmpHourlyInterval,_tmpTime,_tmpWeeklyDays,_tmpMonthlyDays,_tmpYearlyMonth,_tmpYearlyDayOfMonth,_tmpLastRun,_tmpNextRun,_tmpSkipHolidays,_tmpIsEnabled);
             _result.add(_item);
           }
           return _result;
@@ -428,6 +437,7 @@ public final class ScheduleDao_Impl implements ScheduleDao {
           final int _cursorIndexOfYearlyDayOfMonth = CursorUtil.getColumnIndexOrThrow(_cursor, "yearlyDayOfMonth");
           final int _cursorIndexOfLastRun = CursorUtil.getColumnIndexOrThrow(_cursor, "lastRun");
           final int _cursorIndexOfNextRun = CursorUtil.getColumnIndexOrThrow(_cursor, "nextRun");
+          final int _cursorIndexOfSkipHolidays = CursorUtil.getColumnIndexOrThrow(_cursor, "skipHolidays");
           final int _cursorIndexOfIsEnabled = CursorUtil.getColumnIndexOrThrow(_cursor, "isEnabled");
           final Schedule _result;
           if (_cursor.moveToFirst()) {
@@ -510,11 +520,15 @@ public final class ScheduleDao_Impl implements ScheduleDao {
             } else {
               _tmpNextRun = _cursor.getLong(_cursorIndexOfNextRun);
             }
-            final boolean _tmpIsEnabled;
+            final boolean _tmpSkipHolidays;
             final int _tmp_4;
-            _tmp_4 = _cursor.getInt(_cursorIndexOfIsEnabled);
-            _tmpIsEnabled = _tmp_4 != 0;
-            _result = new Schedule(_tmpId,_tmpWorkflowId,_tmpWorkflowName,_tmpScheduleType,_tmpHourlyInterval,_tmpTime,_tmpWeeklyDays,_tmpMonthlyDays,_tmpYearlyMonth,_tmpYearlyDayOfMonth,_tmpLastRun,_tmpNextRun,_tmpIsEnabled);
+            _tmp_4 = _cursor.getInt(_cursorIndexOfSkipHolidays);
+            _tmpSkipHolidays = _tmp_4 != 0;
+            final boolean _tmpIsEnabled;
+            final int _tmp_5;
+            _tmp_5 = _cursor.getInt(_cursorIndexOfIsEnabled);
+            _tmpIsEnabled = _tmp_5 != 0;
+            _result = new Schedule(_tmpId,_tmpWorkflowId,_tmpWorkflowName,_tmpScheduleType,_tmpHourlyInterval,_tmpTime,_tmpWeeklyDays,_tmpMonthlyDays,_tmpYearlyMonth,_tmpYearlyDayOfMonth,_tmpLastRun,_tmpNextRun,_tmpSkipHolidays,_tmpIsEnabled);
           } else {
             _result = null;
           }

@@ -30,5 +30,6 @@ data class Schedule(
     val yearlyDayOfMonth: Int? = null,
     val lastRun: Long? = null,
     val nextRun: Long? = null,
+    val skipHolidays: Boolean = false,
     val isEnabled: Boolean = true
 )
