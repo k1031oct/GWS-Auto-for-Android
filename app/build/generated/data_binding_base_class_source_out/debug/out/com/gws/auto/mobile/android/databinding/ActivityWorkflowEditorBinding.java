@@ -36,6 +36,9 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
   public final Button cancelButton;
 
   @NonNull
+  public final LinearLayout emptyStateContainer;
+
+  @NonNull
   public final FloatingActionButton fabAddModule;
 
   @NonNull
@@ -73,10 +76,10 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
 
   private ActivityWorkflowEditorBinding(@NonNull ConstraintLayout rootView,
       @NonNull Chip addTagChip, @NonNull LinearLayout buttonBar, @NonNull Button cancelButton,
-      @NonNull FloatingActionButton fabAddModule, @NonNull RecyclerView folderRecyclerView,
-      @NonNull LinearLayout libraryContainer, @NonNull RecyclerView libraryRecyclerView,
-      @NonNull RecyclerView moduleRecyclerView, @NonNull Button saveButton,
-      @NonNull ChipGroup tagChipGroup, @NonNull LinearLayout tagSection,
+      @NonNull LinearLayout emptyStateContainer, @NonNull FloatingActionButton fabAddModule,
+      @NonNull RecyclerView folderRecyclerView, @NonNull LinearLayout libraryContainer,
+      @NonNull RecyclerView libraryRecyclerView, @NonNull RecyclerView moduleRecyclerView,
+      @NonNull Button saveButton, @NonNull ChipGroup tagChipGroup, @NonNull LinearLayout tagSection,
       @NonNull TextInputEditText workflowDescriptionEditor,
       @NonNull TextInputLayout workflowDescriptionLayout,
       @NonNull TextInputEditText workflowNameEditor, @NonNull TextInputLayout workflowNameLayout) {
@@ -84,6 +87,7 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
     this.addTagChip = addTagChip;
     this.buttonBar = buttonBar;
     this.cancelButton = cancelButton;
+    this.emptyStateContainer = emptyStateContainer;
     this.fabAddModule = fabAddModule;
     this.folderRecyclerView = folderRecyclerView;
     this.libraryContainer = libraryContainer;
@@ -140,6 +144,12 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
       id = R.id.cancel_button;
       Button cancelButton = ViewBindings.findChildViewById(rootView, id);
       if (cancelButton == null) {
+        break missingId;
+      }
+
+      id = R.id.empty_state_container;
+      LinearLayout emptyStateContainer = ViewBindings.findChildViewById(rootView, id);
+      if (emptyStateContainer == null) {
         break missingId;
       }
 
@@ -216,9 +226,10 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
       }
 
       return new ActivityWorkflowEditorBinding((ConstraintLayout) rootView, addTagChip, buttonBar,
-          cancelButton, fabAddModule, folderRecyclerView, libraryContainer, libraryRecyclerView,
-          moduleRecyclerView, saveButton, tagChipGroup, tagSection, workflowDescriptionEditor,
-          workflowDescriptionLayout, workflowNameEditor, workflowNameLayout);
+          cancelButton, emptyStateContainer, fabAddModule, folderRecyclerView, libraryContainer,
+          libraryRecyclerView, moduleRecyclerView, saveButton, tagChipGroup, tagSection,
+          workflowDescriptionEditor, workflowDescriptionLayout, workflowNameEditor,
+          workflowNameLayout);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
