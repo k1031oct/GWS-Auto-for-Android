@@ -339,7 +339,8 @@ private fun SettingDropdown(
     DisposableEffect(lifecycleOwner) {
         val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
             if (event == androidx.lifecycle.Lifecycle.Event.ON_PAUSE || 
-                event == androidx.lifecycle.Lifecycle.Event.ON_STOP) {
+                event == androidx.lifecycle.Lifecycle.Event.ON_STOP ||
+                event == androidx.lifecycle.Lifecycle.Event.ON_DESTROY) {
                 expanded = false
             }
         }

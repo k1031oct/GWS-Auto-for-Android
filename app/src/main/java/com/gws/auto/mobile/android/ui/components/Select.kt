@@ -32,6 +32,24 @@ fun AppSelect(
     enabled: Boolean = true
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    
+    // ライフサイクルイベントの監視
+    // アプリ再起動時にドロップダウンを確実にクローズ
+    androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_PAUSE || 
+                event == androidx.lifecycle.Lifecycle.Event.ON_STOP ||
+                event == androidx.lifecycle.Lifecycle.Event.ON_DESTROY) {
+                expanded = false
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+            expanded = false  // 確実にクリーンアップ
+        }
+    }
 
     ExposedDropdownMenuBox(
         expanded = expanded,
