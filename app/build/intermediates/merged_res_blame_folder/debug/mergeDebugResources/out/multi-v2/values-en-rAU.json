@@ -89,23 +89,6 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\k1031\\.gradle\\caches\\8.13\\transforms\\593102aaf34178bac243a84fb2497399\\transformed\\browser-1.7.0\\res\\values-en-rAU\\values-en-rAU.xml",
-                    "from": {
-                        "startLines": "2,3,4,5",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "55,153,250,359",
-                        "endColumns": "97,96,108,98",
-                        "endOffsets": "148,245,354,453"
-                    },
-                    "to": {
-                        "startLines": "43,49,50,51",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "4130,4685,4782,4891",
-                        "endColumns": "97,96,108,98",
-                        "endOffsets": "4223,4777,4886,4985"
-                    }
-                },
-                {
                     "source": "C:\\Users\\k1031\\.gradle\\caches\\8.13\\transforms\\37cd8d0ea615830a6a7e667bd7842b1f\\transformed\\core-1.17.0\\res\\values-en-rAU\\values-en-rAU.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
@@ -171,6 +154,23 @@
                         "startOffsets": "4062,4598,12813,12887,13740,14344,14424",
                         "endColumns": "67,86,73,133,168,79,75",
                         "endOffsets": "4125,4680,12882,13016,13904,14419,14495"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\k1031\\.gradle\\caches\\8.13\\transforms\\462ac5fa8796dba108392e9639fab9bd\\transformed\\browser-1.4.0\\res\\values-en-rAU\\values-en-rAU.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,153,250,359",
+                        "endColumns": "97,96,108,98",
+                        "endOffsets": "148,245,354,453"
+                    },
+                    "to": {
+                        "startLines": "43,49,50,51",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "4130,4685,4782,4891",
+                        "endColumns": "97,96,108,98",
+                        "endOffsets": "4223,4777,4886,4985"
                     }
                 }
             ]

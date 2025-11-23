@@ -128,6 +128,10 @@
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\item_history.xml"
     },
     {
+        "merged": "com.gws.auto.mobile.android.app-debug-7:/layout_activity_workflow_editor.xml.flat",
+        "source": "com.gws.auto.mobile.android.app-main-9:/layout/activity_workflow_editor.xml"
+    },
+    {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\layout_fragment_account_connections.xml.flat",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\fragment_account_connections.xml"
     },
@@ -206,10 +210,6 @@
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\layout_item_workflow.xml.flat",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\item_workflow.xml"
-    },
-    {
-        "merged": "com.gws.auto.mobile.android.app-debug-7:/layout_list_item_module.xml.flat",
-        "source": "com.gws.auto.mobile.android.app-main-9:/layout/list_item_module.xml"
     },
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\layout_spinner_item_right_aligned.xml.flat",
@@ -322,6 +322,10 @@
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\drawable_badge_dot.xml.flat",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\drawable\\badge_dot.xml"
+    },
+    {
+        "merged": "com.gws.auto.mobile.android.app-debug-7:/drawable_bg_dashed_border.xml.flat",
+        "source": "com.gws.auto.mobile.android.app-main-9:/drawable/bg_dashed_border.xml"
     },
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\drawable_ic_delete_sweep.xml.flat",

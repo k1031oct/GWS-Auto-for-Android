@@ -4,6 +4,23 @@
             "outputFile": "com.gws.auto.mobile.android.app-mergeDebugResources-5:/values-hy/values-hy.xml",
             "map": [
                 {
+                    "source": "C:\\Users\\k1031\\.gradle\\caches\\8.13\\transforms\\462ac5fa8796dba108392e9639fab9bd\\transformed\\browser-1.4.0\\res\\values-hy\\values-hy.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,159,262,373",
+                        "endColumns": "103,102,110,102",
+                        "endOffsets": "154,257,368,471"
+                    },
+                    "to": {
+                        "startLines": "72,81,82,83",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "7364,8143,8246,8357",
+                        "endColumns": "103,102,110,102",
+                        "endOffsets": "7463,8241,8352,8455"
+                    }
+                },
+                {
                     "source": "C:\\Users\\k1031\\.gradle\\caches\\8.13\\transforms\\fb108d4b0547ffb21035c742390f5335\\transformed\\appcompat-1.7.1\\res\\values-hy\\values-hy.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
@@ -139,23 +156,6 @@
                         "startOffsets": "7292,7958,21739,21905,23031,23642,23726",
                         "endColumns": "71,87,80,136,168,83,80",
                         "endOffsets": "7359,8041,21815,22037,23195,23721,23802"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\k1031\\.gradle\\caches\\8.13\\transforms\\593102aaf34178bac243a84fb2497399\\transformed\\browser-1.7.0\\res\\values-hy\\values-hy.xml",
-                    "from": {
-                        "startLines": "2,3,4,5",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "55,159,262,373",
-                        "endColumns": "103,102,110,102",
-                        "endOffsets": "154,257,368,471"
-                    },
-                    "to": {
-                        "startLines": "72,81,82,83",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "7364,8143,8246,8357",
-                        "endColumns": "103,102,110,102",
-                        "endOffsets": "7463,8241,8352,8455"
                     }
                 },
                 {

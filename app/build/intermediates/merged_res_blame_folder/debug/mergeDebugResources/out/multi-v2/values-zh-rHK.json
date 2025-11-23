@@ -4,23 +4,6 @@
             "outputFile": "com.gws.auto.mobile.android.app-mergeDebugResources-5:/values-zh-rHK/values-zh-rHK.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\k1031\\.gradle\\caches\\8.13\\transforms\\593102aaf34178bac243a84fb2497399\\transformed\\browser-1.7.0\\res\\values-zh-rHK\\values-zh-rHK.xml",
-                    "from": {
-                        "startLines": "2,3,4,5",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "55,138,230,331",
-                        "endColumns": "82,91,100,92",
-                        "endOffsets": "133,225,326,419"
-                    },
-                    "to": {
-                        "startLines": "72,81,82,83",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "6483,7176,7268,7369",
-                        "endColumns": "82,91,100,92",
-                        "endOffsets": "6561,7263,7364,7457"
-                    }
-                },
-                {
                     "source": "C:\\Users\\k1031\\.gradle\\caches\\8.13\\transforms\\37cd8d0ea615830a6a7e667bd7842b1f\\transformed\\core-1.17.0\\res\\values-zh-rHK\\values-zh-rHK.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
@@ -156,6 +139,23 @@
                         "startOffsets": "4343,4419,6566,6735,6826,8524,8598,18794,18872,19204,19277,19579,19716,19797,19870,19940,20278,20353,20418",
                         "endColumns": "75,73,87,90,77,73,76,77,73,72,74,66,80,72,69,68,74,64,115",
                         "endOffsets": "4414,4488,6649,6821,6899,8593,8670,18867,18941,19272,19347,19641,19792,19865,19935,20004,20348,20413,20529"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\k1031\\.gradle\\caches\\8.13\\transforms\\462ac5fa8796dba108392e9639fab9bd\\transformed\\browser-1.4.0\\res\\values-zh-rHK\\values-zh-rHK.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,138,230,331",
+                        "endColumns": "82,91,100,92",
+                        "endOffsets": "133,225,326,419"
+                    },
+                    "to": {
+                        "startLines": "72,81,82,83",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "6483,7176,7268,7369",
+                        "endColumns": "82,91,100,92",
+                        "endOffsets": "6561,7263,7364,7457"
                     }
                 },
                 {

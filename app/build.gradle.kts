@@ -102,6 +102,10 @@ android {
         buildConfig = true
     }
     
+    defaultConfig {
+        // Slack config removed
+    }
+    
     composeOptions {
         kotlinCompilerExtensionVersion = "2.0.0-beta04"
     }
@@ -166,10 +170,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     debugImplementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.preference)
-
-    // Microsoft Services
-    implementation(libs.msal)
-    implementation(libs.microsoft.graph)
 
     // Hilt
     implementation(libs.hilt.android)

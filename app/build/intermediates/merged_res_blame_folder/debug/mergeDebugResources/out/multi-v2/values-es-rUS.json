@@ -4,23 +4,6 @@
             "outputFile": "com.gws.auto.mobile.android.app-mergeDebugResources-5:/values-es-rUS/values-es-rUS.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\k1031\\.gradle\\caches\\8.13\\transforms\\593102aaf34178bac243a84fb2497399\\transformed\\browser-1.7.0\\res\\values-es-rUS\\values-es-rUS.xml",
-                    "from": {
-                        "startLines": "2,3,4,5",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "55,164,266,381",
-                        "endColumns": "108,101,114,105",
-                        "endOffsets": "159,261,376,482"
-                    },
-                    "to": {
-                        "startLines": "72,81,82,83",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "7436,8248,8350,8465",
-                        "endColumns": "108,101,114,105",
-                        "endOffsets": "7540,8345,8460,8566"
-                    }
-                },
-                {
                     "source": "C:\\Users\\k1031\\.gradle\\caches\\8.13\\transforms\\317458ff7ec8cbae0201752c78ce325c\\transformed\\jetified-play-services-base-18.5.0\\res\\values-es-rUS\\values.xml",
                     "from": {
                         "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
@@ -171,6 +154,23 @@
                         "startOffsets": "4747,4846,7545,7737,7840,9976,10055,21897,21989,22379,22466,22798,22952,23037,23113,23193,23539,23617,23687",
                         "endColumns": "98,81,97,102,88,78,95,91,86,86,89,76,84,75,79,75,77,69,122",
                         "endOffsets": "4841,4923,7638,7835,7924,10050,10146,21984,22071,22461,22551,22870,23032,23108,23188,23264,23612,23682,23805"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\k1031\\.gradle\\caches\\8.13\\transforms\\462ac5fa8796dba108392e9639fab9bd\\transformed\\browser-1.4.0\\res\\values-es-rUS\\values-es-rUS.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,164,266,381",
+                        "endColumns": "108,101,114,105",
+                        "endOffsets": "159,261,376,482"
+                    },
+                    "to": {
+                        "startLines": "72,81,82,83",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "7436,8248,8350,8465",
+                        "endColumns": "108,101,114,105",
+                        "endOffsets": "7540,8345,8460,8566"
                     }
                 },
                 {

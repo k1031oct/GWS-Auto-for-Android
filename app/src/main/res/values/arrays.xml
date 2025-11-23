@@ -79,36 +79,22 @@
     </string-array>
 
     <string-array name="module_display_names">
-        <item>Log Message</item>
-        <item>Define Variable</item>
-        <item>Get Relative Date</item>
-        <item>Create Gmail Draft</item>
-        <item>Duplicate Spreadsheet</item>
-        <item>Copy/Paste Sheet Values</item>
-        <item>Post to Google Chat</item>
-        <item>Outlook Send Email</item>
-        <item>Outlook Create Draft</item>
-        <item>OneDrive Upload File</item>
-        <item>OneDrive Create Folder</item>
-        <item>OneDrive Copy File</item>
-        <item>OneDrive Move File</item>
-        <item>Post to Slack</item>
+        <item>Google Calendar: Create Event</item>
+        <item>Google Chat: Send Message</item>
+        <item>Google Sheets: Add Row</item>
+        <item>Gmail: Send Email</item>
+        <item>Google Drive: Upload File</item>
+        <item>Utility: Delay</item>
+        <item>Utility: Log</item>
     </string-array>
 
     <string-array name="module_keys">
-        <item>LOG_MESSAGE</item>
-        <item>DEFINE_VARIABLE</item>
-        <item>GET_RELATIVE_DATE</item>
-        <item>CREATE_GMAIL_DRAFT</item>
-        <item>DUPLICATE_SPREADSHEET</item>
-        <item>COPY_PASTE_SHEET_VALUES</item>
-        <item>chat_post</item>
-        <item>outlook_send_email</item>
-        <item>outlook_create_draft</item>
-        <item>onedrive_upload_file</item>
-        <item>onedrive_create_folder</item>
-        <item>onedrive_copy_file</item>
-        <item>onedrive_move_file</item>
-        <item>slack_post</item>
+        <item>calendar_create_event</item>
+        <item>chat_send_message</item>
+        <item>sheets_add_row</item>
+        <item>gmail_send_email</item>
+        <item>drive_upload_file</item>
+        <item>utility_delay</item>
+        <item>utility_log</item>
     </string-array>
 </resources>

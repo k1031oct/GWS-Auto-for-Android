@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gws.auto.mobile.android"
-    android:versionCode="419"
-    android:versionName="1.2.419" >
+    android:versionCode="420"
+    android:versionName="1.2.420" >
 
     <uses-sdk
         android:minSdkVersion="26"
@@ -10,37 +10,6 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--
-     Required for API Level 30 to make sure we can detect browsers and other apps we want to
-     be able to talk to.
-    -->
-    <!-- https://developer.android.com/training/basics/intents/package-visibility-use-cases -->
-    <queries>
-        <package android:name="com.azure.authenticator" />
-        <package android:name="com.microsoft.identity.testuserapp" />
-        <package android:name="com.microsoft.windowsintune.companyportal" />
-        <package android:name="com.microsoft.mockauthapp" />
-        <package android:name="com.microsoft.mockcp" />
-        <package android:name="com.microsoft.mockltw" />
-        <package android:name="com.microsoft.appmanager" />
-        <!--
-        Required for API Level 30 to make sure we can detect browsers
-        (that don't support custom tabs)
-        -->
-        <intent>
-            <action android:name="android.intent.action.VIEW" />
-
-            <category android:name="android.intent.category.BROWSABLE" />
-
-            <data android:scheme="https" />
-        </intent>
-        <!-- Required for API Level 30 to make sure we can detect browsers that support custom tabs -->
-        <!-- https://developers.google.com/web/updates/2020/07/custom-tabs-android-11#detecting_browsers_that_support_custom_tabs -->
-        <intent>
-            <action android:name="android.support.customtabs.action.CustomTabsService" />
-        </intent>
-    </queries>
-
     <uses-permission android:name="android.permission.USE_BIOMETRIC" /> <!-- suppress DeprecatedClassUsageInspection -->
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -57,14 +26,6 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_ADSERVICES_ATTRIBUTION" />
     <uses-permission android:name="android.permission.ACCESS_ADSERVICES_AD_ID" />
-    <uses-permission android:name="android.permission.NFC" />
-
-    <uses-feature
-        android:name="android.hardware.usb.host"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.nfc"
-        android:required="false" />
 
     <application
         android:name="com.gws.auto.mobile.android.MainApplication"
@@ -76,6 +37,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:testOnly="true"
         android:theme="@style/Theme.GWSAutoForAndroid" >
         <activity
             android:name="com.gws.auto.mobile.android.MainActivity"
@@ -115,39 +77,7 @@
         <activity
             android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
             android:label="@string/oss_license_title" />
-        <activity android:name="com.google.android.gms.oss.licenses.OssLicensesActivity" /> <!-- MSAL activity that will be used to process all the auth related logic -->
-        <activity
-            android:name="com.microsoft.identity.common.internal.providers.oauth2.AuthorizationActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout|keyboard"
-            android:exported="false"
-            android:launchMode="singleTask" />
-        <activity
-            android:name="com.microsoft.identity.common.internal.providers.oauth2.CurrentTaskAuthorizationActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout|keyboard"
-            android:exported="false"
-            android:launchMode="standard" /> <!-- Helper activity for displaying current broker redirect URI configuration -->
-        <activity
-            android:name="com.microsoft.identity.client.helper.BrokerHelperActivity"
-            android:exported="false"
-            android:launchMode="standard" /> <!-- MSAL will use system webview (custom tab) to render the sign-in page, BrowserTabActivity is to get response back from System Webview. Multiple apps on the device could integrate MSAL, OS will check which BrowserTabActivity can handle the intent based on the intent filter declared, so this activity has to be exported. -->
-        <activity
-            android:name="com.microsoft.identity.client.BrowserTabActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout"
-            android:exported="true" />
-        <activity
-            android:name="com.microsoft.identity.client.CurrentTaskBrowserTabActivity"
-            android:exported="true" />
-        <activity
-            android:name="com.microsoft.identity.common.internal.providers.oauth2.SilentAuthorizationActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout|keyboard"
-            android:theme="@style/TransparentActivityTheme" /> <!-- Activity to invoke an interactive request to the intent passed by ad-accounts(Broker) -->
-        <activity
-            android:name="com.microsoft.identity.common.internal.broker.BrokerActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize|screenLayout|keyboard" /> <!-- Activity to launch a install WPJ certificate activity and get the result -->
-        <activity
-            android:name="com.microsoft.identity.common.internal.broker.InstallCertActivityLauncher"
-            android:configChanges="orientation|keyboardHidden|screenSize|screenLayout|keyboard"
-            android:theme="@style/Theme.AppCompat.Light" />
+        <activity android:name="com.google.android.gms.oss.licenses.OssLicensesActivity" />
         <activity
             android:name="com.google.firebase.auth.internal.GenericIdpActivity"
             android:excludeFromRecents="true"
@@ -418,17 +348,6 @@
         <receiver
             android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
             android:exported="false" />
-
-        <activity
-            android:name="com.yubico.yubikit.android.ui.OtpActivity"
-            android:excludeFromRecents="true"
-            android:label="@string/yubikit_otp_activity_title"
-            android:theme="@style/YubiKitPromptDialogTheme" />
-        <activity
-            android:name="com.yubico.yubikit.android.ui.YubiKeyPromptActivity"
-            android:excludeFromRecents="true"
-            android:label="@string/yubikit_prompt_activity_title"
-            android:theme="@style/YubiKitPromptDialogTheme" />
     </application>
 
 </manifest>

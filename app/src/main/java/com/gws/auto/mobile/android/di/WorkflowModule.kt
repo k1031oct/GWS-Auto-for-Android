@@ -9,6 +9,8 @@ import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
 import dagger.multibindings.StringKey
 
+
+
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class WorkflowModule {
@@ -78,65 +80,6 @@ abstract class WorkflowModule {
     @IntoMap
     @StringKey("drive_create_folder")
     abstract fun bindDriveCreateFolderModule(impl: DriveCreateFolderModule): ModuleExecutor
-
-    @Binds
-    @IntoMap
-    @StringKey("drive_move_file")
-    abstract fun bindDriveMoveFileModule(impl: DriveMoveFileModule): ModuleExecutor
-
-    // Microsoft Outlook
-    @Binds
-    @IntoMap
-    @StringKey("outlook_send_email")
-    abstract fun bindOutlookSendEmailModule(impl: OutlookSendEmailModule): ModuleExecutor
-
-    @Binds
-    @IntoMap
-    @StringKey("outlook_create_draft")
-    abstract fun bindOutlookCreateDraftModule(impl: OutlookCreateDraftModule): ModuleExecutor
-
-    // Microsoft OneDrive
-    @Binds
-    @IntoMap
-    @StringKey("onedrive_upload_file")
-    abstract fun bindOneDriveUploadFileModule(impl: OneDriveUploadFileModule): ModuleExecutor
-
-    @Binds
-    @IntoMap
-    @StringKey("onedrive_create_folder")
-    abstract fun bindOneDriveCreateFolderModule(impl: OneDriveCreateFolderModule): ModuleExecutor
-
-    @Binds
-    @IntoMap
-    @StringKey("onedrive_copy_file")
-    abstract fun bindOneDriveCopyFileModule(impl: OneDriveCopyFileModule): ModuleExecutor
-
-    @Binds
-    @IntoMap
-    @StringKey("onedrive_move_file")
-    abstract fun bindOneDriveMoveFileModule(impl: OneDriveMoveFileModule): ModuleExecutor
-
-    // Slack
-    @Binds
-    @IntoMap
-    @StringKey("slack_post")
-    abstract fun bindSlackPostModule(impl: SlackPostModule): ModuleExecutor
-
-    // Utility Modules
-    @Binds
-    @IntoMap
-    @StringKey("define_variable")
-    abstract fun bindDefineVariableModule(impl: DefineVariableModule): ModuleExecutor
-
-    @Binds
-    @IntoMap
-    @StringKey("get_relative_date")
-    abstract fun bindGetRelativeDateModule(impl: GetRelativeDateModule): ModuleExecutor
-
-    @Binds
-    @IntoMap
-    @StringKey("log_message")
-    abstract fun bindLogMessageModule(impl: LogMessageModule): ModuleExecutor
 
     @Binds
     @IntoMap

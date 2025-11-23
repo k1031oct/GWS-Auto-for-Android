@@ -27,10 +27,6 @@ import com.gws.auto.mobile.android.R
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-
-
-
-
 @Composable
 fun AppSettingsScreen(
     settingsRepository: com.gws.auto.mobile.android.data.repository.SettingsRepository,
@@ -39,9 +35,6 @@ fun AppSettingsScreen(
 ) {
     val scrollState = rememberScrollState()
 
-
-
-    
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -115,6 +108,7 @@ private fun GoogleAccountSection() {
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        // Google Account
         Text(
             text = "Google Account",
             style = MaterialTheme.typography.titleLarge,
@@ -123,47 +117,11 @@ private fun GoogleAccountSection() {
         
         if (isSignedIn) {
             // Signed-in UI
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                )
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Profile image (placeholder for now)
-                    Surface(
-                        modifier = Modifier.size(48.dp),
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.primary
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Text(
-                                text = accountName?.firstOrNull()?.uppercase() ?: "?",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
-                    }
-                    
-                    Column(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            text = accountName ?: "Unknown",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Text(
-                            text = accountEmail ?: "",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            }
+            AccountCard(
+                name = accountName ?: "Unknown",
+                email = accountEmail ?: "",
+                initial = accountName?.firstOrNull()?.uppercase() ?: "?"
+            )
             
             Button(
                 onClick = {
@@ -194,6 +152,50 @@ private fun GoogleAccountSection() {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Sign In with Google")
+            }
+        }
+    }
+}
+
+@Composable
+private fun AccountCard(name: String, email: String, initial: String) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Surface(
+                modifier = Modifier.size(48.dp),
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.primary
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Text(
+                        text = initial,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            }
+            
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = name,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    text = email,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }

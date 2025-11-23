@@ -286,7 +286,7 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
     }
 
     private fun setupDragAndDrop() {
-        binding.moduleRecyclerView.setOnDragListener { _, event ->
+        val dragListener = View.OnDragListener { _, event ->
             when (event.action) {
                 DragEvent.ACTION_DROP -> {
                     val item: ClipData.Item = event.clipData.getItemAt(0)
@@ -303,6 +303,9 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
                 else -> true
             }
         }
+
+        binding.moduleRecyclerView.setOnDragListener(dragListener)
+        binding.emptyStateContainer.setOnDragListener(dragListener)
     }
 
     private fun observeViewModel() {
@@ -317,6 +320,13 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
         lifecycleScope.launch {
             viewModel.modules.collectLatest { modules ->
                 moduleAdapter.submitList(modules)
+                if (modules.isEmpty()) {
+                    binding.moduleRecyclerView.visibility = View.GONE
+                    binding.emptyStateContainer.visibility = View.VISIBLE
+                } else {
+                    binding.moduleRecyclerView.visibility = View.VISIBLE
+                    binding.emptyStateContainer.visibility = View.GONE
+                }
             }
         }
         lifecycleScope.launch {
