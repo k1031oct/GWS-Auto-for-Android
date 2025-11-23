@@ -333,10 +333,19 @@ private fun SettingDropdown(
     onSelectionChanged: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
     
-    // Ensure dropdown is dismissed when composable is disposed (e.g., during activity recreation)
-    DisposableEffect(Unit) {
+    // Close dropdown when activity lifecycle changes (e.g., during recreation)
+    DisposableEffect(lifecycleOwner) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_PAUSE || 
+                event == androidx.lifecycle.Lifecycle.Event.ON_STOP) {
+                expanded = false
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
         onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
             expanded = false
         }
     }
