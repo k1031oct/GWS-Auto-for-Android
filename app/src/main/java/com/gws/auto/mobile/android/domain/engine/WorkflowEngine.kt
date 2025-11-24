@@ -22,8 +22,9 @@ interface WorkflowEngine {
      *
      * @param workflowId The ID of the workflow to execute.
      * @param triggerType The type of trigger that initiated this execution (MANUAL or SCHEDULED).
+     * @return `true` if the workflow executed successfully, `false` otherwise.
      */
-    suspend fun executeWorkflow(workflowId: String, triggerType: String = "MANUAL")
+    suspend fun executeWorkflow(workflowId: String, triggerType: String = "MANUAL"): Boolean
 
     /**
      * Executes a single, isolated module.
@@ -48,7 +49,7 @@ class LocalWorkflowEngine @Inject constructor(
 
     private val logMessageModule = LogMessageModule()
 
-    override suspend fun executeWorkflow(workflowId: String, triggerType: String) {
+    override suspend fun executeWorkflow(workflowId: String, triggerType: String): Boolean {
         val workflow = workflowRepository.getWorkflowById(workflowId)
         if (workflow == null) {
             val errorMsg = "Workflow not found: $workflowId"
@@ -62,7 +63,7 @@ class LocalWorkflowEngine @Inject constructor(
                 triggerType = triggerType
             )
             historyRepository.insertHistory(history)
-            return
+            return false
         }
         val modules = workflow.modules
         val executionStartTime = Date()
@@ -128,6 +129,7 @@ class LocalWorkflowEngine @Inject constructor(
             Timber.d("Saving execution history: workflowId=$workflowId, workflowName=${workflow.name}, status=$status, triggerType=$triggerType")
             historyRepository.insertHistory(history)
             Timber.d("Execution history saved successfully for workflow: ${workflow.name} (triggerType=$triggerType)")
+            return status == "Success"
         }
     }
 

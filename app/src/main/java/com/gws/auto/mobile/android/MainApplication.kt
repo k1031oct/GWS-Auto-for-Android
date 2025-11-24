@@ -1,16 +1,19 @@
 package com.gws.auto.mobile.android
 
+import android.app.Activity
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import android.os.Bundle
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import androidx.work.WorkManager
 import com.google.firebase.FirebaseApp
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -33,6 +36,7 @@ class MainApplication : Application() {
             Timber.plant(Timber.DebugTree())
         }
         createNotificationChannel()
+        registerActivityLifecycleCallbacks(activityLifecycleCallbacks)
     }
 
     private fun createNotificationChannel() {
@@ -48,5 +52,41 @@ class MainApplication : Application() {
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    private val activityLifecycleCallbacks = object : ActivityLifecycleCallbacks {
+        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+            currentActivity = WeakReference(activity)
+        }
+
+        override fun onActivityStarted(activity: Activity) {
+            currentActivity = WeakReference(activity)
+        }
+
+        override fun onActivityResumed(activity: Activity) {
+            currentActivity = WeakReference(activity)
+        }
+
+        override fun onActivityPaused(activity: Activity) {
+            // No-op
+        }
+
+        override fun onActivityStopped(activity: Activity) {
+            // No-op
+        }
+
+        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+            // No-op
+        }
+
+        override fun onActivityDestroyed(activity: Activity) {
+            if (currentActivity?.get() == activity) {
+                currentActivity = null
+            }
+        }
+    }
+
+    companion object {
+        var currentActivity: WeakReference<Activity>? = null
     }
 }
