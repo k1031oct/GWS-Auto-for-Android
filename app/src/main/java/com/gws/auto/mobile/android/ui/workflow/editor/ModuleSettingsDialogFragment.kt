@@ -117,6 +117,18 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
             "CREATE_GMAIL_DRAFT" -> setupCreateGmailDraftUI()
             "DUPLICATE_SPREADSHEET" -> setupDuplicateSpreadsheetUI()
             "COPY_PASTE_SHEET_VALUES" -> setupCopyPasteSheetValuesUI()
+            "gmail_send_email" -> setupGmailSendEmailUI()
+            "sheets_append_row" -> setupSheetsAppendRowUI()
+            "sheets_set_value" -> setupSheetsSetValueUI()
+            "sheets_create_new" -> setupSheetsCreateNewUI()
+            "sheets_clear_values" -> setupSheetsClearValuesUI()
+            "drive_create_folder" -> setupDriveCreateFolderUI()
+            "drive_copy_file" -> setupDriveCopyFileUI()
+            "drive_move_file" -> setupDriveMoveFileUI()
+            "calendar_create_event" -> setupCalendarCreateEventUI()
+            "chat_post" -> setupChatPostUI()
+            "SHOW_TOAST" -> setupToastNotificationUI()
+            "LOG_MESSAGE" -> setupLogMessageUI()
             else -> setupDefaultUI()
         }
         binding.cancelButton.setOnClickListener { dismiss() }
@@ -322,6 +334,231 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
         }
         binding.parametersContainer.addView(textView)
         binding.saveButton.setOnClickListener { dismiss() }
+    }
+
+    private fun setupGmailSendEmailUI() {
+        val toInput = createTextInputLayout("宛先", module.parameters["to"])
+        val ccInput = createTextInputLayout("CC", module.parameters["cc"])
+        val bccInput = createTextInputLayout("BCC", module.parameters["bcc"])
+        val subjectInput = createTextInputLayout("件名", module.parameters["subject"])
+        val bodyInput = createTextInputLayout("本文", module.parameters["body"], isMultiLine = true)
+
+        binding.parametersContainer.addView(toInput)
+        binding.parametersContainer.addView(ccInput)
+        binding.parametersContainer.addView(bccInput)
+        binding.parametersContainer.addView(subjectInput)
+        binding.parametersContainer.addView(bodyInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mapOf(
+                "to" to toInput.editText?.text.toString(),
+                "cc" to ccInput.editText?.text.toString(),
+                "bcc" to bccInput.editText?.text.toString(),
+                "subject" to subjectInput.editText?.text.toString(),
+                "body" to bodyInput.editText?.text.toString()
+            )
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupSheetsAppendRowUI() {
+        val spreadsheetUrlInput = createTextInputLayout("スプレッドシートURL", module.parameters["spreadsheetUrl"])
+        val sheetNameInput = createTextInputLayout("シート名", module.parameters["sheetName"])
+        val rowDataInput = createTextInputLayout("行データ（カンマ区切り）", module.parameters["rowData"])
+
+        binding.parametersContainer.addView(spreadsheetUrlInput)
+        binding.parametersContainer.addView(sheetNameInput)
+        binding.parametersContainer.addView(rowDataInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mapOf(
+                "spreadsheetUrl" to spreadsheetUrlInput.editText?.text.toString(),
+                "sheetName" to sheetNameInput.editText?.text.toString(),
+                "rowData" to rowDataInput.editText?.text.toString()
+            )
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupSheetsSetValueUI() {
+        val spreadsheetUrlInput = createTextInputLayout("スプレッドシートURL", module.parameters["spreadsheetUrl"])
+        val rangeInput = createTextInputLayout("セル範囲（例: A1:B2）", module.parameters["range"])
+        val valueInput = createTextInputLayout("値", module.parameters["value"])
+
+        binding.parametersContainer.addView(spreadsheetUrlInput)
+        binding.parametersContainer.addView(rangeInput)
+        binding.parametersContainer.addView(valueInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mapOf(
+                "spreadsheetUrl" to spreadsheetUrlInput.editText?.text.toString(),
+                "range" to rangeInput.editText?.text.toString(),
+                "value" to valueInput.editText?.text.toString()
+            )
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupSheetsCreateNewUI() {
+        val titleInput = createTextInputLayout("タイトル", module.parameters["title"])
+        val parentFolderIdInput = createTextInputLayout("親フォルダID（任意）", module.parameters["parentFolderId"])
+
+        binding.parametersContainer.addView(titleInput)
+        binding.parametersContainer.addView(parentFolderIdInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mapOf(
+                "title" to titleInput.editText?.text.toString(),
+                "parentFolderId" to parentFolderIdInput.editText?.text.toString()
+            )
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupSheetsClearValuesUI() {
+        val spreadsheetUrlInput = createTextInputLayout("スプレッドシートURL", module.parameters["spreadsheetUrl"])
+        val rangeInput = createTextInputLayout("クリア範囲（例: A1:Z100）", module.parameters["range"])
+
+        binding.parametersContainer.addView(spreadsheetUrlInput)
+        binding.parametersContainer.addView(rangeInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mapOf(
+                "spreadsheetUrl" to spreadsheetUrlInput.editText?.text.toString(),
+                "range" to rangeInput.editText?.text.toString()
+            )
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupDriveCreateFolderUI() {
+        val newFolderNameInput = createTextInputLayout("フォルダ名", module.parameters["newFolderName"])
+        val parentFolderIdInput = createTextInputLayout("親フォルダID（任意）", module.parameters["parentFolderId"])
+        val outputFolderIdInput = createTextInputLayout("出力変数名（任意）", module.parameters["outputFolderId"])
+
+        binding.parametersContainer.addView(newFolderNameInput)
+        binding.parametersContainer.addView(parentFolderIdInput)
+        binding.parametersContainer.addView(outputFolderIdInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mapOf(
+                "newFolderName" to newFolderNameInput.editText?.text.toString(),
+                "parentFolderId" to parentFolderIdInput.editText?.text.toString(),
+                "outputFolderId" to outputFolderIdInput.editText?.text.toString()
+            )
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupDriveCopyFileUI() {
+        val sourceFileIdInput = createTextInputLayout("ソースファイルID", module.parameters["sourceFileId"])
+        val destFolderIdInput = createTextInputLayout("先フォルダID", module.parameters["destinationFolderId"])
+        val newFileNameInput = createTextInputLayout("新しいファイル名", module.parameters["newFileName"])
+
+        binding.parametersContainer.addView(sourceFileIdInput)
+        binding.parametersContainer.addView(destFolderIdInput)
+        binding.parametersContainer.addView(newFileNameInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mapOf(
+                "sourceFileId" to sourceFileIdInput.editText?.text.toString(),
+                "destinationFolderId" to destFolderIdInput.editText?.text.toString(),
+                "newFileName" to newFileNameInput.editText?.text.toString()
+            )
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupDriveMoveFileUI() {
+        val fileIdInput = createTextInputLayout("ファイルID", module.parameters["fileId"])
+        val toFolderIdInput = createTextInputLayout("先フォルダID", module.parameters["toFolderId"])
+
+        binding.parametersContainer.addView(fileIdInput)
+        binding.parametersContainer.addView(toFolderIdInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mapOf(
+                "fileId" to fileIdInput.editText?.text.toString(),
+                "toFolderId" to toFolderIdInput.editText?.text.toString()
+            )
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupCalendarCreateEventUI() {
+        val summaryInput = createTextInputLayout("イベント名", module.parameters["summary"])
+        val startInput = createTextInputLayout("開始日時（ISO8601形式）", module.parameters["start"])
+        val endInput = createTextInputLayout("終了日時（ISO8601形式）", module.parameters["end"])
+        val descriptionInput = createTextInputLayout("説明（任意）", module.parameters["description"], isMultiLine = true)
+
+        binding.parametersContainer.addView(summaryInput)
+        binding.parametersContainer.addView(startInput)
+        binding.parametersContainer.addView(endInput)
+        binding.parametersContainer.addView(descriptionInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mapOf(
+                "summary" to summaryInput.editText?.text.toString(),
+                "start" to startInput.editText?.text.toString(),
+                "end" to endInput.editText?.text.toString(),
+                "description" to descriptionInput.editText?.text.toString()
+            )
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupChatPostUI() {
+        val spaceIdInput = createTextInputLayout("スペースID", module.parameters["spaceId"])
+        val messageInput = createTextInputLayout("メッセージ", module.parameters["message"], isMultiLine = true)
+
+        binding.parametersContainer.addView(spaceIdInput)
+        binding.parametersContainer.addView(messageInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mapOf(
+                "spaceId" to spaceIdInput.editText?.text.toString(),
+                "message" to messageInput.editText?.text.toString()
+            )
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupToastNotificationUI() {
+        val messageInput = createTextInputLayout("メッセージ", module.parameters["message"])
+
+        binding.parametersContainer.addView(messageInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mapOf(
+                "message" to messageInput.editText?.text.toString()
+            )
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupLogMessageUI() {
+        val messageInput = createTextInputLayout("メッセージ", module.parameters["message"])
+
+        binding.parametersContainer.addView(messageInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mapOf(
+                "message" to messageInput.editText?.text.toString()
+            )
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
     }
     
     private fun createSectionHeader(title: String): TextView {

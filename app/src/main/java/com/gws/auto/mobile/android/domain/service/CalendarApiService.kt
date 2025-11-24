@@ -29,11 +29,14 @@ class CalendarApiService @Inject constructor(
             .build()
     }
 
-    suspend fun createEvent(calendarId: String, title: String, startTime: DateTime, endTime: DateTime): Event = withContext(Dispatchers.IO) {
+    suspend fun createEvent(calendarId: String, title: String, startTime: DateTime, endTime: DateTime, description: String? = null): Event = withContext(Dispatchers.IO) {
         val event = Event().apply {
             summary = title
             start = EventDateTime().setDateTime(startTime)
             end = EventDateTime().setDateTime(endTime)
+            if (!description.isNullOrBlank()) {
+                this.description = description
+            }
         }
         getService().events().insert(calendarId, event).execute()
     }

@@ -81,22 +81,54 @@
     </string-array>
 
     <string-array name="module_display_names">
-        <item>Google Calendar: Create Event</item>
-        <item>Google Chat: Send Message</item>
-        <item>Google Sheets: Add Row</item>
-        <item>Gmail: Send Email</item>
-        <item>Google Drive: Upload File</item>
-        <item>Utility: Delay</item>
-        <item>Utility: Log</item>
+        <!-- Gmail -->
+        <item>Gmail: メール送信</item>
+        <item>Gmail: 下書き作成</item>
+        <!-- Google Sheets -->
+        <item>Sheets: 行追加</item>
+        <item>Sheets: セル更新</item>
+        <item>Sheets: 新規作成</item>
+        <item>Sheets: クリア</item>
+        <item>Sheets: コピー\u0026ペースト</item>
+        <item>Sheets: 複製</item>
+        <!-- Google Drive -->
+        <item>Drive: フォルダ作成</item>
+        <item>Drive: ファイルコピー</item>
+        <item>Drive: ファイル移動</item>
+        <!-- Google Calendar -->
+        <item>Calendar: イベント作成</item>
+        <!-- Google Chat -->
+        <item>Chat: メッセージ送信</item>
+        <!-- ユーティリティ -->
+        <item>変数定義</item>
+        <item>相対日付取得</item>
+        <item>Toast通知</item>
+        <item>ログ出力</item>
     </string-array>
 
     <string-array name="module_keys">
-        <item>calendar_create_event</item>
-        <item>chat_send_message</item>
-        <item>sheets_add_row</item>
+        <!-- Gmail -->
         <item>gmail_send_email</item>
-        <item>drive_upload_file</item>
-        <item>utility_delay</item>
-        <item>utility_log</item>
+        <item>CREATE_GMAIL_DRAFT</item>
+        <!-- Google Sheets -->
+        <item>sheets_append_row</item>
+        <item>sheets_set_value</item>
+        <item>sheets_create_new</item>
+        <item>sheets_clear_values</item>
+        <item>COPY_PASTE_SHEET_VALUES</item>
+        <item>DUPLICATE_SPREADSHEET</item>
+        <!-- Google Drive -->
+        <item>drive_create_folder</item>
+        <item>drive_copy_file</item>
+        <item>drive_move_file</item>
+        <!-- Google Calendar -->
+        <item>calendar_create_event</item>
+        <!-- Google Chat -->
+        <item>chat_post</item>
+        <!-- ユーティリティ -->
+        <item>DEFINE_VARIABLE</item>
+        <item>GET_RELATIVE_DATE</item>
+        <item>SHOW_TOAST</item>
+        <item>LOG_MESSAGE</item>
     </string-array>
 </resources>

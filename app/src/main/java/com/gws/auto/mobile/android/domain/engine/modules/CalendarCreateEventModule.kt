@@ -16,19 +16,20 @@ class CalendarCreateEventModule @Inject constructor(
     override suspend fun execute(context: ExecutionContext): ExecutionResult {
         return try {
             val calendarId = context.resolveVariables(context.module.parameters["calendarId"] ?: "primary")
-            val title = context.resolveVariables(context.module.parameters["title"] ?: "")
-            val startTimeStr = context.resolveVariables(context.module.parameters["startTime"] ?: "")
-            val endTimeStr = context.resolveVariables(context.module.parameters["endTime"] ?: "")
+            val summary = context.resolveVariables(context.module.parameters["summary"] ?: "")
+            val start = context.resolveVariables(context.module.parameters["start"] ?: "")
+            val end = context.resolveVariables(context.module.parameters["end"] ?: "")
+            val description = context.resolveVariables(context.module.parameters["description"] ?: "")
 
-            if (title.isBlank() || startTimeStr.isBlank() || endTimeStr.isBlank()) {
-                return ExecutionResult(false, "Title, start time, and end time are required.")
+            if (summary.isBlank() || start.isBlank() || end.isBlank()) {
+                return ExecutionResult(false, "Summary, start, and end are required.")
             }
 
-            val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault())
-            val startTime = DateTime(dateFormat.parse(startTimeStr))
-            val endTime = DateTime(dateFormat.parse(endTimeStr))
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+            val startTime = DateTime(dateFormat.parse(start))
+            val endTime = DateTime(dateFormat.parse(end))
 
-            val event = calendarApiService.createEvent(calendarId, title, startTime, endTime)
+            val event = calendarApiService.createEvent(calendarId, summary, startTime, endTime, description)
 
             ExecutionResult(true, "Successfully created event with ID: ${event.id}")
         } catch (e: Exception) {
