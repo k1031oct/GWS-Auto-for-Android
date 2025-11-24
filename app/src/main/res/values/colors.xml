@@ -47,4 +47,8 @@
     <color name="md_theme_light_inversePrimary">#616161</color>
     <color name="DefaultPrimaryDark">#00695C</color>
     <color name="DefaultPrimaryLight">#4DB6AC</color>
+    
+    <!-- Trigger Type Badge Colors -->
+    <color name="badge_background">#BDBDBD</color> <!-- Grey for manual -->
+    <color name="badge_scheduled_background">#80D8FF</color> <!-- Turquoise for scheduled -->
 </resources>

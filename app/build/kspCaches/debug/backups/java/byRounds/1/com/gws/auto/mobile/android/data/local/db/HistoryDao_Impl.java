@@ -51,7 +51,7 @@ public final class HistoryDao_Impl implements HistoryDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR REPLACE INTO `execution_history` (`id`,`workflowId`,`workflowName`,`executedAt`,`status`,`logs`,`durationMs`,`isBookmarked`) VALUES (nullif(?, 0),?,?,?,?,?,?,?)";
+        return "INSERT OR REPLACE INTO `execution_history` (`id`,`workflowId`,`workflowName`,`executedAt`,`status`,`logs`,`durationMs`,`isBookmarked`,`triggerType`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -71,6 +71,7 @@ public final class HistoryDao_Impl implements HistoryDao {
         statement.bindLong(7, entity.getDurationMs());
         final int _tmp_1 = entity.isBookmarked() ? 1 : 0;
         statement.bindLong(8, _tmp_1);
+        statement.bindString(9, entity.getTriggerType());
       }
     };
     this.__preparedStmtOfDeleteHistoryById = new SharedSQLiteStatement(__db) {
@@ -176,6 +177,7 @@ public final class HistoryDao_Impl implements HistoryDao {
           final int _cursorIndexOfLogs = CursorUtil.getColumnIndexOrThrow(_cursor, "logs");
           final int _cursorIndexOfDurationMs = CursorUtil.getColumnIndexOrThrow(_cursor, "durationMs");
           final int _cursorIndexOfIsBookmarked = CursorUtil.getColumnIndexOrThrow(_cursor, "isBookmarked");
+          final int _cursorIndexOfTriggerType = CursorUtil.getColumnIndexOrThrow(_cursor, "triggerType");
           final List<History> _result = new ArrayList<History>(_cursor.getCount());
           while (_cursor.moveToNext()) {
             final History _item;
@@ -208,7 +210,9 @@ public final class HistoryDao_Impl implements HistoryDao {
             final int _tmp_2;
             _tmp_2 = _cursor.getInt(_cursorIndexOfIsBookmarked);
             _tmpIsBookmarked = _tmp_2 != 0;
-            _item = new History(_tmpId,_tmpWorkflowId,_tmpWorkflowName,_tmpExecutedAt,_tmpStatus,_tmpLogs,_tmpDurationMs,_tmpIsBookmarked);
+            final String _tmpTriggerType;
+            _tmpTriggerType = _cursor.getString(_cursorIndexOfTriggerType);
+            _item = new History(_tmpId,_tmpWorkflowId,_tmpWorkflowName,_tmpExecutedAt,_tmpStatus,_tmpLogs,_tmpDurationMs,_tmpIsBookmarked,_tmpTriggerType);
             _result.add(_item);
           }
           return _result;

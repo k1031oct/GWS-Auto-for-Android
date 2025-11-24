@@ -22,8 +22,24 @@
             android:textAppearance="?attr/textAppearanceListItem"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/bookmark_button"
+            app:layout_constraintEnd_toStartOf="@+id/trigger_type_badge"
             tools:text="Workflow Name" />
+
+        <TextView
+            android:id="@+id/trigger_type_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:background="@drawable/badge_background"
+            app:layout_constraintEnd_toStartOf="@+id/bookmark_button"
+            app:layout_constraintTop_toTopOf="@+id/workflow_name"
+            app:layout_constraintBottom_toBottomOf="@+id/workflow_name"
+            tools:text="手動" />
 
         <TextView
             android:id="@+id/execution_time"

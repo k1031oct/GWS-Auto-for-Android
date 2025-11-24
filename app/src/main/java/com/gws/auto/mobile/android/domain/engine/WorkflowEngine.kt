@@ -19,8 +19,9 @@ interface WorkflowEngine {
      * Executes all modules within a specified workflow.
      *
      * @param workflowId The ID of the workflow to execute.
+     * @param triggerType The type of trigger that initiated this execution (MANUAL or SCHEDULED).
      */
-    suspend fun executeWorkflow(workflowId: String)
+    suspend fun executeWorkflow(workflowId: String, triggerType: String = "MANUAL")
 
     /**
      * Executes a single, isolated module.
@@ -43,7 +44,7 @@ class LocalWorkflowEngine @Inject constructor(
     private val logMessageModule: com.gws.auto.mobile.android.domain.engine.modules.LogMessageModule
 ) : WorkflowEngine {
 
-    override suspend fun executeWorkflow(workflowId: String) {
+    override suspend fun executeWorkflow(workflowId: String, triggerType: String) {
         val workflow = workflowRepository.getWorkflowById(workflowId)
         if (workflow == null) {
             val errorMsg = "Workflow not found: $workflowId"
@@ -53,7 +54,8 @@ class LocalWorkflowEngine @Inject constructor(
                 workflowName = "Unknown",
                 executedAt = Date(),
                 status = "Failure",
-                logs = "ERROR: $errorMsg"
+                logs = "ERROR: $errorMsg",
+                triggerType = triggerType
             )
             historyRepository.insertHistory(history)
             return
@@ -116,10 +118,12 @@ class LocalWorkflowEngine @Inject constructor(
                 workflowName = workflow.name,
                 executedAt = executionStartTime,
                 status = status,
-                logs = logBuilder.toString()
+                logs = logBuilder.toString(),
+                triggerType = triggerType
             )
+            Timber.d("Saving execution history: workflowId=$workflowId, workflowName=${workflow.name}, status=$status, triggerType=$triggerType")
             historyRepository.insertHistory(history)
-            Timber.d("Saved execution history for workflow: ${workflow.name}")
+            Timber.d("Execution history saved successfully for workflow: ${workflow.name} (triggerType=$triggerType)")
         }
     }
 

@@ -34,17 +34,21 @@ public final class ListItemHistoryHeaderBinding implements ViewBinding {
   public final ConstraintLayout historyItemContainer;
 
   @NonNull
+  public final TextView triggerTypeBadge;
+
+  @NonNull
   public final TextView workflowName;
 
   private ListItemHistoryHeaderBinding(@NonNull MaterialCardView rootView,
       @NonNull CheckBox bookmarkButton, @NonNull TextView executionStatus,
       @NonNull TextView executionTime, @NonNull ConstraintLayout historyItemContainer,
-      @NonNull TextView workflowName) {
+      @NonNull TextView triggerTypeBadge, @NonNull TextView workflowName) {
     this.rootView = rootView;
     this.bookmarkButton = bookmarkButton;
     this.executionStatus = executionStatus;
     this.executionTime = executionTime;
     this.historyItemContainer = historyItemContainer;
+    this.triggerTypeBadge = triggerTypeBadge;
     this.workflowName = workflowName;
   }
 
@@ -99,6 +103,12 @@ public final class ListItemHistoryHeaderBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.trigger_type_badge;
+      TextView triggerTypeBadge = ViewBindings.findChildViewById(rootView, id);
+      if (triggerTypeBadge == null) {
+        break missingId;
+      }
+
       id = R.id.workflow_name;
       TextView workflowName = ViewBindings.findChildViewById(rootView, id);
       if (workflowName == null) {
@@ -106,7 +116,7 @@ public final class ListItemHistoryHeaderBinding implements ViewBinding {
       }
 
       return new ListItemHistoryHeaderBinding((MaterialCardView) rootView, bookmarkButton,
-          executionStatus, executionTime, historyItemContainer, workflowName);
+          executionStatus, executionTime, historyItemContainer, triggerTypeBadge, workflowName);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

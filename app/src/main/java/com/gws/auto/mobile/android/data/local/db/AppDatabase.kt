@@ -15,7 +15,7 @@ import com.gws.auto.mobile.android.domain.model.WorkflowFolder
 
 @Database(
     entities = [Workflow::class, Module::class, SearchHistory::class, WorkflowFolder::class, Tag::class, History::class, Schedule::class],
-    version = 7,
+    version = 8,
     exportSchema = false
 )
 @TypeConverters(DateConverter::class, ListConverter::class, ScheduleTypeConverter::class)
@@ -34,6 +34,12 @@ abstract class AppDatabase : RoomDatabase() {
         val MIGRATION_6_7 = object : Migration(6, 7) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE schedules ADD COLUMN skipHolidays INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+
+        val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE execution_history ADD COLUMN triggerType TEXT NOT NULL DEFAULT 'MANUAL'")
             }
         }
     }

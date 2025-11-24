@@ -123,6 +123,8 @@
     <string name="delete_all_history">すべての履歴を削除</string>
     <string name="clear_history_button_text">クリア</string>
     <string name="no_history_prompt_with_workflow">このワークフローの実行履歴はありません</string>
+    <string name="trigger_type_manual">手動</string>
+    <string name="trigger_type_scheduled">スケジュール</string>
 
     <!-- Table Headers -->
     <string name="header_workflow_name">ワークフロー名</string>

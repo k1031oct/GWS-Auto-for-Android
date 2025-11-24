@@ -48,13 +48,14 @@ class ScheduleWorker @AssistedInject constructor(
         }
 
         return try {
-            workflowEngine.executeWorkflow(schedule.workflowId)
-            Timber.i("Successfully executed workflow for schedule: $scheduleId")
+            Timber.i("Starting scheduled workflow execution: scheduleId=$scheduleId, workflowId=${schedule.workflowId}, workflowName=${schedule.workflowName}")
+            workflowEngine.executeWorkflow(schedule.workflowId, triggerType = "SCHEDULED")
+            Timber.i("Successfully executed scheduled workflow: scheduleId=$scheduleId, workflowName=${schedule.workflowName}")
             sendNotification(schedule, isSuccess = true)
             reschedule(schedule)
             Result.success()
         } catch (e: Exception) {
-            Timber.e(e, "Failed to execute workflow for schedule: $scheduleId")
+            Timber.e(e, "Failed to execute scheduled workflow: scheduleId=$scheduleId, workflowName=${schedule.workflowName}")
             sendNotification(schedule, isSuccess = false, errorMessage = e.message)
             reschedule(schedule) // Reschedule even on failure to ensure continuity
             Result.failure()

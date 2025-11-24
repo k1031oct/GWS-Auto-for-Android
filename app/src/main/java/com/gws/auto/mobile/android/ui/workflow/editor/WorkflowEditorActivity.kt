@@ -223,10 +223,18 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
     }
 
     private fun showAddTagDialog() {
-        val availableTags = viewModel.availableTags.value.map { it.name }
-        val selectedTags = viewModel.selectedTags.value
-        val suggestions = availableTags.filter { !selectedTags.contains(it) }
+        lifecycleScope.launch {
+            val availableTags = viewModel.availableTags.value.map { it.name }
+            val selectedTags = viewModel.selectedTags.value
+            val suggestions = availableTags.filter { !selectedTags.contains(it) }
+            
+            Timber.d("showAddTagDialog: availableTags=${availableTags.size}, selectedTags=${selectedTags.size}, suggestions=${suggestions.size}")
+            
+            showTagDialogUI(suggestions)
+        }
+    }
 
+    private fun showTagDialogUI(suggestions: List<String>) {
         val container = android.widget.LinearLayout(this).apply {
             orientation = android.widget.LinearLayout.VERTICAL
             setPadding(
@@ -323,8 +331,10 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
     private fun observeAvailableTags() {
         lifecycleScope.launch {
             viewModel.availableTags.collectLatest { tags ->
-                // Just observing to keep the StateFlow active so viewModel.availableTags.value is fresh
-                Timber.d("Available tags updated: ${tags.size}")
+                Timber.d("Available tags updated: ${tags.size} tags")
+                tags.forEach { tag ->
+                    Timber.d("  - Tag: ${tag.name}")
+                }
             }
         }
     }

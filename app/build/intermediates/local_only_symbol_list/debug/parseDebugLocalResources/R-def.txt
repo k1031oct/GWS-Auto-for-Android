@@ -87,6 +87,7 @@ color purple_700
 color teal_200
 color teal_700
 color white
+drawable badge_background
 drawable badge_dot
 drawable bg_dashed_border
 drawable bg_today
@@ -241,6 +242,7 @@ id time_text
 id timestamp
 id timestamp_text
 id toolbar
+id trigger_type_badge
 id unread_indicator
 id user_avatar
 id user_email

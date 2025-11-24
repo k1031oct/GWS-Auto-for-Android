@@ -17,5 +17,6 @@ data class History(
     val status: String, // e.g., "Success", "Failure"
     val logs: String, // Simple text log for now, could be JSON for structured logs
     val durationMs: Long = 0,
-    val isBookmarked: Boolean = false
+    val isBookmarked: Boolean = false,
+    val triggerType: String = "MANUAL" // MANUAL or SCHEDULED
 )
