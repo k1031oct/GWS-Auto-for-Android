@@ -58,7 +58,7 @@ class HistoryAdapter(
             binding.executionStatus.text = item.history.status
             binding.bookmarkButton.isChecked = item.history.isBookmarked
 
-            // Set trigger type text and background
+            // Set trigger type text
             val context = binding.root.context
             val triggerTypeResId = when (item.history.triggerType) {
                 "MANUAL" -> R.string.trigger_type_manual
@@ -71,15 +71,6 @@ class HistoryAdapter(
             } else {
                 binding.triggerTypeBadge.text = item.history.triggerType
             }
-
-            val triggerTypeColorResId = when (item.history.triggerType) {
-                "MANUAL" -> R.color.badge_manual_background
-                "SCHEDULED" -> R.color.badge_scheduled_background
-                else -> R.color.badge_background
-            }
-            binding.triggerTypeBadge.backgroundTintList =
-                ColorStateList.valueOf(context.getColor(triggerTypeColorResId))
-
 
             itemView.setOnClickListener {
                 onHeaderClick(item.history.id.toString())

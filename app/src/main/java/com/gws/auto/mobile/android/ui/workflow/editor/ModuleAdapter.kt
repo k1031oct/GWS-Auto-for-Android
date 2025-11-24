@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gws.auto.mobile.android.databinding.ListItemModuleBinding
 import com.gws.auto.mobile.android.domain.model.Module
-import android.content.res.ColorStateList
 
 class ModuleAdapter(
     private val onEditClicked: (Module) -> Unit,
@@ -18,15 +17,9 @@ class ModuleAdapter(
     private val onModuleEnabledChanged: (Module, Boolean) -> Unit
 ) : ListAdapter<Module, ModuleAdapter.ModuleViewHolder>(ModuleDiffCallback()) {
 
-    var highlightColor: Int? = null
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ModuleViewHolder {
         val binding = ListItemModuleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ModuleViewHolder(binding, highlightColor)
+        return ModuleViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ModuleViewHolder, position: Int) {
@@ -52,24 +45,7 @@ class ModuleAdapter(
         }
     }
 
-    inner class ModuleViewHolder(val binding: ListItemModuleBinding, highlightColor: Int?) : RecyclerView.ViewHolder(binding.root) {
-        init {
-            if (highlightColor != null) {
-                val colorStateList = ColorStateList.valueOf(highlightColor)
-                // Apply to icon
-                binding.moduleIcon.imageTintList = colorStateList
-                // Apply to switch thumb and track
-                binding.moduleEnabledSwitch.thumbTintList = colorStateList
-                binding.moduleEnabledSwitch.trackTintList = colorStateList
-                // Apply to buttons
-                binding.runModuleButton.imageTintList = colorStateList
-                binding.deleteButton.imageTintList = colorStateList
-                // Apply to timeline lines
-                binding.lineTop.setBackgroundColor(highlightColor)
-                binding.lineBottom.setBackgroundColor(highlightColor)
-            }
-        }
-        
+    class ModuleViewHolder(val binding: ListItemModuleBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(module: Module) {
             binding.moduleName.text = module.type
             binding.moduleEnabledSwitch.isChecked = module.isEnabled

@@ -503,9 +503,6 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
         
         // Apply to Cancel Button (text color)
         binding.cancelButton.setTextColor(colorInt)
-        
-        // Apply to ModuleAdapter (icons and switches)
-        moduleAdapter.highlightColor = colorInt
 
         // Apply to Tags
         val chipGroup = binding.tagChipGroup
