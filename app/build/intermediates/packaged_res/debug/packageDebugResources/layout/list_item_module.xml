@@ -57,20 +57,37 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@id/module_icon"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/run_module_button"
-                tools:text="Gmail Send" />
+                app:layout_constraintBottom_toTopOf="@+id/module_description"
+                app:layout_constraintEnd_toStartOf="@+id/edit_button"
+                tools:text="ToastNotificationModule" />
 
-            <EditText
-                android:id="@+id/toast_message_input"
+            <TextView
+                android:id="@+id/module_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Enter toast message"
+                android:layout_marginStart="16dp"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?android:attr/textColorSecondary"
                 android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@id/module_icon"
                 app:layout_constraintTop_toBottomOf="@id/module_name"
-                app:layout_constraintStart_toStartOf="@id/module_name"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="8dp"/>
-                
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/edit_button"
+                tools:text="Message: Hello World" />
+
+            <ImageButton
+                android:id="@+id/edit_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Edit Module"
+                android:src="@drawable/ic_edit"
+                android:padding="8dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toStartOf="@id/run_module_button"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/module_enabled_switch"
                 android:layout_width="wrap_content"
@@ -88,7 +105,7 @@
                 android:contentDescription="Run this module"
                 android:src="@drawable/ic_play_arrow"
                 android:padding="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/delete_button"
+                app:layout_constraintEnd_toStartOf="@id/delete_button"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 

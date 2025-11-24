@@ -4,7 +4,6 @@ package com.gws.auto.mobile.android.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,6 +27,9 @@ public final class ListItemModuleBinding implements ViewBinding {
   public final ImageButton deleteButton;
 
   @NonNull
+  public final ImageButton editButton;
+
+  @NonNull
   public final View lineBottom;
 
   @NonNull
@@ -35,6 +37,9 @@ public final class ListItemModuleBinding implements ViewBinding {
 
   @NonNull
   public final MaterialCardView moduleCard;
+
+  @NonNull
+  public final TextView moduleDescription;
 
   @NonNull
   public final SwitchMaterial moduleEnabledSwitch;
@@ -48,24 +53,23 @@ public final class ListItemModuleBinding implements ViewBinding {
   @NonNull
   public final ImageButton runModuleButton;
 
-  @NonNull
-  public final EditText toastMessageInput;
-
   private ListItemModuleBinding(@NonNull ConstraintLayout rootView,
-      @NonNull ImageButton deleteButton, @NonNull View lineBottom, @NonNull View lineTop,
-      @NonNull MaterialCardView moduleCard, @NonNull SwitchMaterial moduleEnabledSwitch,
+      @NonNull ImageButton deleteButton, @NonNull ImageButton editButton, @NonNull View lineBottom,
+      @NonNull View lineTop, @NonNull MaterialCardView moduleCard,
+      @NonNull TextView moduleDescription, @NonNull SwitchMaterial moduleEnabledSwitch,
       @NonNull ImageView moduleIcon, @NonNull TextView moduleName,
-      @NonNull ImageButton runModuleButton, @NonNull EditText toastMessageInput) {
+      @NonNull ImageButton runModuleButton) {
     this.rootView = rootView;
     this.deleteButton = deleteButton;
+    this.editButton = editButton;
     this.lineBottom = lineBottom;
     this.lineTop = lineTop;
     this.moduleCard = moduleCard;
+    this.moduleDescription = moduleDescription;
     this.moduleEnabledSwitch = moduleEnabledSwitch;
     this.moduleIcon = moduleIcon;
     this.moduleName = moduleName;
     this.runModuleButton = runModuleButton;
-    this.toastMessageInput = toastMessageInput;
   }
 
   @Override
@@ -101,6 +105,12 @@ public final class ListItemModuleBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.edit_button;
+      ImageButton editButton = ViewBindings.findChildViewById(rootView, id);
+      if (editButton == null) {
+        break missingId;
+      }
+
       id = R.id.line_bottom;
       View lineBottom = ViewBindings.findChildViewById(rootView, id);
       if (lineBottom == null) {
@@ -116,6 +126,12 @@ public final class ListItemModuleBinding implements ViewBinding {
       id = R.id.module_card;
       MaterialCardView moduleCard = ViewBindings.findChildViewById(rootView, id);
       if (moduleCard == null) {
+        break missingId;
+      }
+
+      id = R.id.module_description;
+      TextView moduleDescription = ViewBindings.findChildViewById(rootView, id);
+      if (moduleDescription == null) {
         break missingId;
       }
 
@@ -143,15 +159,9 @@ public final class ListItemModuleBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.toast_message_input;
-      EditText toastMessageInput = ViewBindings.findChildViewById(rootView, id);
-      if (toastMessageInput == null) {
-        break missingId;
-      }
-
-      return new ListItemModuleBinding((ConstraintLayout) rootView, deleteButton, lineBottom,
-          lineTop, moduleCard, moduleEnabledSwitch, moduleIcon, moduleName, runModuleButton,
-          toastMessageInput);
+      return new ListItemModuleBinding((ConstraintLayout) rootView, deleteButton, editButton,
+          lineBottom, lineTop, moduleCard, moduleDescription, moduleEnabledSwitch, moduleIcon,
+          moduleName, runModuleButton);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

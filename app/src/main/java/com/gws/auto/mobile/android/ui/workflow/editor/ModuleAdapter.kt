@@ -32,22 +32,7 @@ class ModuleAdapter(
     override fun onBindViewHolder(holder: ModuleViewHolder, position: Int) {
         val module = getItem(position)
         holder.bind(module)
-
-        if (module.type == "ToastNotificationModule") {
-            holder.binding.editButton.visibility = View.VISIBLE
-            holder.binding.editButton.setOnClickListener { onEditClicked(module) }
-            val message = module.parameters["message"]
-            if (!message.isNullOrBlank()) {
-                holder.binding.moduleDescription.text = "Message: $message"
-                holder.binding.moduleDescription.visibility = View.VISIBLE
-            } else {
-                holder.binding.moduleDescription.visibility = View.GONE
-            }
-        } else {
-            holder.binding.editButton.visibility = View.GONE
-            holder.binding.moduleDescription.visibility = View.GONE
-        }
-
+        holder.itemView.setOnClickListener { onEditClicked(module) }
         holder.binding.deleteButton.setOnClickListener { onRemoveClicked(module) }
         holder.binding.runModuleButton.setOnClickListener { onRunModuleClicked(module) }
         holder.binding.moduleEnabledSwitch.setOnCheckedChangeListener { _, isChecked ->
@@ -79,7 +64,6 @@ class ModuleAdapter(
                 // Apply to buttons
                 binding.runModuleButton.imageTintList = colorStateList
                 binding.deleteButton.imageTintList = colorStateList
-                binding.editButton.imageTintList = colorStateList
                 // Apply to timeline lines
                 binding.lineTop.setBackgroundColor(highlightColor)
                 binding.lineBottom.setBackgroundColor(highlightColor)

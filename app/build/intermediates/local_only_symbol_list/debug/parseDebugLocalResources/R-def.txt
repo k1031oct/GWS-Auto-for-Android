@@ -183,6 +183,7 @@ id line_top
 id log_message
 id manual_button
 id module_card
+id module_description
 id module_enabled_switch
 id module_icon
 id module_name
@@ -244,7 +245,6 @@ id theme_system_radio
 id time_text
 id timestamp
 id timestamp_text
-id toast_message_input
 id toolbar
 id trigger_type_badge
 id unread_indicator
