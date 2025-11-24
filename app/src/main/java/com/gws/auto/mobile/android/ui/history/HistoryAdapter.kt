@@ -1,10 +1,12 @@
 package com.gws.auto.mobile.android.ui.history
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.databinding.ListItemHistoryHeaderBinding
 import com.gws.auto.mobile.android.databinding.ListItemHistoryLogBinding
 import java.text.SimpleDateFormat
@@ -55,6 +57,30 @@ class HistoryAdapter(
             binding.executionTime.text = sdf.format(item.history.executedAt)
             binding.executionStatus.text = item.history.status
             binding.bookmarkButton.isChecked = item.history.isBookmarked
+
+            // Set trigger type text and background
+            val context = binding.root.context
+            val triggerTypeResId = when (item.history.triggerType) {
+                "MANUAL" -> R.string.trigger_type_manual
+                "SCHEDULED" -> R.string.trigger_type_scheduled
+                else -> 0
+            }
+
+            if (triggerTypeResId != 0) {
+                binding.triggerTypeBadge.text = context.getString(triggerTypeResId)
+            } else {
+                binding.triggerTypeBadge.text = item.history.triggerType
+            }
+
+            val triggerTypeColorResId = when (item.history.triggerType) {
+                "MANUAL" -> R.color.badge_manual_background
+                "SCHEDULED" -> R.color.badge_scheduled_background
+                else -> R.color.badge_background
+            }
+            binding.triggerTypeBadge.backgroundTintList =
+                ColorStateList.valueOf(context.getColor(triggerTypeColorResId))
+
+
             itemView.setOnClickListener {
                 onHeaderClick(item.history.id.toString())
             }

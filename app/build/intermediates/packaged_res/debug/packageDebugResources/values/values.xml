@@ -89,6 +89,7 @@
     <color name="DefaultPrimaryDark">#00695C</color>
     <color name="DefaultPrimaryLight">#4DB6AC</color>
     <color name="badge_background">#BDBDBD</color>
+    <color name="badge_manual_background">#FF0099</color>
     <color name="badge_scheduled_background">#80D8FF</color>
     <color name="black">#FF000000</color>
     <color name="chart_red">#F44336</color>
@@ -376,6 +377,8 @@
     <string name="title_settings">Settings</string>
     <string name="title_user_info">User Info</string>
     <string name="title_workflow">Workflow</string>
+    <string name="trigger_type_manual">Manual</string>
+    <string name="trigger_type_scheduled">Scheduled</string>
     <string name="type_label">Type: %1$s</string>
     <string name="unfavorite">Unfavorite</string>
     <string name="unknown_user">Unknown</string>

@@ -18,6 +18,7 @@ attr highlightColor
 color DefaultPrimaryDark
 color DefaultPrimaryLight
 color badge_background
+color badge_manual_background
 color badge_scheduled_background
 color black
 color chart_red
@@ -570,6 +571,8 @@ string title_schedule
 string title_settings
 string title_user_info
 string title_workflow
+string trigger_type_manual
+string trigger_type_scheduled
 string type_label
 string unfavorite
 string unknown_user

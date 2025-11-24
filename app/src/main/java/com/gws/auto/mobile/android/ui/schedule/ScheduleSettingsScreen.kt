@@ -402,7 +402,7 @@ fun TimePickerDialog(onDismissRequest: () -> Unit, onConfirm: () -> Unit, conten
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
             shape = MaterialTheme.shapes.extraLarge,
-            tonalElevation = 6.dp
+            color = MaterialTheme.colorScheme.surface
         ) {
             Column(
                 modifier = Modifier.padding(24.dp),

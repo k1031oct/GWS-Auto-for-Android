@@ -122,9 +122,8 @@
     <string name="search_history">履歴を検索</string>
     <string name="delete_all_history">すべての履歴を削除</string>
     <string name="clear_history_button_text">クリア</string>
-    <string name="no_history_prompt_with_workflow">このワークフローの実行履歴はありません</string>
     <string name="trigger_type_manual">手動</string>
-    <string name="trigger_type_scheduled">スケジュール</string>
+    <string name="trigger_type_scheduled">スケジュール済</string>
 
     <!-- Table Headers -->
     <string name="header_workflow_name">ワークフロー名</string>
@@ -202,6 +201,9 @@
     <!-- Sign In -->
     <string name="sign_in_required">サインインが必要です</string>
     <string name="sign_in_prompt_message">続行するにはサインインしてください</string>
+
+    <!-- History -->
+    <string name="no_history_prompt_with_workflow">このワークフローの実行履歴はありません</string>
 
     <!-- Workflow Folders -->
     <string name="remove_from_folder">フォルダーから削除</string>

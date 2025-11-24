@@ -136,6 +136,8 @@
     <string name="search_history">Search History</string>
     <string name="delete_all_history">Delete All History</string>
     <string name="clear_history_button_text">Clear</string>
+    <string name="trigger_type_manual">Manual</string>
+    <string name="trigger_type_scheduled">Scheduled</string>
 
     <!-- Table Headers -->
     <string name="header_workflow_name">Workflow Name</string>

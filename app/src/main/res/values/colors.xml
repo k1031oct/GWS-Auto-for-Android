@@ -49,6 +49,7 @@
     <color name="DefaultPrimaryLight">#4DB6AC</color>
     
     <!-- Trigger Type Badge Colors -->
-    <color name="badge_background">#BDBDBD</color> <!-- Grey for manual -->
+    <color name="badge_background">#BDBDBD</color> <!-- Original Grey -->
+    <color name="badge_manual_background">#FF0099</color> <!-- Neon Pink for manual -->
     <color name="badge_scheduled_background">#80D8FF</color> <!-- Turquoise for scheduled -->
 </resources>
