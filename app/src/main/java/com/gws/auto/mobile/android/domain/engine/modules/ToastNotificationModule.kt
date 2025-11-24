@@ -18,14 +18,16 @@ class ToastNotificationModule @Inject constructor() : ModuleExecutor {
         // Resolve the message to be displayed from the module parameters.
         val message = context.resolveVariables(context.module.parameters["message"] ?: "")
 
-        if (message.isBlank()) {
-            return ExecutionResult(false, "Message for Toast notification cannot be empty.")
+        val toastMessage = if (message.isBlank()) {
+            "Message for Toast notification is empty."
+        } else {
+            message
         }
 
         // Switch to the Main dispatcher to show UI components like Toast.
         withContext(Dispatchers.Main) {
             MainApplication.currentActivity?.get()?.let {
-                Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(it, toastMessage, Toast.LENGTH_SHORT).show()
             }
         }
 

@@ -10,6 +10,7 @@ import com.gws.auto.mobile.android.domain.model.Schedule
 import com.gws.auto.mobile.android.domain.model.ScheduleType
 import com.gws.auto.mobile.android.domain.service.GoogleApiAuthorizer
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -136,7 +138,7 @@ class ScheduleViewModel @Inject constructor(
     }
 
     private suspend fun loadHolidaysForMonth(yearMonth: YearMonth, country: String) {
-        if (!googleApiAuthorizer.isSignedIn()) {
+        if (!withContext(Dispatchers.IO) { googleApiAuthorizer.isSignedIn() }) {
             Timber.d("Not signed in, clearing holidays.")
             _holidays.value = emptyList()
             _isLoading.value = false

@@ -244,6 +244,7 @@ id theme_system_radio
 id time_text
 id timestamp
 id timestamp_text
+id toast_message_input
 id toolbar
 id trigger_type_badge
 id unread_indicator

@@ -57,9 +57,19 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@id/module_icon"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/run_module_button"
                 tools:text="Gmail Send" />
+
+            <EditText
+                android:id="@+id/toast_message_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Enter toast message"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/module_name"
+                app:layout_constraintStart_toStartOf="@id/module_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"/>
                 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/module_enabled_switch"
@@ -90,7 +100,7 @@
                 android:contentDescription="Delete Module"
                 android:src="@drawable/ic_delete"
                 android:padding="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/module_enabled_switch"
+                app:layout_constraintEnd_toStartOf="@id/module_enabled_switch"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 

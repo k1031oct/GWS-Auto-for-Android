@@ -4,6 +4,7 @@ package com.gws.auto.mobile.android.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -47,11 +48,14 @@ public final class ListItemModuleBinding implements ViewBinding {
   @NonNull
   public final ImageButton runModuleButton;
 
+  @NonNull
+  public final EditText toastMessageInput;
+
   private ListItemModuleBinding(@NonNull ConstraintLayout rootView,
       @NonNull ImageButton deleteButton, @NonNull View lineBottom, @NonNull View lineTop,
       @NonNull MaterialCardView moduleCard, @NonNull SwitchMaterial moduleEnabledSwitch,
       @NonNull ImageView moduleIcon, @NonNull TextView moduleName,
-      @NonNull ImageButton runModuleButton) {
+      @NonNull ImageButton runModuleButton, @NonNull EditText toastMessageInput) {
     this.rootView = rootView;
     this.deleteButton = deleteButton;
     this.lineBottom = lineBottom;
@@ -61,6 +65,7 @@ public final class ListItemModuleBinding implements ViewBinding {
     this.moduleIcon = moduleIcon;
     this.moduleName = moduleName;
     this.runModuleButton = runModuleButton;
+    this.toastMessageInput = toastMessageInput;
   }
 
   @Override
@@ -138,8 +143,15 @@ public final class ListItemModuleBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.toast_message_input;
+      EditText toastMessageInput = ViewBindings.findChildViewById(rootView, id);
+      if (toastMessageInput == null) {
+        break missingId;
+      }
+
       return new ListItemModuleBinding((ConstraintLayout) rootView, deleteButton, lineBottom,
-          lineTop, moduleCard, moduleEnabledSwitch, moduleIcon, moduleName, runModuleButton);
+          lineTop, moduleCard, moduleEnabledSwitch, moduleIcon, moduleName, runModuleButton,
+          toastMessageInput);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

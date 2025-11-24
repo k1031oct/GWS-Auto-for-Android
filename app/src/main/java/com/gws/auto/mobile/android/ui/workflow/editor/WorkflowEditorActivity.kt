@@ -7,6 +7,7 @@ import android.view.DragEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -119,8 +120,12 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
     private fun setupRecyclerView() {
         moduleAdapter = ModuleAdapter(
             onEditClicked = { module ->
-                val dialog = ModuleSettingsDialogFragment(module)
-                dialog.show(supportFragmentManager, "ModuleSettingsDialog")
+                if (module.type == "ToastNotificationModule") {
+                    showToastMessageDialog(module)
+                } else {
+                    val dialog = ModuleSettingsDialogFragment(module)
+                    dialog.show(supportFragmentManager, "ModuleSettingsDialog")
+                }
             },
             onRemoveClicked = { module ->
                 viewModel.removeModule(module)
@@ -136,6 +141,22 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
             adapter = moduleAdapter
             layoutManager = LinearLayoutManager(this@WorkflowEditorActivity)
         }
+    }
+
+    private fun showToastMessageDialog(module: Module) {
+        val editText = EditText(this).apply {
+            setText(module.parameters["message"])
+        }
+        AlertDialog.Builder(this)
+            .setTitle("Toast Message")
+            .setView(editText)
+            .setPositiveButton("OK") { _, _ ->
+                val newParameters = module.parameters.toMutableMap()
+                newParameters["message"] = editText.text.toString()
+                viewModel.updateModuleParameters(module.id, newParameters)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun setupLibraryRecyclerView() {
@@ -168,7 +189,7 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
                     Module(id = "", type = "GET_CLIPBOARD", parameters = emptyMap())
                 )
                 "Output" -> listOf(
-                    Module(id = "", type = "SHOW_TOAST", parameters = emptyMap()),
+                    Module(id = "", type = "ToastNotificationModule", parameters = emptyMap()),
                     Module(id = "", type = "LOG_MESSAGE", parameters = emptyMap()),
                     Module(id = "", type = "SET_CLIPBOARD", parameters = emptyMap())
                 )
