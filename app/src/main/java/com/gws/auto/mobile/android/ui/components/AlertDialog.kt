@@ -1,5 +1,8 @@
 package com.gws.auto.mobile.android.ui.components
 
+import androidx.compose.ui.res.stringResource
+import com.gws.auto.mobile.android.R
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
@@ -52,7 +55,7 @@ fun AppAlertDialogPreview() {
         var showDialog by remember { mutableStateOf(true) }
 
         Surface(modifier = Modifier.padding(16.dp)) {
-            AppButton(onClick = { showDialog = true }, text = "Show Alert Dialog")
+            AppButton(onClick = { showDialog = true }, text = stringResource(R.string.show_alert_dialog))
         }
 
         if (showDialog) {

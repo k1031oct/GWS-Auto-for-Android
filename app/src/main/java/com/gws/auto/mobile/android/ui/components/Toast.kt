@@ -19,6 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.gws.auto.mobile.android.R
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gws.auto.mobile.android.ui.theme.GWSAutoForAndroidTheme
 import kotlinx.coroutines.launch

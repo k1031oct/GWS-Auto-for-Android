@@ -1,5 +1,8 @@
 package com.gws.auto.mobile.android.ui.components
 
+import androidx.compose.ui.res.stringResource
+import com.gws.auto.mobile.android.R
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -74,10 +77,10 @@ fun AppBadgePreview() {
     GWSAutoForAndroidTheme {
         Surface(modifier = Modifier.padding(16.dp)) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                AppBadge(text = "Default")
-                AppBadge(text = "Secondary", variant = BadgeVariant.Secondary)
-                AppBadge(text = "Destructive", variant = BadgeVariant.Destructive)
-                AppBadge(text = "Outline", variant = BadgeVariant.Outline)
+                AppBadge(text = stringResource(R.string.badge_default))
+                AppBadge(text = stringResource(R.string.badge_secondary), variant = BadgeVariant.Secondary)
+                AppBadge(text = stringResource(R.string.badge_destructive), variant = BadgeVariant.Destructive)
+                AppBadge(text = stringResource(R.string.badge_outline), variant = BadgeVariant.Outline)
             }
         }
     }

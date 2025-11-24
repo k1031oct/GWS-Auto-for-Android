@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/manual_button"
+        style="@style/SettingsItem"
+        android:text="@string/about_manual" />
+
+    <View style="@style/Divider" />
+
+    <TextView
+        android:id="@+id/rating_button"
+        style="@style/SettingsItem"
+        android:text="@string/about_rate_app" />
+
+    <View style="@style/Divider" />
+
+    <TextView
+        android:id="@+id/share_button"
+        style="@style/SettingsItem"
+        android:text="@string/about_share_app" />
+
+    <View style="@style/Divider" />
+
+    <TextView
+        android:id="@+id/privacy_policy_button"
+        style="@style/SettingsItem"
+        android:text="@string/about_privacy_policy" />
+
+    <View style="@style/Divider" />
+
+    <TextView
+        android:id="@+id/licenses_button"
+        style="@style/SettingsItem"
+        android:text="@string/about_licenses" />
+
+    <View style="@style/Divider" />
+
+    <TextView
+        android:id="@+id/contact_button"
+        style="@style/SettingsItem"
+        android:text="@string/about_contact" />
+
+    <View style="@style/Divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/TextAppearance.Material3.BodyLarge"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/about_app_version" />
+
+        <TextView
+            android:id="@+id/version_text"
+            style="@style/TextAppearance.Material3.BodyLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/version_number_placeholder" />
+    </LinearLayout>
+
+</LinearLayout>

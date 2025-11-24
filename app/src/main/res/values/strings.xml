@@ -28,6 +28,7 @@
     <string name="exit_confirmation_title">Exit Confirmation</string>
     <string name="exit_confirmation_message">Do you want to exit the app?</string>
     <string name="exit">Exit</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
     <string name="delete_tag_confirmation">Delete this tag?</string>
@@ -181,7 +182,6 @@
     <string name="schedule_select_dates">Select Dates (multiple)</string>
     <string name="schedule_date_label">Date</string>
     <string name="save">Save</string>
-    <string name="ok">OK</string>
 
     <!-- Weekdays short -->
     <string name="weekday_mon_short">Mon</string>
@@ -315,4 +315,19 @@
     <string name="invoice_list_caption">A list of your recent invoices.</string>
     <string name="airplane_mode">Airplane Mode</string>
     <string name="value_format">Value: %.2f</string>
+    <!-- ModuleSettingsDialogFragment -->
+    <string name="file_info_resolve_failed">Failed to resolve file information.</string>
+    <string name="not_signed_in">Not signed in.</string>
+    <string name="sheet_name_fetch_failed">Failed to fetch sheet name.</string>
+    <string name="please_sign_in_first">Please sign in from User Information settings first.</string>
+    <!-- ScheduleSettingsScreen -->
+    <string name="hourly_interval_format">Interval: %1$d hours</string>
+    <string name="execute_next_day_on_holiday">Execute next day if holiday</string>
+    <string name="yearly_date_format">%1$d/%2$d</string>
+    <!-- DashboardScreen -->
+    <string name="usage_count_format">Used: %1$d times</string>
+    <string name="error_count_format">Errors: %1$d</string>
+    <!-- SignInActivity -->
+    <string name="firebase_auth_failed">Firebase authentication failed.</string>
+    <!-- XML Layouts -->
 </resources>

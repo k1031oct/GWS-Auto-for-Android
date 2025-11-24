@@ -154,7 +154,10 @@ class SearchFragment : Fragment() {
                     "forest" -> if (isDarkTheme) ForestPrimaryDark else ForestPrimaryLight
                     "ocean" -> if (isDarkTheme) OceanPrimaryDark else OceanPrimaryLight
                     "sakura" -> if (isDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight
-                    else -> if (isDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight
+                    else -> {
+                        val colorRes = if (isDarkTheme) R.color.DefaultPrimaryDark else R.color.DefaultPrimaryLight
+                        androidx.compose.ui.graphics.Color(androidx.core.content.ContextCompat.getColor(requireContext(), colorRes))
+                    }
                 }
                 tagAdapter.highlightColor = color.toArgb()
             }

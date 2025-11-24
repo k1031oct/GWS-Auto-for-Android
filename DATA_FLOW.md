@@ -65,6 +65,20 @@
 | **WorkflowEditorViewModel.removeModule** | `index: Int` | モジュール削除 | Unit | |
 | └─ `_modules.value = _modules.value.filterIndexed` | `predicate` | 指定インデックス除外 | List | |
 
+### 2.4 ワークフロータグ管理
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **WorkflowEditorViewModel.addTagToWorkflow** | `tagName: String` | ワークフローへのタグ追加 | Unit | |
+| ├─ `_selectedTags.value` | `tagName` | 重複チェック | Boolean | 既存なら追加しない |
+| ├─ `_selectedTags.value += tagName` | `tagName` | StateFlow更新 | Unit | |
+| └─ **TagRepository.addTag** | `Tag(tagName)` | タグマスタへの保存 | Unit | |
+| **WorkflowEditorViewModel.removeTagFromWorkflow** | `tagName: String` | ワークフローからのタグ削除 | Unit | |
+| └─ `_selectedTags.value -= tagName` | `tagName` | StateFlow更新 | Unit | |
+| **WorkflowEditorActivity.showAddTagDialog** | None | タグ追加ダイアログ表示 | Dialog | |
+| ├─ `viewModel.availableTags` | None | 既存タグリスト取得 | List<Tag> | |
+| └─ `filter(!selectedTags.contains)` | `availableTags` | 未選択タグのみ表示 | List<String> | |
+
 ---
 
 ## 3. ワークフロー実行エンジン (Workflow Execution Engine)
@@ -110,6 +124,41 @@
 | ├─ `gmail.users().messages().send` | `userId="me", message` | Gmail API呼び出し | `Message` | クォータ制限 |
 | └─ Error Handling | `Exception` | try-catch | ExecutionResult(false) | ログ記録 |
 
+### 4.1.1 Gmail API - メール受信
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **GmailReceiveModule.executeInternal** | `query, maxResults?, labelIds?` | Gmail受信処理 | `ExecutionResult` | |
+| ├─ **GoogleApiAuthorizer.getCredential** | `[GmailReadOnly]` | OAuth2資格情報取得 | Credential | スコープ権限確認 |
+| ├─ `Gmail.Builder` | `credential` | GmailServiceインスタンス生成 | Gmail | |
+| ├─ `gmail.users().messages().list` | `userId="me"` | メッセージリスト取得 | ListMessagesResponse | |
+| │  ├─ `setQ(query)` | `query` | 検索クエリ設定 | Request | Gmail検索構文 |
+| │  ├─ `setMaxResults(maxResults ?: 10)` | `maxResults` | 取得件数制限 | Request | 1-500 |
+| │  └─ `setLabelIds(labelIds)` | `labelIds` | ラベルフィルタ | Request | INBOX, SENT等 |
+| ├─ Loop `messages` | `messageId` | 各メッセージの詳細取得 | | |
+| │  ├─ `gmail.users().messages().get` | `userId="me", id=messageId` | メッセージ取得 | Message | |
+| │  ├─ `parseHeaders` | `message.payload.headers` | ヘッダー解析 | Map | From, To, Subject, Date |
+| │  ├─ `parseBody` | `message.payload` | 本文抽出 | String | text/plain, text/html |
+| │  └─ `context.setVariable("emails", emailList)` | `emailList` | 実行コンテキストへ保存 | Unit | 次モジュールで利用可能 |
+| └─ Error Handling | `Exception` | try-catch | ExecutionResult(false) | ログ記録 |
+
+### 4.1.2 Gmail API - 添付ファイル保存
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **GmailSaveAttachmentModule.executeInternal** | `messageId, savePath, fileNamePattern?` | 添付ファイル保存 | `ExecutionResult` | |
+| ├─ **GoogleApiAuthorizer.getCredential** | `[GmailReadOnly]` | OAuth2資格情報取得 | Credential | |
+| ├─ `Gmail.Builder` | `credential` | GmailServiceインスタンス生成 | Gmail | |
+| ├─ `gmail.users().messages().get` | `userId="me", id=messageId` | メッセージ取得 | Message | |
+| ├─ `extractAttachments` | `message.payload.parts` | 添付ファイル部分抽出 | List<MessagePart> | MIMEパート解析 |
+| ├─ Loop `attachments` | `part` | 各添付ファイルの処理 | | |
+| │  ├─ Validation | `part.filename` | ファイル名パターンマッチ |  Boolean | 正規表現 |
+| │  ├─ `gmail.users().messages().attachments().get` | `messageId, attachmentId` | 添付データ取得 | MessagePartBody | |
+| │  ├─ `decodeBase64UrlSafe` | `attachmentData` | Base64デコード | ByteArray | |
+| │  ├─ `File(savePath, filename)` | `path, name` | 保存先ファイル作成 | File | ディレクトリ存在確認 |
+| │  └─ `FileOutputStream.write` | `decodedData` | ファイル書き込み | Unit | ストレージ容量 |
+| └─ Error Handling | `Exception` | try-catch | ExecutionResult(false) | ログ記録 |
+
 ### 4.2 Drive API - ファイルアップロード
 
 | 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
@@ -125,6 +174,60 @@
 | ├─ `drive.files().create` | `fileMetadata, mediaContent` | Drive API呼び出し | File | ストレージ容量 |
 | └─ Error Handling | `Exception` | try-catch | ExecutionResult(false) | ログ記録 |
 
+### 4.2.1 Drive API - ファイルダウンロード
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **DriveDownloadModule.executeInternal** | `fileId, savePath` | Driveダウンロード | `ExecutionResult` | |
+| ├─ **GoogleApiAuthorizer.getCredential** | `[DriveReadOnly]` | OAuth2資格情報取得 | Credential | |
+| ├─ `Drive.Builder` | `credential` | DriveServiceインスタンス生成 | Drive | |
+| ├─ `drive.files().get(fileId)` | `fileId` | ファイルメタデータ取得 | File | ファイル存在確認 |
+| ├─ `drive.files().get(fileId).executeMediaAndDownloadTo` | `outputStream` | ファイル内容ダウンロード | Unit | |
+| ├─ `File(savePath, fileName)` | `path, name` | 保存先ファイル作成 | File | ディレクトリ存在確認 |
+| ├─ `FileOutputStream` | `file` | ファイル出力ストリーム | FileOutputStream | |
+| └─ Error Handling | `Exception` | try-catch | ExecutionResult(false) | ログ記録 |
+
+### 4.2.2 Drive API - フォルダ作成
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **DriveCreateFolderModule.executeInternal** | `folderName, parentFolderId?` | Driveフォルダ作成 | `ExecutionResult` | |
+| ├─ **GoogleApiAuthorizer.getCredential** | `[DriveFullAccess]` | OAuth2資格情報取得 | Credential | |
+| ├─ `Drive.Builder` | `credential` | DriveServiceインスタンス生成 | Drive | |
+| ├─ `com.google.api.services.drive.model.File` | `metadata` | フォルダメタデータ設定 | File | |
+| │  ├─ `setName(folderName)` | `name` | フォルダ名 | Unit | |
+| │  ├─ `setMimeType("application/vnd.google-apps.folder")` | None | フォルダタイプ設定 | Unit | |
+| │  └─ `setParents(listOf(parentFolderId))` | `parentFolderId` | 親フォルダID | Unit | オプション |
+| ├─ `drive.files().create(folderMetadata)` | `metadata` | Drive API呼び出し | File | |
+| ├─ `context.setVariable("folderId", result.id)` | `folderId` | フォルダIDを保存 | Unit | 次モジュールで利用可能 |
+| └─ Error Handling | `Exception` | try-catch | ExecutionResult(false) | ログ記録 |
+
+### 4.2.3 Drive API - ファイル検索
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **DriveSearchModule.executeInternal** | `query, maxResults?` | Driveファイル検索 | `ExecutionResult` | |
+| ├─ **GoogleApiAuthorizer.getCredential** | `[DriveReadOnly]` | OAuth2資格情報取得 | Credential | |
+| ├─ `Drive.Builder` | `credential` | DriveServiceインスタンス生成 | Drive | |
+| ├─ `drive.files().list()` | None | ファイルリストリクエスト | FileList | |
+| │  ├─ `setQ(query)` | `query` | 検索クエリ設定 | Request | Drive検索構文 |
+| │  ├─ `setPageSize(maxResults ?: 10)` | `maxResults` | 取得件数制限 | Request | 1-1000 |
+| │  ├─ `setFields("files(id, name, mimeType, createdTime)")` | None | レスポンスフィールド指定 | Request | 効率化 |
+| │  └─ `setOrderBy("createdTime desc")` | None | ソート順設定 | Request | |
+| ├─ `execute()` | None | API実行 | FileList | |
+| ├─ `context.setVariable("searchResults", fileList)` | `fileList` | 検索結果を保存 | Unit | 次モジュールで利用可能 |
+| └─ Error Handling | `Exception` | try-catch | ExecutionResult(false) | ログ記録 |
+
+### 4.2.4 Drive API - ファイル移動
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **DriveMoveFileModule.executeInternal** | `sourceFileUrl, destinationFolderUrl` | Driveファイル移動 | `ExecutionResult` | |
+| ├─ `extractFileId` | `sourceFileUrl` | ファイルID抽出 | String | Regex |
+| ├─ `extractFileId` | `destinationFolderUrl` | フォルダID抽出 | String | Regex |
+| ├─ **DriveApiService.moveFile** | `fileId, folderId` | Drive API呼び出し | Unit | |
+| └─ Error Handling | `Exception` | try-catch | ExecutionResult(false) | ログ記録 |
+
 ### 4.3 Sheets API - データ追記
 
 | 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
@@ -136,6 +239,31 @@
 | ├─ `ValueRange` | `values` | データレンジ作成 | ValueRange | |
 | ├─ `sheets.spreadsheets().values().append` | `spreadsheetId, range, valueRange` | Sheets API呼び出し | AppendValuesResponse | スプレッドシート権限 |
 | │\u0026nbsp;\u0026nbsp;└─ `setValueInputOption("USER_ENTERED")` | None | 数式解釈 | Request | |
+| └─ Error Handling | `Exception` | try-catch | ExecutionResult(false) | ログ記録 |
+
+### 4.3.1 Sheets API - セル更新
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **SheetsUpdateModule.executeInternal** | `spreadsheetId, range, values` | Sheetsセル更新 | `ExecutionResult` | |
+| ├─ **GoogleApiAuthorizer.getCredential** | `[SheetsFullAccess]` | OAuth2資格情報取得 | Credential | |
+| ├─ `Sheets.Builder` | `credential` | SheetsServiceインスタンス生成 | Sheets | |
+| ├─ Validation | `values` | `values.isNotEmpty()` | Boolean | 空データ拒否 |
+| ├─ `ValueRange` | `values` | データレンジ作成 | ValueRange | |
+| ├─ `sheets.spreadsheets().values().update` | `spreadsheetId, range, valueRange` | Sheets API呼び出し | UpdateValuesResponse | スプレッドシート権限 |
+| │  └─ `setValueInputOption("USER_ENTERED")` | None | 数式解釈 | Request | |
+| └─ Error Handling | `Exception` | try-catch | ExecutionResult(false) | ログ記録 |
+
+### 4.3.2 Sheets API - データ取得
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **SheetsGetModule.executeInternal** | `spreadsheetId, range` | Sheetsデータ取得 | `ExecutionResult` | |
+| ├─ **GoogleApiAuthorizer.getCredential** | `[SheetsReadOnly]` | OAuth2資格情報取得 | Credential | |
+| ├─ `Sheets.Builder` | `credential` | SheetsServiceインスタンス生成 | Sheets | |
+| ├─ `sheets.spreadsheets().values().get` | `spreadsheetId, range` | Sheets API呼び出し | ValueRange | スプレッドシート権限 |
+| ├─ `result.getValues()` | None | データ行のリスト取得 | List<List<Object>> | Null安全性 |
+| ├─ `context.setVariable("sheetData", data)` | `data` | 実行コンテキストへ保存 | Unit | 次モジュールで利用可能 |
 | └─ Error Handling | `Exception` | try-catch | ExecutionResult(false) | ログ記録 |
 
 ### 4.4 Calendar API - イベント作成
@@ -151,6 +279,23 @@
 | │\u0026nbsp;\u0026nbsp;│\u0026nbsp;\u0026nbsp;├─ `setStart(EventDateTime)` | `start` | 開始時刻 | Unit | DateTime形式検証 |
 | │\u0026nbsp;\u0026nbsp;│\u0026nbsp;\u0026nbsp;└─ `setEnd(EventDateTime)` | `end` | 終了時刻 | Unit | start < end検証 |
 | │\u0026nbsp;\u0026nbsp;└─ `calendar.events().insert` | `"primary", event` | Calendar API呼び出し | Event | カレンダー権限 |
+| └─ Error Handling | `Exception` | try-catch | ExecutionResult(false) | ログ記録 |
+
+### 4.4.1 Calendar API - イベント取得
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **CalendarGetEventsModule.executeInternal** | `timeMin, timeMax, maxResults?` | カレンダーイベント取得 | `ExecutionResult` | |
+| ├─ **GoogleApiAuthorizer.getCredential** | `[CalendarReadOnly]` | OAuth2資格情報取得 | Credential | |
+| ├─ `Calendar.Builder` | `credential` | CalendarServiceインスタンス生成 | Calendar | |
+| ├─ `calendar.events().list("primary")` | `calendarId = "primary"` | イベントリストリクエスト | Events | |
+| │  ├─ `setTimeMin(DateTime(timeMin))` | `timeMin` | 開始時刻設定 | Request | |
+| │  ├─ `setTimeMax(DateTime(timeMax))` | `timeMax` | 終了時刻設定 | Request | |
+| │  ├─ `setMaxResults(maxResults ?: 10)` | `maxResults` | 取得件数制限 | Request | 1-2500 |
+| │  ├─ `setSingleEvents(true)` | None | 繰り返しイベント展開 | Request | |
+| │  └─ `setOrderBy("startTime")` | None | 開始時刻順ソート | Request | |
+| ├─ `execute()` | None | API実行 | Events | クォータ制限 |
+| ├─ `context.setVariable("calendarEvents", eventList)` | `eventList` | 実行コンテキストへ保存 | Unit | 次モジュールで利用可能 |
 | └─ Error Handling | `Exception` | try-catch | ExecutionResult(false) | ログ記録 |
 
 ### 4.5 Chat API - メッセージ送信
@@ -171,6 +316,98 @@
 | │\u0026nbsp;\u0026nbsp;├─ `connection.responseCode` | None | レスポンス確認 | Int | 200-299成功 |
 | │\u0026nbsp;\u0026nbsp;└─ Error Stream | `errorStream` | エラー詳細取得 | String | ログ記録 |
 | └─ Error Handling | `Exception` | try-catch | ExecutionResult(false) | ログ記録 |
+
+---
+
+## 6. ユーティリティモジュール (Utility Modules)
+
+### 6.1 条件分岐 (If/Else)
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **IfElseModule.executeInternal** | `condition, trueModuleId?, falseModuleId?` | 条件分岐評価 | `ExecutionResult` | |
+| ├─ `evaluateCondition` | `condition` | 式の評価 (JavaScript/Kotlin Script) | Boolean | 構文エラー処理 |
+| ├─ Conditional | `result == true` | 分岐先決定 | String? (ModuleID) | |
+| ├─ `context.setNextModuleId` | `moduleId` | 次に実行するモジュールを指定 | Unit | フロー制御 |
+| └─ `ExecutionResult` | `success=true` | 実行結果返却 | ExecutionResult | |
+
+### 6.2 待機 (Delay)
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **DelayModule.executeInternal** | `duration, unit` | 指定時間の待機 | `ExecutionResult` | |
+| ├─ `calculateMillis` | `duration, unit` | ミリ秒換算 | Long | |
+| ├─ `Thread.sleep` / `delay` | `millis` | スレッド停止 (Coroutine delay) | Unit | キャンセル対応 |
+| └─ `ExecutionResult` | `success=true` | 実行結果返却 | ExecutionResult | |
+
+### 6.5 ログ出力 (Log Message)
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **LogMessageModule.executeInternal** | `message` | ログメッセージの出力 | `ExecutionResult` | |
+| ├─ `context.resolveVariables` | `message` | 変数展開 | String | |
+| └─ `ExecutionResult` | `success=true, output=message` | 結果返却 (UIログに表示) | ExecutionResult | |
+
+### 6.3 繰り返し (Loop/For Each)
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **ForEachModule.executeInternal** | `items, variableName` | リストの繰り返し処理 | `ExecutionResult` | |
+| ├─ `context.getVariable(items)` | `items` | 対象リストの取得 | List<Any> | 型チェック |
+| ├─ `Loop Control` | `index, item` | イテレーション管理 | | |
+| │  ├─ `context.setVariable(variableName, item)` | `item` | 現在の要素を変数に設定 | Unit | |
+| │  └─ `executeChildModules` | `childModules` | 内部モジュールの実行 | ExecutionResult | 再帰的実行 |
+| └─ `ExecutionResult` | `success=true` | 実行結果返却 | ExecutionResult | |
+
+### 6.4 データ操作 (Data Manipulation)
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **DataTransformModule.executeInternal** | `operation, input, outputVariable` | データの変換・加工 | `ExecutionResult` | |
+| ├─ `performOperation` | `operation` | 操作の実行 | Any | |
+| │  ├─ `JSON Parse` | `input` | 文字列→JSONオブジェクト | JSONObject | |
+| │  ├─ `Regex Extract` | `input, pattern` | 正規表現抽出 | String | |
+| │  └─ `Math Calc` | `expression` | 数式計算 | Number | |
+| ├─ `context.setVariable(outputVariable, result)` | `result` | 結果の保存 | Unit | |
+| └─ `ExecutionResult` | `success=true` | 実行結果返却 | ExecutionResult | |
+
+### 6.5 変数定義 (Define Variable)
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **DefineVariableModule.executeInternal** | `variableName, value` | 変数定義 | `ExecutionResult` | |
+| ├─ `context.resolveVariables` | `value` | 変数展開 | String | |
+| ├─ `context.setVariable(variableName, value)` | `value` | 変数保存 | Unit | |
+| └─ `ExecutionResult` | `success=true` | 実行結果返却 | ExecutionResult | |
+
+### 6.6 相対日付取得 (Get Relative Date)
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **GetRelativeDateModule.executeInternal** | `baseDate, offsetValue, offsetUnit, outputVariableName` | 日付計算 | `ExecutionResult` | |
+| ├─ `LocalDate.parse` / `LocalDate.now` | `baseDate` | 基準日決定 | LocalDate | ISO_LOCAL_DATE |
+| ├─ `ChronoUnit` | `offsetUnit` | 単位変換 | ChronoUnit | DAYS/WEEKS/MONTHS/YEARS |
+| ├─ `baseDate.plus` | `offsetValue, unit` | 日付加算 | LocalDate | |
+| ├─ `context.setVariable` | `formattedDate` | 結果保存 | Unit | |
+| └─ `ExecutionResult` | `success=true` | 実行結果返却 | ExecutionResult | |
+
+### 6.7 ログ出力 (Log Message)
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **LogMessageModule.executeInternal** | `message` | ログ出力 | `ExecutionResult` | |
+| ├─ `context.resolveVariables` | `message` | 変数展開 | String | |
+| └─ `ExecutionResult` | `success=true, output=message` | 実行結果返却 | ExecutionResult | |
+
+### 6.8 Toast通知 (Show Toast)
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **ToastNotificationModule.executeInternal** | `message` | Toast表示 | `ExecutionResult` | |
+| ├─ `context.resolveVariables` | `message` | 変数展開 | String | |
+| ├─ `withContext(Dispatchers.Main)` | None | メインスレッド切り替え | Unit | |
+| │  └─ `Toast.makeText(...).show()` | `message` | Toast表示 | Unit | |
+| └─ `ExecutionResult` | `success=true` | 実行結果返却 | ExecutionResult | |
 
 ---
 
@@ -273,11 +510,17 @@ val executor = executorMap[module.type]?.get()
 | **GWSAutoForAndroidTheme** | `theme: String, highlightColor: String` | Material Theme設定 | @Composable | |
 | ├─ `isDarkTheme` | `theme` | "Light"/"Dark"/"System"判定 | Boolean | システム設定考慮 |
 | ├─ `baseColorScheme` | `isDarkTheme` | DarkColorScheme/LightColorScheme選択 | ColorScheme | |
+
 | └─ **highlightColorカラースキーム適用** | `highlightColor` | primaryカラーのオーバーライド | ColorScheme | |
 | &nbsp;&nbsp;&nbsp;├─ `"forest"` | None | ForestPrimaryDark/Light適用 | ColorScheme.copy() | |
 | &nbsp;&nbsp;&nbsp;├─ `"ocean"` | None | OceanPrimaryDark/Light適用 | ColorScheme.copy() | |
 | &nbsp;&nbsp;&nbsp;├─ `"sakura"` | None | SakuraPrimaryDark/Light適用 | ColorScheme.copy() | |
 | &nbsp;&nbsp;&nbsp;└─ `"default"` | None | DefaultPrimaryDark/Light適用 | ColorScheme.copy() | Sharp Neon |
+
+### 6.2.1 テーマ変更時のクラッシュ対策
+
+- **課題**: テーマや言語変更時に`AppCompatDelegate.setDefaultNightMode`や`setApplicationLocales`が呼ばれるとActivityが再生成されるが、Composeの`ExposedDropdownMenu`が開いたままだと`PopupLayout`がWindowからデタッチされた状態で更新を行おうとしてクラッシュする (`IllegalArgumentException: View not attached to window manager`)。
+- **解決策**: `AppSettingsScreen`において、テーマ・言語設定の保存処理に`300ms`の遅延を入れることで、ドロップダウンメニューが閉じてからActivity再生成が行われるように制御。
 
 ### 6.3 Compose UI での clickable 修飾子処理
 
@@ -303,10 +546,15 @@ val executor = executorMap[module.type]?.get()
 abstract class WorkflowModule {
     @Binds
     @IntoMap
-    @StringKey("gmail_send")
-    abstract fun bindGmailSendModule(executor: GmailSendModuleExecutor): ModuleExecutor
+    @StringKey("gmail_send_email")
+    abstract fun bindGmailSendEmailModule(impl: GmailSendEmailModule): ModuleExecutor
     
-    // ... 19個のModuleExecutor bindings
+    @Binds
+    @IntoMap
+    @StringKey("SHOW_TOAST")
+    abstract fun bindToastNotificationModule(impl: ToastNotificationModule): ModuleExecutor
+
+    // ... 他のModuleExecutor bindings
 }
 ```
 

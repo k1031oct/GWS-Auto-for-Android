@@ -9,4 +9,8 @@ class ModuleExecutorProvider @Inject constructor(
     fun get(type: String): ModuleExecutor? {
         return executors[type]?.get()
     }
+
+    fun getAvailableTypes(): Set<String> {
+        return executors.keys
+    }
 }

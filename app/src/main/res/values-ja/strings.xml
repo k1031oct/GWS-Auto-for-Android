@@ -21,19 +21,6 @@
     <string name="all_schedules_title">すべてのスケジュール</string>
     <string name="title_user_info">ユーザー情報</string>
     <string name="title_account_connections">アカウント連携</string>
-    <string name="title_app_settings">アプリケーション設定</string>
-    <string name="title_about_app">このアプリについて</string>
-
-    <!-- Dialogs -->
-    <string name="exit_confirmation_title">終了確認</string>
-    <string name="exit_confirmation_message">アプリを終了しますか？</string>
-    <string name="exit">終了</string>
-    <string name="cancel">キャンセル</string>
-    <string name="delete">削除</string>
-    <string name="delete_tag_confirmation">タグを削除しますか？</string>
-    <string name="delete_history_confirmation">履歴を削除しますか？</string>
-    <string name="clear_history_confirmation_title">履歴の消去</string>
-    <string name="clear_history_confirmation_message">本当にすべての実行履歴を消去しますか？</string>
     <string name="clear_search_history_confirmation">検索履歴を消去しますか？</string>
     <string name="add_tag_title">新しいタグを追加</string>
     <string name="tag_name_hint">タグ名</string>
@@ -182,7 +169,6 @@
     <string name="schedule_select_dates">日付を選択 (複数選択可)</string>
     <string name="schedule_date_label">日付</string>
     <string name="save">保存</string>
-    <string name="ok">OK</string>
 
     <!-- Weekdays short -->
     <string name="weekday_mon_short">月</string>
@@ -269,7 +255,6 @@
     <string name="clear_all">すべて消去</string>
     <string name="history_cleared">すべての履歴を消去しました</string>
     <string name="set_parameters_title">%1$s のパラメータ設定</string>
-    <string name="ok">OK</string>
     <string name="schedule_hourly_format">%1$d時間毎</string>
     <string name="schedule_daily_format">日毎 %1$s</string>
     <string name="schedule_weekly_format">週毎 %1$s %2$s</string>
@@ -315,4 +300,19 @@
     <string name="invoice_list_caption">最近の請求書一覧です。</string>
     <string name="airplane_mode">機内モード</string>
     <string name="value_format">値: %.2f</string>
+    <!-- ModuleSettingsDialogFragment -->
+    <string name="file_info_resolve_failed">ファイル情報の解決に失敗しました。</string>
+    <string name="not_signed_in">サインインしていません。</string>
+    <string name="sheet_name_fetch_failed">シート名の取得に失敗しました。</string>
+    <string name="please_sign_in_first">まずユーザー情報設定からサインインしてください。</string>
+    <!-- ScheduleSettingsScreen -->
+    <string name="hourly_interval_format">間隔: %1$d 時間</string>
+    <string name="execute_next_day_on_holiday">祝日の場合は翌日に実行</string>
+    <string name="yearly_date_format">%1$d月 %2$d日</string>
+    <!-- DashboardScreen -->
+    <string name="usage_count_format">使用回数: %1$d 回</string>
+    <string name="error_count_format">エラー: %1$d</string>
+    <!-- SignInActivity -->
+    <string name="firebase_auth_failed">Firebase認証に失敗しました。</string>
+    <!-- XML Layouts -->
 </resources>

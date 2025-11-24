@@ -73,7 +73,7 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
     private fun handleFileSelection(uri: Uri, key: String) {
         val (fileId, fileName) = getFileInfoFromUri(uri)
         if (fileId == null || fileName == null) {
-            Toast.makeText(requireContext(), "ファイル情報の解決に失敗しました。", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.file_info_resolve_failed), Toast.LENGTH_SHORT).show()
             return
         }
         selectedFiles[key] = Pair(fileId, fileName)
@@ -294,7 +294,7 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
             try {
                 val account = GoogleSignIn.getLastSignedInAccount(requireContext())
                 if (account == null) {
-                    withContext(Dispatchers.Main) { Toast.makeText(requireContext(), "サインインしていません。", Toast.LENGTH_SHORT).show() }
+                    withContext(Dispatchers.Main) { Toast.makeText(requireContext(), getString(R.string.not_signed_in), Toast.LENGTH_SHORT).show() }
                     return@launch
                 }
                 val credential = GoogleAccountCredential.usingOAuth2(requireContext(), listOf(SheetsScopes.SPREADSHEETS_READONLY))
@@ -311,7 +311,7 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
                 }
             } catch (e: Exception) {
                 Timber.e(e, "シート名の取得エラー")
-                withContext(Dispatchers.Main) { Toast.makeText(requireContext(), "シート名の取得に失敗しました。", Toast.LENGTH_SHORT).show() }
+                withContext(Dispatchers.Main) { Toast.makeText(requireContext(), getString(R.string.sheet_name_fetch_failed), Toast.LENGTH_SHORT).show() }
             }
         }
     }
@@ -356,7 +356,7 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
     
     private fun openPicker(key: String, mimeType: String) {
         if (GoogleSignIn.getLastSignedInAccount(requireContext()) == null) {
-            Toast.makeText(requireContext(), "まずユーザー情報設定からサインインしてください。", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), getString(R.string.please_sign_in_first), Toast.LENGTH_LONG).show()
             return
         }
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply {

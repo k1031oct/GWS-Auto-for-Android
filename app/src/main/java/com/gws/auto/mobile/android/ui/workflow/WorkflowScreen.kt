@@ -77,12 +77,12 @@ fun WorkflowScreen(
                         showDeleteWorkflowDialog = null
                     }
                 ) {
-                    Text("削除")
+                    Text(stringResource(R.string.delete))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteWorkflowDialog = null }) {
-                    Text("キャンセル")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )
@@ -100,12 +100,12 @@ fun WorkflowScreen(
                         showDeleteFolderDialog = null
                     }
                 ) {
-                    Text("削除")
+                    Text(stringResource(R.string.delete))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteFolderDialog = null }) {
-                    Text("キャンセル")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )

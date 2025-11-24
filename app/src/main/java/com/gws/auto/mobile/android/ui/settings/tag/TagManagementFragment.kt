@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gws.auto.mobile.android.databinding.FragmentTagManagementBinding
 import com.gws.auto.mobile.android.domain.model.Tag
+import com.gws.auto.mobile.android.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -105,7 +106,10 @@ class TagManagementFragment : Fragment() {
                     "forest" -> if (isDarkTheme) ForestPrimaryDark else ForestPrimaryLight
                     "ocean" -> if (isDarkTheme) OceanPrimaryDark else OceanPrimaryLight
                     "sakura" -> if (isDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight
-                    else -> if (isDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight
+                    else -> {
+                        val colorRes = if (isDarkTheme) R.color.DefaultPrimaryDark else R.color.DefaultPrimaryLight
+                        androidx.compose.ui.graphics.Color(androidx.core.content.ContextCompat.getColor(requireContext(), colorRes))
+                    }
                 }
                 binding.addTagButton.backgroundTintList = ColorStateList.valueOf(color.toArgb())
             }

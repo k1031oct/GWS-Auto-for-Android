@@ -61,6 +61,8 @@ class WorkflowFragment : Fragment() {
                                     try {
                                         workflowEngine.executeWorkflow(workflow.id)
                                         Timber.d("Workflow execution requested: ${workflow.name}")
+                                    } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
+                                        e.intent?.let { startActivity(it) }
                                     } catch (e: Exception) {
                                         Timber.e(e, "Failed to execute workflow: ${workflow.name}")
                                     }

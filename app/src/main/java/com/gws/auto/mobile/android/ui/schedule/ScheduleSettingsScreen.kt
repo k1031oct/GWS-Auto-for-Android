@@ -100,7 +100,7 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel, onSave: () -> U
                 }) { Text("OK") }
             },
             dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) { Text("キャンセル") }
+                TextButton(onClick = { showDatePicker = false }) { Text(stringResource(R.string.cancel)) }
             }
         ) {
             DatePicker(state = datePickerState)
@@ -129,7 +129,7 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel, onSave: () -> U
                         readOnly = true,
                         value = workflows.find { wf -> wf.id == uiState.selectedWorkflowId }?.name ?: "",
                         onValueChange = {},
-                        label = { Text("ワークフロー") },
+                        label = { Text(stringResource(R.string.schedule_workflow_label)) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isWorkflowMenuExpanded) },
                     )
                     ExposedDropdownMenu(
@@ -161,7 +161,7 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel, onSave: () -> U
                         readOnly = true,
                         value = uiState.scheduleType,
                         onValueChange = {},
-                        label = { Text("繰り返し") },
+                        label = { Text(stringResource(R.string.schedule_repeat_label)) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isScheduleTypeMenuExpanded) },
                     )
                     ExposedDropdownMenu(
@@ -187,7 +187,7 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel, onSave: () -> U
                 // --- Conditional UI ---
                 when (uiState.scheduleType) {
                     "時間毎" -> {
-                        Text("間隔: ${uiState.hourlyInterval} 時間")
+                        Text(stringResource(R.string.hourly_interval_format, uiState.hourlyInterval))
                         Slider(
                             value = uiState.hourlyInterval.toFloat(),
                             onValueChange = { value -> viewModel.setHourlyInterval(value.toInt()) },
@@ -209,11 +209,11 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel, onSave: () -> U
                                 onCheckedChange = { viewModel.toggleSkipHolidays() }
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("祝日の場合は翌日に実行", style = MaterialTheme.typography.bodyMedium)
+                            Text(stringResource(R.string.execute_next_day_on_holiday), style = MaterialTheme.typography.bodyMedium)
                         }
                     }
                     "週毎" -> {
-                        Text("曜日を選択")
+                        Text(stringResource(R.string.schedule_select_days))
                         Spacer(modifier = Modifier.height(8.dp))
                         // Single row with all weekdays
                         Row(
@@ -312,12 +312,12 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel, onSave: () -> U
                                 onCheckedChange = { viewModel.toggleSkipHolidays() }
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("祝日の場合は翌日に実行", style = MaterialTheme.typography.bodyMedium)
+                            Text(stringResource(R.string.execute_next_day_on_holiday), style = MaterialTheme.typography.bodyMedium)
                         }
                     }
                     "月毎" -> {
                         var isMonthlyDayMenuExpanded by remember { mutableStateOf(false) }
-                        Text("日付を選択 (複数選択可)")
+                        Text(stringResource(R.string.schedule_select_dates))
                         ExposedDropdownMenuBox(
                             expanded = isMonthlyDayMenuExpanded,
                             onExpandedChange = { isMonthlyDayMenuExpanded = !isMonthlyDayMenuExpanded },
@@ -327,7 +327,7 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel, onSave: () -> U
                                 readOnly = true,
                                 value = uiState.monthlyDays.sorted().joinToString(", "),
                                 onValueChange = {},
-                                label = { Text("日付") },
+                                label = { Text(stringResource(R.string.schedule_date_label)) },
                                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isMonthlyDayMenuExpanded) },
                             )
                             ExposedDropdownMenu(
@@ -363,12 +363,12 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel, onSave: () -> U
                                 onCheckedChange = { viewModel.toggleSkipHolidays() }
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("祝日の場合は翌日に実行", style = MaterialTheme.typography.bodyMedium)
+                            Text(stringResource(R.string.execute_next_day_on_holiday), style = MaterialTheme.typography.bodyMedium)
                         }
                     }
                     "年毎" -> {
                         OutlinedButton(onClick = { showDatePicker = true }, modifier = Modifier.fillMaxWidth()) {
-                            Text("${uiState.yearlyMonth}月 ${uiState.yearlyDayOfMonth}日")
+                            Text(stringResource(R.string.yearly_date_format, uiState.yearlyMonth, uiState.yearlyDayOfMonth))
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         OutlinedButton(onClick = { showTimePicker = true }, modifier = Modifier.fillMaxWidth()) {
@@ -381,14 +381,14 @@ fun ScheduleSettingsScreen(viewModel: ScheduleSettingsViewModel, onSave: () -> U
 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     OutlinedButton(onClick = onCancel) {
-                        Text("キャンセル")
+                        Text(stringResource(R.string.cancel))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
                         onClick = { viewModel.saveSchedule(); onSave() },
                         enabled = uiState.selectedWorkflowId.isNotBlank()
                     ) {
-                        Text("保存")
+                        Text(stringResource(R.string.save))
                     }
                 }
             }
@@ -411,7 +411,7 @@ fun TimePickerDialog(onDismissRequest: () -> Unit, onConfirm: () -> Unit, conten
                 content()
                 Spacer(modifier = Modifier.height(24.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    TextButton(onClick = onDismissRequest) { Text("キャンセル") }
+                    TextButton(onClick = onDismissRequest) { Text(stringResource(R.string.cancel)) }
                     Spacer(modifier = Modifier.width(8.dp))
                     TextButton(onClick = onConfirm) { Text("OK") }
                 }

@@ -1,0 +1,22 @@
+{
+    "actionButtons": {
+        "defaultColor": "#ff0034",
+        "reloadButton": "♻️",
+        "commands": [
+            {
+                "cwd": "${workspaceFolder}",
+                "name": "Deploy",
+                "color": "white",
+                "singleInstance": true,
+                "command": "bundle exec fastlane distribute"
+            },
+            {
+                "cwd": "${workspaceFolder}",
+                "name": "Run on Pixel 8",
+                "color": "#3DDC84",
+                "singleInstance": true,
+                "command": "powershell -ExecutionPolicy Bypass -File \"${workspaceFolder}/scripts/run-on-pixel8.ps1\""
+            }
+        ]
+    }
+}

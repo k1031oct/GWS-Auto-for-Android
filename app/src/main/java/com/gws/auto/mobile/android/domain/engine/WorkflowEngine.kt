@@ -39,11 +39,25 @@ interface WorkflowEngine {
 class LocalWorkflowEngine @Inject constructor(
     private val moduleExecutorProvider: ModuleExecutorProvider,
     private val historyRepository: HistoryRepository,
-    private val workflowRepository: WorkflowRepository
+    private val workflowRepository: WorkflowRepository,
+    private val logMessageModule: com.gws.auto.mobile.android.domain.engine.modules.LogMessageModule
 ) : WorkflowEngine {
 
     override suspend fun executeWorkflow(workflowId: String) {
-        val workflow = workflowRepository.getWorkflowById(workflowId) ?: return
+        val workflow = workflowRepository.getWorkflowById(workflowId)
+        if (workflow == null) {
+            val errorMsg = "Workflow not found: $workflowId"
+            Timber.e(errorMsg)
+            val history = History(
+                workflowId = workflowId,
+                workflowName = "Unknown",
+                executedAt = Date(),
+                status = "Failure",
+                logs = "ERROR: $errorMsg"
+            )
+            historyRepository.insertHistory(history)
+            return
+        }
         val modules = workflow.modules
         val executionStartTime = Date()
         val logBuilder = StringBuilder()
@@ -59,11 +73,16 @@ class LocalWorkflowEngine @Inject constructor(
                 }
 
                 val context = ExecutionContext(module, variables)
-                val executor = moduleExecutorProvider.get(module.type)
+                var executor = moduleExecutorProvider.get(module.type)
+
+                if (executor == null && module.type == "LOG_MESSAGE") {
+                    executor = logMessageModule
+                }
 
                 if (executor == null) {
                     val errorMsg = "No executor found for module type: ${module.type}"
                     Timber.e(errorMsg)
+                    Timber.e("Available module types: ${moduleExecutorProvider.getAvailableTypes().joinToString(", ")}")
                     logBuilder.append("ERROR: $errorMsg\n")
                     status = "Failure"
                     break
@@ -78,6 +97,10 @@ class LocalWorkflowEngine @Inject constructor(
                         status = "Failure"
                         break
                     }
+                } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
+                    status = "Failure"
+                    logBuilder.append("ERROR: Need remote consent - ${e.message}\n")
+                    throw e
                 } catch (e: Exception) {
                     val errorMsg = "Exception during module execution: ${module.type}"
                     Timber.e(e, errorMsg)
@@ -103,7 +126,11 @@ class LocalWorkflowEngine @Inject constructor(
     override suspend fun executeSingleModule(module: Module): ExecutionResult {
         val variables = mutableMapOf<String, Any>() // Empty context for single execution
         val context = ExecutionContext(module, variables)
-        val executor = moduleExecutorProvider.get(module.type)
+        var executor = moduleExecutorProvider.get(module.type)
+
+        if (executor == null && module.type == "LOG_MESSAGE") {
+            executor = logMessageModule
+        }
 
         if (executor == null) {
             val errorMsg = "No executor found for module type: ${module.type}"

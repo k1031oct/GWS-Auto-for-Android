@@ -31,12 +31,12 @@ abstract class WorkflowModule {
     // Google Sheets
     @Binds
     @IntoMap
-    @StringKey("copy_paste_sheet_values")
+    @StringKey("COPY_PASTE_SHEET_VALUES")
     abstract fun bindCopyPasteSheetValuesModule(impl: CopyPasteSheetValuesModule): ModuleExecutor
 
     @Binds
     @IntoMap
-    @StringKey("duplicate_spreadsheet")
+    @StringKey("DUPLICATE_SPREADSHEET")
     abstract fun bindDuplicateSpreadsheetModule(impl: DuplicateSpreadsheetModule): ModuleExecutor
 
     @Binds
@@ -62,7 +62,7 @@ abstract class WorkflowModule {
     // Gmail
     @Binds
     @IntoMap
-    @StringKey("create_gmail_draft")
+    @StringKey("CREATE_GMAIL_DRAFT")
     abstract fun bindCreateGmailDraftModule(impl: CreateGmailDraftModule): ModuleExecutor
 
     @Binds
@@ -83,6 +83,27 @@ abstract class WorkflowModule {
 
     @Binds
     @IntoMap
-    @StringKey("toast_notification")
+    @StringKey("drive_move_file")
+    abstract fun bindDriveMoveFileModule(impl: DriveMoveFileModule): ModuleExecutor
+
+    // Core
+    @Binds
+    @IntoMap
+    @StringKey("DEFINE_VARIABLE")
+    abstract fun bindDefineVariableModule(impl: DefineVariableModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("GET_RELATIVE_DATE")
+    abstract fun bindGetRelativeDateModule(impl: GetRelativeDateModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("SHOW_TOAST")
     abstract fun bindToastNotificationModule(impl: ToastNotificationModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("LOG_MESSAGE")
+    abstract fun bindLogMessageModule(impl: LogMessageModule): ModuleExecutor
 }

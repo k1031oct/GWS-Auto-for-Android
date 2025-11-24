@@ -51,7 +51,7 @@ fun AppSheetPreview() {
                 drawerState = drawerState,
                 sheetContent = {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text("Sheet Content")
+                        Text(stringResource(R.string.sheet_content))
                         Spacer(modifier = Modifier.height(16.dp))
                         AppButton(onClick = { scope.launch { drawerState.close() } }, text = stringResource(R.string.close_sheet))
                     }

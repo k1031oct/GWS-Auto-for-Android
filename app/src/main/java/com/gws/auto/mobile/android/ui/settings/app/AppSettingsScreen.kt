@@ -24,6 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.gws.auto.mobile.android.R
+import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -271,7 +272,11 @@ private fun SettingsSection(
             valueMapper = languageValues,
             onSelectionChanged = { value ->
                 language = value
-                scope.launch { settingsRepository.saveLanguage(value) }
+                scope.launch {
+                    // Delay to allow dropdown to close before activity recreation
+                    kotlinx.coroutines.delay(300)
+                    settingsRepository.saveLanguage(value)
+                }
             }
         )
         
@@ -285,7 +290,11 @@ private fun SettingsSection(
             valueMapper = themeValues,
             onSelectionChanged = { value ->
                 theme = value
-                scope.launch { settingsRepository.saveTheme(value) }
+                scope.launch {
+                    // Delay to allow dropdown to close before activity recreation
+                    kotlinx.coroutines.delay(300)
+                    settingsRepository.saveTheme(value)
+                }
             }
         )
         

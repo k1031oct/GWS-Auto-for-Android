@@ -70,6 +70,8 @@ class ChatApiService @Inject constructor(private val googleApiAuthorizer: Google
                     Timber.e("Failed to post message. Response code: $responseCode, Error: $errorStream")
                     false
                 }
+            } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
+                throw e
             } catch (e: Exception) {
                 Timber.e(e, "Failed to post message to Google Chat.")
                 false

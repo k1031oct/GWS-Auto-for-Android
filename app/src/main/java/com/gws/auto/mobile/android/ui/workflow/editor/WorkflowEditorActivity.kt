@@ -73,6 +73,7 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
         observeViewModel()
         observeViewModel()
         observeTags()
+        observeAvailableTags()
         observeTheme()
 
         binding.fabAddModule.visibility = View.GONE
@@ -226,16 +227,71 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
         val selectedTags = viewModel.selectedTags.value
         val suggestions = availableTags.filter { !selectedTags.contains(it) }
 
+        val container = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(
+                16f.dpToPx().toInt(),
+                16f.dpToPx().toInt(),
+                16f.dpToPx().toInt(),
+                16f.dpToPx().toInt()
+            )
+        }
+
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, suggestions)
         val textView = AutoCompleteTextView(this).apply {
             setAdapter(adapter)
             threshold = 1
             hint = getString(R.string.tag_name_hint)
+            layoutParams = android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+        container.addView(textView)
+
+        var dialog: AlertDialog? = null
+
+        if (suggestions.isNotEmpty()) {
+            val label = android.widget.TextView(this).apply {
+                text = "Saved Tags"
+                setTypeface(null, android.graphics.Typeface.BOLD)
+                setPadding(0, 32, 0, 16)
+            }
+            container.addView(label)
+
+            val chipGroup = com.google.android.material.chip.ChipGroup(this).apply {
+                layoutParams = android.widget.LinearLayout.LayoutParams(
+                    android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+            }
+
+            suggestions.forEach { tagName ->
+                val chip = layoutInflater.inflate(R.layout.list_item_tag, chipGroup, false) as Chip
+                chip.apply {
+                    text = tagName
+                    isCloseIconVisible = false
+                    isCheckable = false
+                    setOnClickListener {
+                        viewModel.addTagToWorkflow(tagName)
+                        dialog?.dismiss()
+                    }
+                    currentHighlightColor?.let { color ->
+                        // Apply simpler styling for selection chips
+                        val colorStateList = ColorStateList.valueOf(color)
+                        chipStrokeColor = colorStateList
+                        chipStrokeWidth = 1f.dpToPx()
+                        setTextColor(color)
+                    }
+                }
+                chipGroup.addView(chip)
+            }
+            container.addView(chipGroup)
         }
 
-        AlertDialog.Builder(this)
+        dialog = AlertDialog.Builder(this)
             .setTitle(R.string.add_tag_title)
-            .setView(textView)
+            .setView(container)
             .setPositiveButton(R.string.add) { _, _ ->
                 val tagName = textView.text.toString().trim()
                 if (tagName.isNotEmpty()) {
@@ -243,13 +299,32 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
                 }
             }
             .setNegativeButton(R.string.cancel, null)
-            .show()
+            .create()
+
+        dialog.show()
+    }
+
+    private fun Float.dpToPx(): Float {
+        return android.util.TypedValue.applyDimension(
+            android.util.TypedValue.COMPLEX_UNIT_DIP,
+            this,
+            resources.displayMetrics
+        )
     }
 
     private fun observeTags() {
         lifecycleScope.launch {
             viewModel.selectedTags.collectLatest { tags ->
                 updateTagChips(tags)
+            }
+        }
+    }
+
+    private fun observeAvailableTags() {
+        lifecycleScope.launch {
+            viewModel.availableTags.collectLatest { tags ->
+                // Just observing to keep the StateFlow active so viewModel.availableTags.value is fresh
+                Timber.d("Available tags updated: ${tags.size}")
             }
         }
     }

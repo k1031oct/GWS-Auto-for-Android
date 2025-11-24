@@ -45,4 +45,6 @@
     <color name="md_theme_light_inverseSurface">#121212</color>
     <color name="md_theme_light_inverseOnSurface">#FFFFFF</color>
     <color name="md_theme_light_inversePrimary">#616161</color>
+    <color name="DefaultPrimaryDark">#00695C</color>
+    <color name="DefaultPrimaryLight">#4DB6AC</color>
 </resources>
