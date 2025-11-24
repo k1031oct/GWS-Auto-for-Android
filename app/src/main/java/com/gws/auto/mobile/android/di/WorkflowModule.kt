@@ -101,9 +101,4 @@ abstract class WorkflowModule {
     @IntoMap
     @StringKey("SHOW_TOAST")
     abstract fun bindToastNotificationModule(impl: ToastNotificationModule): ModuleExecutor
-
-    @Binds
-    @IntoMap
-    @StringKey("LOG_MESSAGE")
-    abstract fun bindLogMessageModule(impl: LogMessageModule): ModuleExecutor
 }

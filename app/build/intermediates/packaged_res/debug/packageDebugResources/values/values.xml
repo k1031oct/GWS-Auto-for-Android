@@ -88,6 +88,8 @@
     <attr format="color" name="highlightColor"/>
     <color name="DefaultPrimaryDark">#00695C</color>
     <color name="DefaultPrimaryLight">#4DB6AC</color>
+    <color name="badge_background">#BDBDBD</color>
+    <color name="badge_scheduled_background">#80D8FF</color>
     <color name="black">#FF000000</color>
     <color name="chart_red">#F44336</color>
     <color name="grey_400">#BDBDBD</color>

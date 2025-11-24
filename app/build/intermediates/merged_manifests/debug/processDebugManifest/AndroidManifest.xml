@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gws.auto.mobile.android"
-    android:versionCode="437"
-    android:versionName="1.2.437" >
+    android:versionCode="439"
+    android:versionName="1.2.439" >
 
     <uses-sdk
         android:minSdkVersion="26"
@@ -216,25 +216,6 @@
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-
-        <provider
-            android:name="androidx.startup.InitializationProvider"
-            android:authorities="com.gws.auto.mobile.android.androidx-startup"
-            android:exported="false" >
-            <meta-data
-                android:name="androidx.work.WorkManagerInitializer"
-                android:value="androidx.startup" />
-            <meta-data
-                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-                android:value="androidx.startup" />
-            <meta-data
-                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-                android:value="androidx.startup" />
-            <meta-data
-                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-                android:value="androidx.startup" />
-        </provider>
-
         <service
             android:name="androidx.work.impl.background.systemjob.SystemJobService"
             android:directBootAware="false"

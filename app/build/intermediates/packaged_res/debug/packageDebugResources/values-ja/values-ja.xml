@@ -226,6 +226,8 @@
     <string name="title_settings">設定</string>
     <string name="title_user_info">ユーザー情報</string>
     <string name="title_workflow">ワークフロー</string>
+    <string name="trigger_type_manual">手動</string>
+    <string name="trigger_type_scheduled">スケジュール</string>
     <string name="type_label">種類: %1$s</string>
     <string name="unfavorite">お気に入り解除</string>
     <string name="unknown_user">不明</string>

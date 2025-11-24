@@ -1,9 +1,29 @@
 -- Merging decision tree log ---
+provider#androidx.startup.InitializationProvider
+INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:17:9-21:35
+REJECTED from [androidx.work:work-runtime:2.11.0] C:\Users\k1031\.gradle\caches\8.13\transforms\4eab6851fe32035df86b4760a1937c96\transformed\work-runtime-2.11.0\AndroidManifest.xml:29:9-37:20
+MERGED from [androidx.emoji2:emoji2:1.4.0] C:\Users\k1031\.gradle\caches\8.13\transforms\0a588da4d4e95e3ee164d3842fdbead2\transformed\jetified-emoji2-1.4.0\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.emoji2:emoji2:1.4.0] C:\Users\k1031\.gradle\caches\8.13\transforms\0a588da4d4e95e3ee164d3842fdbead2\transformed\jetified-emoji2-1.4.0\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.9.4] C:\Users\k1031\.gradle\caches\8.13\transforms\6e8c48ad1c564e99d42456e11137ce74\transformed\jetified-lifecycle-process-2.9.4\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.9.4] C:\Users\k1031\.gradle\caches\8.13\transforms\6e8c48ad1c564e99d42456e11137ce74\transformed\jetified-lifecycle-process-2.9.4\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\k1031\.gradle\caches\8.13\transforms\b3c22ed21a7b9b35b738eb70dcfeed3e\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\k1031\.gradle\caches\8.13\transforms\b3c22ed21a7b9b35b738eb70dcfeed3e\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\k1031\.gradle\caches\8.13\transforms\fca5b7fe8b6c505eaf4631a50eb3f9b9\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:26:9-30:34
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\k1031\.gradle\caches\8.13\transforms\fca5b7fe8b6c505eaf4631a50eb3f9b9\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:26:9-30:34
+	tools:node
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:21:13-32
+	android:authorities
+		INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:19:13-68
+	android:exported
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:20:13-37
+	android:name
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:18:13-67
 manifest
-ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:2:1-60:12
-INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:2:1-60:12
-INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:2:1-60:12
-INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:2:1-60:12
+ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:2:1-66:12
+INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:2:1-66:12
+INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:2:1-66:12
+INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:2:1-66:12
 MERGED from [androidx.databinding:viewbinding:8.9.3] C:\Users\k1031\.gradle\caches\8.13\transforms\20c4c0a9d0957f112c2a79c7803d0875\transformed\jetified-viewbinding-8.9.3\AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.android.gms:play-services-oss-licenses:17.0.1] C:\Users\k1031\.gradle\caches\8.13\transforms\194837da7d1dc41c498ace87c5134471\transformed\jetified-play-services-oss-licenses-17.0.1\AndroidManifest.xml:17:1-29:12
 MERGED from [androidx.hilt:hilt-navigation-compose:1.2.0] C:\Users\k1031\.gradle\caches\8.13\transforms\03028218a782380f33028432f0e7985c\transformed\jetified-hilt-navigation-compose-1.2.0\AndroidManifest.xml:2:1-7:12
@@ -206,8 +226,8 @@ MERGED from [com.google.android.datatransport:transport-backend-cct:3.1.9] C:\Us
 	android:name
 		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:5:22-64
 application
-ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:7:5-58:19
-INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:7:5-58:19
+ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:7:5-64:19
+INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:7:5-64:19
 MERGED from [com.google.android.gms:play-services-oss-licenses:17.0.1] C:\Users\k1031\.gradle\caches\8.13\transforms\194837da7d1dc41c498ace87c5134471\transformed\jetified-play-services-oss-licenses-17.0.1\AndroidManifest.xml:22:5-27:19
 MERGED from [com.google.android.gms:play-services-oss-licenses:17.0.1] C:\Users\k1031\.gradle\caches\8.13\transforms\194837da7d1dc41c498ace87c5134471\transformed\jetified-play-services-oss-licenses-17.0.1\AndroidManifest.xml:22:5-27:19
 MERGED from [com.google.android.material:material:1.13.0] C:\Users\k1031\.gradle\caches\8.13\transforms\b4b1351a8cb91d31c2b2c6f48ccae32a\transformed\material-1.13.0\AndroidManifest.xml:22:5-20
@@ -317,71 +337,71 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\k1
 	android:name
 		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:8:9-40
 activity#com.gws.auto.mobile.android.MainActivity
-ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:17:9-21:20
-	android:exported
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:19:13-36
-	android:theme
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:20:13-59
-	android:name
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:18:13-41
-activity#com.gws.auto.mobile.android.SplashActivity
-ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:23:9-31:20
+ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:23:9-27:20
 	android:exported
 		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:25:13-36
 	android:theme
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:26:13-66
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:26:13-59
 	android:name
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:24:13-43
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:24:13-41
+activity#com.gws.auto.mobile.android.SplashActivity
+ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:29:9-37:20
+	android:exported
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:31:13-36
+	android:theme
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:32:13-66
+	android:name
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:30:13-43
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:27:13-30:29
+ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:33:13-36:29
 action#android.intent.action.MAIN
-ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:28:17-69
+ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:34:17-69
 	android:name
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:28:25-66
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:34:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:29:17-77
+ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:35:17-77
 	android:name
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:29:27-74
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:35:27-74
 activity#com.gws.auto.mobile.android.ui.workflow.editor.WorkflowEditorActivity
-ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:33:9-36:62
+ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:39:9-42:62
 	android:exported
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:35:13-37
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:41:13-37
 	android:theme
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:36:13-59
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:42:13-59
 	android:name
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:34:13-70
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:40:13-70
 activity#com.gws.auto.mobile.android.ui.schedule.ScheduleSettingsActivity
-ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:38:9-41:62
+ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:44:9-47:62
 	android:exported
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:40:13-37
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:46:13-37
 	android:theme
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:41:13-59
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:47:13-59
 	android:name
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:39:13-65
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:45:13-65
 activity#com.gws.auto.mobile.android.ui.settings.SettingsActivity
-ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:43:9-46:62
+ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:49:9-52:62
 	android:exported
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:45:13-37
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:51:13-37
 	android:theme
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:46:13-59
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:52:13-59
 	android:name
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:44:13-57
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:50:13-57
 activity#com.gws.auto.mobile.android.ui.wizard.WizardActivity
-ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:48:9-51:62
+ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:54:9-57:62
 	android:exported
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:50:13-37
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:56:13-37
 	android:theme
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:51:13-59
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:57:13-59
 	android:name
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:49:13-53
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:55:13-53
 activity#com.gws.auto.mobile.android.ui.filepicker.FilePickerActivity
-ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:53:9-56:62
+ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:59:9-62:62
 	android:exported
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:55:13-37
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:61:13-37
 	android:theme
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:56:13-59
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:62:13-59
 	android:name
-		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:54:13-61
+		ADDED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml:60:13-61
 uses-sdk
 INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Engineering\Android\GWS-Auto-for-Android\app\src\main\AndroidManifest.xml
@@ -996,30 +1016,6 @@ uses-permission#android.permission.FOREGROUND_SERVICE
 ADDED from [androidx.work:work-runtime:2.11.0] C:\Users\k1031\.gradle\caches\8.13\transforms\4eab6851fe32035df86b4760a1937c96\transformed\work-runtime-2.11.0\AndroidManifest.xml:26:5-77
 	android:name
 		ADDED from [androidx.work:work-runtime:2.11.0] C:\Users\k1031\.gradle\caches\8.13\transforms\4eab6851fe32035df86b4760a1937c96\transformed\work-runtime-2.11.0\AndroidManifest.xml:26:22-74
-provider#androidx.startup.InitializationProvider
-ADDED from [androidx.work:work-runtime:2.11.0] C:\Users\k1031\.gradle\caches\8.13\transforms\4eab6851fe32035df86b4760a1937c96\transformed\work-runtime-2.11.0\AndroidManifest.xml:29:9-37:20
-MERGED from [androidx.emoji2:emoji2:1.4.0] C:\Users\k1031\.gradle\caches\8.13\transforms\0a588da4d4e95e3ee164d3842fdbead2\transformed\jetified-emoji2-1.4.0\AndroidManifest.xml:24:9-32:20
-MERGED from [androidx.emoji2:emoji2:1.4.0] C:\Users\k1031\.gradle\caches\8.13\transforms\0a588da4d4e95e3ee164d3842fdbead2\transformed\jetified-emoji2-1.4.0\AndroidManifest.xml:24:9-32:20
-MERGED from [androidx.lifecycle:lifecycle-process:2.9.4] C:\Users\k1031\.gradle\caches\8.13\transforms\6e8c48ad1c564e99d42456e11137ce74\transformed\jetified-lifecycle-process-2.9.4\AndroidManifest.xml:24:9-32:20
-MERGED from [androidx.lifecycle:lifecycle-process:2.9.4] C:\Users\k1031\.gradle\caches\8.13\transforms\6e8c48ad1c564e99d42456e11137ce74\transformed\jetified-lifecycle-process-2.9.4\AndroidManifest.xml:24:9-32:20
-MERGED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\k1031\.gradle\caches\8.13\transforms\b3c22ed21a7b9b35b738eb70dcfeed3e\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:24:9-32:20
-MERGED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\k1031\.gradle\caches\8.13\transforms\b3c22ed21a7b9b35b738eb70dcfeed3e\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:24:9-32:20
-MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\k1031\.gradle\caches\8.13\transforms\fca5b7fe8b6c505eaf4631a50eb3f9b9\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:26:9-30:34
-MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\k1031\.gradle\caches\8.13\transforms\fca5b7fe8b6c505eaf4631a50eb3f9b9\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:26:9-30:34
-	tools:node
-		ADDED from [androidx.work:work-runtime:2.11.0] C:\Users\k1031\.gradle\caches\8.13\transforms\4eab6851fe32035df86b4760a1937c96\transformed\work-runtime-2.11.0\AndroidManifest.xml:33:13-31
-	android:authorities
-		ADDED from [androidx.work:work-runtime:2.11.0] C:\Users\k1031\.gradle\caches\8.13\transforms\4eab6851fe32035df86b4760a1937c96\transformed\work-runtime-2.11.0\AndroidManifest.xml:31:13-68
-	android:exported
-		ADDED from [androidx.work:work-runtime:2.11.0] C:\Users\k1031\.gradle\caches\8.13\transforms\4eab6851fe32035df86b4760a1937c96\transformed\work-runtime-2.11.0\AndroidManifest.xml:32:13-37
-	android:name
-		ADDED from [androidx.work:work-runtime:2.11.0] C:\Users\k1031\.gradle\caches\8.13\transforms\4eab6851fe32035df86b4760a1937c96\transformed\work-runtime-2.11.0\AndroidManifest.xml:30:13-67
-meta-data#androidx.work.WorkManagerInitializer
-ADDED from [androidx.work:work-runtime:2.11.0] C:\Users\k1031\.gradle\caches\8.13\transforms\4eab6851fe32035df86b4760a1937c96\transformed\work-runtime-2.11.0\AndroidManifest.xml:34:13-36:52
-	android:value
-		ADDED from [androidx.work:work-runtime:2.11.0] C:\Users\k1031\.gradle\caches\8.13\transforms\4eab6851fe32035df86b4760a1937c96\transformed\work-runtime-2.11.0\AndroidManifest.xml:36:17-49
-	android:name
-		ADDED from [androidx.work:work-runtime:2.11.0] C:\Users\k1031\.gradle\caches\8.13\transforms\4eab6851fe32035df86b4760a1937c96\transformed\work-runtime-2.11.0\AndroidManifest.xml:35:17-68
 service#androidx.work.impl.background.systemjob.SystemJobService
 ADDED from [androidx.work:work-runtime:2.11.0] C:\Users\k1031\.gradle\caches\8.13\transforms\4eab6851fe32035df86b4760a1937c96\transformed\work-runtime-2.11.0\AndroidManifest.xml:39:9-45:35
 	android:enabled

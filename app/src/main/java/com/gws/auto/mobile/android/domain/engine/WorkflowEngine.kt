@@ -5,9 +5,11 @@ import com.gws.auto.mobile.android.data.repository.WorkflowRepository
 import com.gws.auto.mobile.android.domain.model.History
 import com.gws.auto.mobile.android.domain.model.Module
 import com.gws.auto.mobile.android.domain.model.ExecutionResult
+import com.gws.auto.mobile.android.domain.engine.modules.LogMessageModule
 import timber.log.Timber
 import java.util.Date
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Defines the contract for a workflow execution engine.
@@ -37,12 +39,14 @@ interface WorkflowEngine {
  * The default, local implementation of the [WorkflowEngine].
  * It executes workflows directly on the user's device.
  */
+@Singleton
 class LocalWorkflowEngine @Inject constructor(
     private val moduleExecutorProvider: ModuleExecutorProvider,
     private val historyRepository: HistoryRepository,
-    private val workflowRepository: WorkflowRepository,
-    private val logMessageModule: com.gws.auto.mobile.android.domain.engine.modules.LogMessageModule
+    private val workflowRepository: WorkflowRepository
 ) : WorkflowEngine {
+
+    private val logMessageModule = LogMessageModule()
 
     override suspend fun executeWorkflow(workflowId: String, triggerType: String) {
         val workflow = workflowRepository.getWorkflowById(workflowId)

@@ -17,6 +17,8 @@ array theme_values
 attr highlightColor
 color DefaultPrimaryDark
 color DefaultPrimaryLight
+color badge_background
+color badge_scheduled_background
 color black
 color chart_red
 color chip_default_color
@@ -89,6 +91,7 @@ color teal_700
 color white
 drawable badge_background
 drawable badge_dot
+drawable badge_scheduled_background
 drawable bg_dashed_border
 drawable bg_today
 drawable circle_background
