@@ -51,9 +51,19 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        // Enable edge-to-edge
+        androidx.core.view.WindowCompat.setDecorFitsSystemWindows(window, false)
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, v.paddingBottom)
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val isImeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+            
+            // Calculate bottom padding: use IME height if visible, otherwise system bars (nav bar)
+            // We use max to ensure we don't overlap with nav bar if IME is overlaying it
+            val bottomPadding = if (isImeVisible) ime.bottom else systemBars.bottom
+            
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, bottomPadding)
             insets
         }
 
