@@ -170,6 +170,40 @@ class WorkflowViewModel @Inject constructor(
         val allFolders = workflowFolderRepository.getAllWorkflowFolders().first()
 
         val fromWorkflow = allWorkflows.find { it.id == fromId } ?: return@launch
+        
+        // Handle "Move to Bottom" case
+        if (toId == "BOTTOM") {
+             // Check if fromId is in a folder
+             val sourceFolder = allFolders.find { it.workflowIds.contains(fromId) }
+             
+             if (sourceFolder != null) {
+                 // Move from folder to root bottom
+                 val updatedSourceIds = sourceFolder.workflowIds.toMutableList().also { it.remove(fromId) }
+                 workflowFolderRepository.updateWorkflowFolder(sourceFolder.copy(workflowIds = updatedSourceIds))
+                 
+                 // Add to root bottom (order = max + 1)
+                 val maxOrder = allWorkflows.maxOfOrNull { it.order } ?: 0
+                 workflowRepository.saveWorkflow(fromWorkflow.copy(order = maxOrder + 1))
+             } else {
+                 // Move from root to root bottom
+                 val rootWorkflows = allWorkflows.filter { workflow ->
+                    allFolders.none { it.workflowIds.contains(workflow.id) }
+                 }.sortedBy { it.order }.toMutableList()
+                 
+                 val fromIndex = rootWorkflows.indexOfFirst { it.id == fromId }
+                 if (fromIndex != -1) {
+                     val item = rootWorkflows.removeAt(fromIndex)
+                     rootWorkflows.add(item) // Add to end
+                     
+                     val updatedWorkflows = rootWorkflows.mapIndexed { index, workflow ->
+                        workflow.copy(order = index)
+                     }
+                     workflowRepository.updateWorkflowOrders(updatedWorkflows)
+                 }
+             }
+             return@launch
+        }
+
         val toWorkflow = allWorkflows.find { it.id == toId } ?: return@launch
 
         // Check if both are root workflows
@@ -186,7 +220,15 @@ class WorkflowViewModel @Inject constructor(
 
             if (fromIndex != -1 && toIndex != -1) {
                 val item = rootWorkflows.removeAt(fromIndex)
-                rootWorkflows.add(toIndex, item)
+                // Insert Above Logic:
+                // If moving down (from < to), we want to insert BEFORE the target.
+                // Since we removed the item, the target's index shifted down by 1.
+                // So we insert at toIndex - 1.
+                // If moving up (from > to), we want to insert BEFORE the target.
+                // The target's index didn't change.
+                // So we insert at toIndex.
+                val insertionIndex = if (fromIndex < toIndex) toIndex - 1 else toIndex
+                rootWorkflows.add(insertionIndex, item)
 
                 val updatedWorkflows = rootWorkflows.mapIndexed { index, workflow ->
                     workflow.copy(order = index)
@@ -205,7 +247,8 @@ class WorkflowViewModel @Inject constructor(
 
                 if (fromIndex != -1 && toIndex != -1) {
                     val item = workflowIds.removeAt(fromIndex)
-                    workflowIds.add(toIndex, item)
+                    val insertionIndex = if (fromIndex < toIndex) toIndex - 1 else toIndex
+                    workflowIds.add(insertionIndex, item)
                     workflowFolderRepository.updateWorkflowFolder(fromFolder.copy(workflowIds = workflowIds))
                 }
             }

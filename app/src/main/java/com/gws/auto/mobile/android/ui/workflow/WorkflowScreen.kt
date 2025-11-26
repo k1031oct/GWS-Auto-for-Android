@@ -182,13 +182,63 @@ fun WorkflowScreen(
                 }
                 is WorkflowListItem.AddItem -> {
                     // Add root drop zone before AddItem
-                    AddItemRow(onAddClicked = onAddClicked)
+                    DropTargetAddItemRow(
+                        onAddClicked = onAddClicked,
+                        onDrop = { workflowId ->
+                            onReorder(workflowId, "BOTTOM")
+                        }
+                    )
                 }
                 is WorkflowListItem.EmptyFolderItem -> {
                     EmptyFolderItemRow()
                 }
             }
         }
+    }
+}
+
+@Composable
+fun DropTargetAddItemRow(
+    onAddClicked: () -> Unit,
+    onDrop: (String) -> Unit
+) {
+    var isDraggingOver by remember { mutableStateOf(false) }
+
+    val dropTarget = remember {
+        object : DragAndDropTarget {
+            override fun onDrop(event: DragAndDropEvent): Boolean {
+                isDraggingOver = false
+                val clipData = event.toAndroidDragEvent().clipData
+                if (clipData != null && clipData.itemCount > 0) {
+                    val workflowId = clipData.getItemAt(0).text.toString()
+                    onDrop(workflowId)
+                    return true
+                }
+                return false
+            }
+
+            override fun onEntered(event: DragAndDropEvent) {
+                isDraggingOver = true
+            }
+
+            override fun onExited(event: DragAndDropEvent) {
+                isDraggingOver = false
+            }
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .dragAndDropTarget(
+                shouldStartDragAndDrop = { event ->
+                    event.mimeTypes().contains(ClipDescription.MIMETYPE_TEXT_PLAIN)
+                },
+                target = dropTarget
+            )
+            .background(if (isDraggingOver) MaterialTheme.colorScheme.primaryContainer else androidx.compose.ui.graphics.Color.Transparent)
+    ) {
+        AddItemRow(onAddClicked = onAddClicked)
     }
 }
 
