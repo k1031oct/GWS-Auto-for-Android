@@ -120,6 +120,7 @@ class ModuleParameterDialogFragment : DialogFragment() {
     private fun getManualParameters(moduleType: String): List<String> {
         return when (moduleType) {
             "LOG_MESSAGE" -> listOf("message")
+            "SYSTEM_NOTIFICATION" -> listOf("message", "title")
             "chat_post" -> listOf("spaceId", "message")
             "drive_create_folder" -> listOf("newFolderName")
             "drive_copy_file" -> listOf("newFileName")

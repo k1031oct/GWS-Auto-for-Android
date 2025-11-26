@@ -195,6 +195,7 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
                 )
                 "Output" -> listOf(
                     Module(id = "", type = "ToastNotificationModule", parameters = emptyMap()),
+                    Module(id = "", type = "SYSTEM_NOTIFICATION", parameters = emptyMap()),
                     Module(id = "", type = "LOG_MESSAGE", parameters = emptyMap()),
                     Module(id = "", type = "SET_CLIPBOARD", parameters = emptyMap())
                 )
