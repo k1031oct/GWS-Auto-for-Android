@@ -184,10 +184,6 @@
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\drawable\\circle_background.xml"
     },
     {
-        "merged": "com.gws.auto.mobile.android.app-debug-7:/layout_list_item_history_header.xml.flat",
-        "source": "com.gws.auto.mobile.android.app-main-9:/layout/list_item_history_header.xml"
-    },
-    {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\mipmap-xxhdpi_ic_launcher_foreground.webp.flat",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\mipmap-xxhdpi\\ic_launcher_foreground.webp"
     },
@@ -396,6 +392,10 @@
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\mipmap-hdpi\\ic_launcher_round.webp"
     },
     {
+        "merged": "com.gws.auto.mobile.android.app-debug-7:/layout_list_item_file.xml.flat",
+        "source": "com.gws.auto.mobile.android.app-main-9:/layout/list_item_file.xml"
+    },
+    {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\mipmap-hdpi_ic_launcher_foreground.webp.flat",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\mipmap-hdpi\\ic_launcher_foreground.webp"
     },
@@ -466,6 +466,10 @@
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\drawable_ic_dashboard.xml.flat",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\drawable\\ic_dashboard.xml"
+    },
+    {
+        "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\drawable_bg_search_view.xml.flat",
+        "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\drawable\\bg_search_view.xml"
     },
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\drawable_ic_add.xml.flat",

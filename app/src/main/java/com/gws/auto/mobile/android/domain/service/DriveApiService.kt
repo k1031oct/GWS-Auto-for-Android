@@ -25,10 +25,24 @@ class DriveApiService @Inject constructor(private val authorizer: GoogleApiAutho
     }
 
     @Throws(IOException::class)
-    suspend fun listFiles(folderId: String): FileList = withContext(Dispatchers.IO) {
+    suspend fun listFiles(folderId: String, mimeType: String? = null, searchQuery: String? = null): FileList = withContext(Dispatchers.IO) {
         val service = getService()
+        var query = "'$folderId' in parents and trashed = false"
+
+        if (!mimeType.isNullOrBlank()) {
+             query += if (mimeType == "application/vnd.google-apps.folder") {
+                 " and mimeType = '$mimeType'"
+             } else {
+                 " and (mimeType = '$mimeType' or mimeType = 'application/vnd.google-apps.folder')"
+             }
+        }
+
+        if (!searchQuery.isNullOrBlank()) {
+            query += " and name contains '$searchQuery'"
+        }
+
         service.files().list()
-            .setQ("'$folderId' in parents and trashed = false")
+            .setQ(query)
             .setFields("files(id, name, mimeType)")
             .execute()
     }

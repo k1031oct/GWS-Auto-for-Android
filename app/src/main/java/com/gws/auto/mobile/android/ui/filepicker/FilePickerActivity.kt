@@ -30,6 +30,7 @@ class FilePickerActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         expectedType = intent.getStringExtra("expectedType")
+        viewModel.setExpectedType(expectedType)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -39,6 +40,7 @@ class FilePickerActivity : AppCompatActivity() {
                 selectedFile = file
                 adapter.setSelectedFile(file)
                 binding.confirmButton.visibility = View.VISIBLE
+                binding.selectCurrentFolderButton.visibility = View.GONE
             },
             onFolderNavigation = { folder ->
                 viewModel.onFolderClicked(folder.id, folder.name)
@@ -51,12 +53,35 @@ class FilePickerActivity : AppCompatActivity() {
 
         binding.confirmButton.setOnClickListener { confirmSelection() }
 
+        binding.selectCurrentFolderButton.setOnClickListener {
+            confirmCurrentFolder()
+        }
+
+        binding.searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.onSearchQueryChanged(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Optional: Live search
+                // viewModel.onSearchQueryChanged(newText)
+                return false
+            }
+        })
+        
+        binding.searchView.setOnCloseListener {
+            viewModel.onSearchQueryChanged(null)
+            false
+        }
+
         viewModel.files.observe(this) {
             adapter.submitList(it)
         }
 
         viewModel.currentFolderName.observe(this) {
             supportActionBar?.title = it
+            updateButtonsState()
         }
 
         viewModel.error.observe(this) { error ->
@@ -65,11 +90,48 @@ class FilePickerActivity : AppCompatActivity() {
                 viewModel.onErrorShown()
             }
         }
+        
+        viewModel.theme.observe(this) { theme ->
+            val mode = when (theme) {
+                "Light" -> androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+                "Dark" -> androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+                else -> androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            }
+            if (androidx.appcompat.app.AppCompatDelegate.getDefaultNightMode() != mode) {
+                androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(mode)
+            }
+        }
+
+        viewModel.highlightColor.observe(this) { colorName ->
+            val isDark = when (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) {
+                android.content.res.Configuration.UI_MODE_NIGHT_YES -> true
+                else -> false
+            }
+            
+            // Color values from Color.kt
+            val color = when (colorName) {
+                "forest" -> if (isDark) 0xFF76FF03.toInt() else 0xFF9CCC65.toInt()
+                "ocean" -> if (isDark) 0xFF00E5FF.toInt() else 0xFF4DD0E1.toInt()
+                "sakura" -> if (isDark) 0xFFFF4081.toInt() else 0xFFF48FB1.toInt()
+                "neon" -> if (isDark) 0xFFDFFF00.toInt() else 0xFFFFC66D.toInt()
+                else -> if (isDark) 0xFFFFFFFF.toInt() else 0xFF000000.toInt() // Default
+            }
+            
+            adapter.setHighlightColor(color)
+            
+            // Debug Toast
+            Toast.makeText(this, "Theme: $colorName, Dark: $isDark", Toast.LENGTH_SHORT).show()
+            
+            // Optional: Update Toolbar title color to match highlight
+            // binding.toolbar.setTitleTextColor(color)
+        }
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (!viewModel.onUpClicked()) {
                     finish()
+                } else {
+                    clearSelection()
                 }
             }
         })
@@ -88,16 +150,73 @@ class FilePickerActivity : AppCompatActivity() {
     private fun clearSelection() {
         selectedFile = null
         adapter.setSelectedFile(null)
-        binding.confirmButton.visibility = View.GONE
+        updateButtonsState()
+    }
+    
+    private fun updateButtonsState() {
+        if (selectedFile != null) {
+            binding.confirmButton.visibility = View.VISIBLE
+            binding.selectCurrentFolderButton.visibility = View.GONE
+        } else {
+            binding.confirmButton.visibility = View.GONE
+            if (expectedType == "folder") {
+                binding.selectCurrentFolderButton.visibility = View.VISIBLE
+            } else {
+                binding.selectCurrentFolderButton.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun confirmCurrentFolder() {
+        // When selecting current folder, we need the ID of the folder we are currently IN.
+        // But the ViewModel only exposes currentFolderName.
+        // We need the current folder ID from the ViewModel.
+        // Let's assume we can get it or we need to expose it.
+        // Wait, ViewModel has folderStack. The top is the current folder.
+        // I should probably expose currentFolderId in ViewModel.
+        // For now, let's see if I can get it from the stack or if I need to change ViewModel.
+        // ViewModel has `currentFolderName` LiveData.
+        // I should add `currentFolderId` LiveData to ViewModel.
+        // For now, I will modify ViewModel to expose currentFolderId.
+        // But since I can't modify ViewModel in this tool call, I will assume it's there or I will add it in next step.
+        // Actually, I can just use the selectedFile logic if I select a folder from the list.
+        // But "Select Current Folder" means the one we are INSIDE.
+        // So I need the ID of the folder currently displayed.
+        
+        // Let's modify ViewModel first to expose currentFolderId.
+        // I will revert this thought and go modify ViewModel first.
+        // But I am already in the middle of modifying Activity.
+        // I will comment out the implementation of confirmCurrentFolder for now and fix it after updating ViewModel.
+        
+        // Actually, I can just ask ViewModel for current folder ID if I expose it.
+        // Let's finish this file update assuming `viewModel.currentFolderId.value` will be available.
+        // I will add `currentFolderId` to ViewModel in the next step.
+        
+        val folderId = viewModel.currentFolderId.value
+        val folderName = viewModel.currentFolderName.value
+        
+        if (folderId != null && folderName != null) {
+             val resultIntent = Intent()
+             resultIntent.putExtra("fileId", folderId)
+             resultIntent.putExtra("fileName", folderName)
+             setResult(Activity.RESULT_OK, resultIntent)
+             finish()
+        }
     }
 
     private fun confirmSelection() {
         selectedFile?.let { file ->
             val isFolder = file.mimeType == "application/vnd.google-apps.folder"
+            // If we are picking a file, we might select a folder to navigate, but if we click confirm on a folder...
+            // If expectedType is "file", we shouldn't be able to confirm a folder, unless we want to allow it?
+            // Usually if I select a folder in a file picker, I want to open it.
+            // But here I have a separate navigation click.
+            // If I select a folder (highlight it) and click confirm, it means I want to pick that folder.
+            
             val typeMatches = when (expectedType) {
                 "folder" -> isFolder
                 "file" -> !isFolder
-                else -> true // No expectation, anything is fine
+                else -> true 
             }
 
             if (typeMatches) {

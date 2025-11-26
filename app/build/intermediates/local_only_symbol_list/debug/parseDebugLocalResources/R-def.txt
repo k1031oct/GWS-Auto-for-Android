@@ -99,6 +99,7 @@ drawable badge_background
 drawable badge_dot
 drawable badge_scheduled_background
 drawable bg_dashed_border
+drawable bg_search_view
 drawable bg_today
 drawable circle_background
 drawable ic_add
@@ -149,7 +150,9 @@ id back_button
 id bookmark_button
 id bottom_nav
 id button_bar
+id button_container
 id cancel_button
+id card_view
 id chip_scroll_view
 id clear_history_button
 id compose_view
@@ -224,6 +227,7 @@ id schedule_workflow_name
 id search_chip_group
 id search_fragment_container
 id search_view
+id select_current_folder_button
 id setting_title
 id settings_application
 id settings_badge

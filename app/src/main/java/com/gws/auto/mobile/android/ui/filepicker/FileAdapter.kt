@@ -17,18 +17,19 @@ class FileAdapter(
 ) : ListAdapter<File, FileAdapter.FileViewHolder>(FileDiffCallback) {
 
     private var selectedFile: File? = null
-    private var lastClickTime = 0L
-
-    companion object {
-        private const val DOUBLE_CLICK_TIME_DELTA: Long = 300 // milliseconds
-    }
+    private var highlightColor: Int = Color.GRAY // Default
 
     fun setSelectedFile(file: File?) {
         selectedFile = file
         notifyDataSetChanged()
     }
+    
+    fun setHighlightColor(color: Int) {
+        highlightColor = color
+        notifyDataSetChanged()
+    }
 
-    class FileViewHolder(val binding: ListItemFileBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class FileViewHolder(val binding: ListItemFileBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(file: File, isSelected: Boolean) {
             binding.fileName.text = file.name
             val isFolder = file.mimeType == "application/vnd.google-apps.folder"
@@ -36,12 +37,27 @@ class FileAdapter(
             binding.fileIcon.setImageResource(
                 if (isFolder) R.drawable.ic_folder else R.drawable.ic_file
             )
+            
+            // Show chevron for folders to allow navigation
             binding.navigateIcon.visibility = if (isFolder) View.VISIBLE else View.GONE
-
+            
+            val context = binding.root.context
+            val density = context.resources.displayMetrics.density
+            val strokeWidthSelected = (4 * density).toInt()
+            val strokeWidthUnselected = (1 * density).toInt()
+            
+            // Resolve outline color from theme
+            val typedValue = android.util.TypedValue()
+            context.theme.resolveAttribute(com.google.android.material.R.attr.colorOutline, typedValue, true)
+            val outlineColor = typedValue.data
+            
+            // Set background based on selection
             if (isSelected) {
-                binding.root.setBackgroundColor(Color.LTGRAY)
+                binding.cardView.strokeColor = highlightColor
+                binding.cardView.strokeWidth = strokeWidthSelected
             } else {
-                binding.root.setBackgroundColor(Color.TRANSPARENT)
+                binding.cardView.strokeColor = outlineColor
+                binding.cardView.strokeWidth = strokeWidthUnselected
             }
         }
     }
@@ -54,17 +70,24 @@ class FileAdapter(
     override fun onBindViewHolder(holder: FileViewHolder, position: Int) {
         val file = getItem(position)
         holder.bind(file, file.id == selectedFile?.id)
+        
         holder.itemView.setOnClickListener {
-            val clickTime = System.currentTimeMillis()
-            if (clickTime - lastClickTime < DOUBLE_CLICK_TIME_DELTA && file.mimeType == "application/vnd.google-apps.folder") {
-                onFolderNavigation(file)
-            } else {
-                onFileSelected(file)
-            }
-            lastClickTime = clickTime
+             if (file.mimeType == "application/vnd.google-apps.folder") {
+                 onFolderNavigation(file)
+             } else {
+                 // Optional: Show hint or do nothing for file tap
+             }
         }
-        holder.binding.navigateIcon.setOnClickListener { 
-            if (file.mimeType == "application/vnd.google-apps.folder") onFolderNavigation(file) 
+        
+        holder.itemView.setOnLongClickListener {
+            onFileSelected(file)
+            true
+        }
+        
+        holder.binding.navigateIcon.setOnClickListener {
+             if (file.mimeType == "application/vnd.google-apps.folder") {
+                 onFolderNavigation(file)
+             }
         }
     }
 }

@@ -5,8 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,21 +28,34 @@ public final class ActivityFilePickerBinding implements ViewBinding {
   public final AppBarLayout appBarLayout;
 
   @NonNull
+  public final LinearLayout buttonContainer;
+
+  @NonNull
   public final Button confirmButton;
 
   @NonNull
   public final RecyclerView fileList;
 
   @NonNull
+  public final SearchView searchView;
+
+  @NonNull
+  public final Button selectCurrentFolderButton;
+
+  @NonNull
   public final Toolbar toolbar;
 
   private ActivityFilePickerBinding(@NonNull ConstraintLayout rootView,
-      @NonNull AppBarLayout appBarLayout, @NonNull Button confirmButton,
-      @NonNull RecyclerView fileList, @NonNull Toolbar toolbar) {
+      @NonNull AppBarLayout appBarLayout, @NonNull LinearLayout buttonContainer,
+      @NonNull Button confirmButton, @NonNull RecyclerView fileList, @NonNull SearchView searchView,
+      @NonNull Button selectCurrentFolderButton, @NonNull Toolbar toolbar) {
     this.rootView = rootView;
     this.appBarLayout = appBarLayout;
+    this.buttonContainer = buttonContainer;
     this.confirmButton = confirmButton;
     this.fileList = fileList;
+    this.searchView = searchView;
+    this.selectCurrentFolderButton = selectCurrentFolderButton;
     this.toolbar = toolbar;
   }
 
@@ -77,6 +92,12 @@ public final class ActivityFilePickerBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.button_container;
+      LinearLayout buttonContainer = ViewBindings.findChildViewById(rootView, id);
+      if (buttonContainer == null) {
+        break missingId;
+      }
+
       id = R.id.confirm_button;
       Button confirmButton = ViewBindings.findChildViewById(rootView, id);
       if (confirmButton == null) {
@@ -89,14 +110,26 @@ public final class ActivityFilePickerBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.search_view;
+      SearchView searchView = ViewBindings.findChildViewById(rootView, id);
+      if (searchView == null) {
+        break missingId;
+      }
+
+      id = R.id.select_current_folder_button;
+      Button selectCurrentFolderButton = ViewBindings.findChildViewById(rootView, id);
+      if (selectCurrentFolderButton == null) {
+        break missingId;
+      }
+
       id = R.id.toolbar;
       Toolbar toolbar = ViewBindings.findChildViewById(rootView, id);
       if (toolbar == null) {
         break missingId;
       }
 
-      return new ActivityFilePickerBinding((ConstraintLayout) rootView, appBarLayout, confirmButton,
-          fileList, toolbar);
+      return new ActivityFilePickerBinding((ConstraintLayout) rootView, appBarLayout,
+          buttonContainer, confirmButton, fileList, searchView, selectCurrentFolderButton, toolbar);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
