@@ -138,11 +138,17 @@ fun GWSAutoForAndroidTheme(
         )
         else -> baseColorScheme.copy( // "default" - Monochrome
             primary = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight,
+            onPrimary = if (useDarkTheme) Color.Black else Color.White,
             primaryContainer = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight,
+            onPrimaryContainer = if (useDarkTheme) Color.Black else Color.White,
             secondary = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight,
+            onSecondary = if (useDarkTheme) Color.Black else Color.White,
             secondaryContainer = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight,
+            onSecondaryContainer = if (useDarkTheme) Color.Black else Color.White,
             tertiary = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight,
+            onTertiary = if (useDarkTheme) Color.Black else Color.White,
             tertiaryContainer = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight,
+            onTertiaryContainer = if (useDarkTheme) Color.Black else Color.White,
             outline = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight
         )
     }
