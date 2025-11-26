@@ -40,6 +40,7 @@
         <activity
             android:name=".ui.workflow.editor.WorkflowEditorActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.GWSAutoForAndroid" />
 
         <activity
