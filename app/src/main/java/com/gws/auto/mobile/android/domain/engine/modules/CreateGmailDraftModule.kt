@@ -23,6 +23,8 @@ class CreateGmailDraftModule @Inject constructor(
             val draft = gmailApiService.createDraft(to, subject, body)
             Timber.d("Successfully created draft with ID: ${draft.id}")
             ExecutionResult.Success("Draft created: ${draft.id}", mapOf("draftId" to draft.id))
+        } catch (e: com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException) {
+            throw e.cause ?: e
         } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
             throw e
         } catch (e: Exception) {

@@ -120,11 +120,16 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
     private fun setupRecyclerView() {
         moduleAdapter = ModuleAdapter(
             onEditClicked = { module ->
-                if (module.type == "ToastNotificationModule") {
-                    showToastMessageDialog(module)
-                } else {
-                    val dialog = ModuleSettingsDialogFragment(module)
-                    dialog.show(supportFragmentManager, "ModuleSettingsDialog")
+                when (module.type) {
+                    "ToastNotificationModule" -> showToastMessageDialog(module)
+                    "tasks_create_task" -> {
+                        val dialog = GoogleTasksSettingsDialog(module)
+                        dialog.show(supportFragmentManager, "GoogleTasksSettingsDialog")
+                    }
+                    else -> {
+                        val dialog = ModuleSettingsDialogFragment(module)
+                        dialog.show(supportFragmentManager, "ModuleSettingsDialog")
+                    }
                 }
             },
             onRemoveClicked = { module ->

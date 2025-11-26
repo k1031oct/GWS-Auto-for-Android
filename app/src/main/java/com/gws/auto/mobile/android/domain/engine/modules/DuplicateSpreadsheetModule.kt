@@ -33,6 +33,8 @@ class DuplicateSpreadsheetModule @Inject constructor(
 
             Timber.d("Successfully duplicated spreadsheet with new ID: ${newFile.id}")
             ExecutionResult.Success("Duplicated spreadsheet: ${newFile.id}", mapOf("newFileId" to newFile.id))
+        } catch (e: com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException) {
+            throw e.cause ?: e
         } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
             throw e
         } catch (e: Exception) {

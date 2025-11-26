@@ -26,6 +26,8 @@ class SheetsAppendRowModule @Inject constructor(
             sheetsApiService.appendRow(spreadsheetId, sheetName, values)
 
             ExecutionResult.Success("Appended row to $sheetName")
+        } catch (e: com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException) {
+            throw e.cause ?: e
         } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
             throw e
         } catch (e: Exception) {

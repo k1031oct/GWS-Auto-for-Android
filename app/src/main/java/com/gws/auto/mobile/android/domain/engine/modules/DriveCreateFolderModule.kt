@@ -27,6 +27,8 @@ class DriveCreateFolderModule @Inject constructor(
             }
 
             ExecutionResult.Success("Successfully created folder with ID: ${newFolder.id}", mapOf("folderId" to newFolder.id))
+        } catch (e: com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException) {
+            throw e.cause ?: e
         } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
             throw e
         } catch (e: Exception) {

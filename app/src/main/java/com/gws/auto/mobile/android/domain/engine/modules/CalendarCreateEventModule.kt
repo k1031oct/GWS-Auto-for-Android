@@ -32,6 +32,8 @@ class CalendarCreateEventModule @Inject constructor(
             val event = calendarApiService.createEvent(calendarId, summary, startTime, endTime, description)
 
             ExecutionResult.Success("Event created: ${event.htmlLink}", mapOf("eventId" to event.id))
+        } catch (e: com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException) {
+            throw e.cause ?: e
         } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
             throw e
         } catch (e: Exception) {

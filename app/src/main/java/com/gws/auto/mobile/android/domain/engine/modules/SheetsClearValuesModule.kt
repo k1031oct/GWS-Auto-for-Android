@@ -26,6 +26,8 @@ class SheetsClearValuesModule @Inject constructor(
             sheetsApiService.clearValues(spreadsheetId, fullRange)
 
             ExecutionResult.Success("Cleared values in $fullRange")
+        } catch (e: com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException) {
+            throw e.cause ?: e
         } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
             throw e
         } catch (e: Exception) {

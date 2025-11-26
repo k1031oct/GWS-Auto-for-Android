@@ -26,6 +26,8 @@ class SheetsCreateNewModule @Inject constructor(
             }
 
             ExecutionResult.Success("Created spreadsheet: ${newSheet.spreadsheetId}", mapOf("spreadsheetId" to newSheet.spreadsheetId))
+        } catch (e: com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException) {
+            throw e.cause ?: e
         } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
             throw e
         } catch (e: Exception) {
