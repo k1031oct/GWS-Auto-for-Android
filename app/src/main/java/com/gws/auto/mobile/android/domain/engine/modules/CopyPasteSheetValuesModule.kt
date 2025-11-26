@@ -1,5 +1,6 @@
 package com.gws.auto.mobile.android.domain.engine.modules
 
+import com.google.api.services.sheets.v4.model.ValueRange
 import com.gws.auto.mobile.android.domain.engine.ExecutionContext
 import com.gws.auto.mobile.android.domain.model.ExecutionResult
 import com.gws.auto.mobile.android.domain.engine.ModuleExecutor
@@ -20,27 +21,33 @@ class CopyPasteSheetValuesModule @Inject constructor(
             val targetCell = context.resolveVariables(context.module.parameters["targetCell"] ?: "A1")
 
             if (sourceSpreadsheetId.isBlank() || sourceSheetName.isBlank() || sourceRange.isBlank() || targetSpreadsheetId.isBlank() || targetSheetName.isBlank()) {
-                return ExecutionResult(false, "All source and target parameters are required.")
+                return ExecutionResult.Error("All source and target parameters are required.")
             }
 
             val sourceFileId = extractFileId(sourceSpreadsheetId)
             val targetFileId = extractFileId(targetSpreadsheetId)
 
-            val fullSourceRange = "'$sourceSheetName'!$sourceRange"
-            val valuesToCopy = sheetsApiService.getValues(sourceFileId, fullSourceRange)
+            val fullSourceRange = "$sourceSheetName!$sourceRange"
+            val fullTargetRange = "$targetSheetName!$targetCell"
 
-            val fullTargetRange = "'$targetSheetName'!$targetCell"
-            sheetsApiService.updateValues(targetFileId, fullTargetRange, valuesToCopy)
+            val values = sheetsApiService.getValues(sourceFileId, fullSourceRange)
+            
+            if (values.getValues().isNullOrEmpty()) {
+                 return ExecutionResult.Error("No values found in source range.")
+            }
 
-            Timber.d("Successfully copied values from $fullSourceRange to $fullTargetRange")
-            ExecutionResult(true)
+            sheetsApiService.updateValues(targetFileId, fullTargetRange, values)
+
+            ExecutionResult.Success("Copied values from $fullSourceRange to $fullTargetRange")
+        } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
+            throw e
         } catch (e: Exception) {
-            Timber.e(e, "Failed to copy and paste sheet values")
-            ExecutionResult(false, e.message)
+            Timber.e(e, "Failed to copy/paste sheet values")
+            ExecutionResult.Error("Failed to copy/paste values: ${e.message}")
         }
     }
 
-    private fun extractFileId(source: String): String {
-        return "/d/([a-zA-Z0-9_-]+)".toRegex().find(source)?.groupValues?.get(1) ?: source
+    private fun extractFileId(urlOrId: String): String {
+        return "/d/([a-zA-Z0-9_-]+)".toRegex().find(urlOrId)?.groupValues?.get(1) ?: urlOrId
     }
 }

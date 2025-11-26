@@ -8,6 +8,6 @@ import javax.inject.Inject
 class LogMessageModule @Inject constructor() : ModuleExecutor {
     override suspend fun execute(context: ExecutionContext): ExecutionResult {
         val message = context.resolveVariables(context.module.parameters["message"] ?: "")
-        return ExecutionResult(true, message)
+        return ExecutionResult.Success(message)
     }
 }

@@ -106,4 +106,10 @@ abstract class WorkflowModule {
     @IntoMap
     @StringKey("LOG_MESSAGE")
     abstract fun bindLogMessageModule(impl: LogMessageModule): ModuleExecutor
+
+    // Google Tasks
+    @Binds
+    @IntoMap
+    @StringKey("tasks_create_task")
+    abstract fun bindGoogleTasksExecutor(impl: GoogleTasksExecutor): ModuleExecutor
 }

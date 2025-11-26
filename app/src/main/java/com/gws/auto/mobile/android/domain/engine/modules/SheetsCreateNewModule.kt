@@ -16,7 +16,7 @@ class SheetsCreateNewModule @Inject constructor(
             val destFolderId = context.resolveVariables(context.module.parameters["destFolderId"] ?: "")
 
             if (newFileName.isBlank()) {
-                return ExecutionResult(false, "New file name is required.")
+                return ExecutionResult.Error("New file name is required.")
             }
 
             val newSheet = sheetsApiService.createSpreadsheet(newFileName, destFolderId)
@@ -25,10 +25,12 @@ class SheetsCreateNewModule @Inject constructor(
                 context.setVariable(outputVar, newSheet.spreadsheetId)
             }
 
-            ExecutionResult(true, "Successfully created new spreadsheet with ID: ${newSheet.spreadsheetId}")
+            ExecutionResult.Success("Created spreadsheet: ${newSheet.spreadsheetId}", mapOf("spreadsheetId" to newSheet.spreadsheetId))
+        } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
+            throw e
         } catch (e: Exception) {
             Timber.e(e, "Failed to create new Google Sheet")
-            ExecutionResult(false, e.message)
+            ExecutionResult.Error(e.message)
         }
     }
 }

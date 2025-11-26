@@ -17,15 +17,17 @@ class CreateGmailDraftModule @Inject constructor(
             val body = context.resolveVariables(context.module.parameters["body"] ?: "")
 
             if (to.isBlank() || subject.isBlank()) {
-                return ExecutionResult(false, "To and Subject fields are required.")
+                return ExecutionResult.Error("To and Subject fields are required.")
             }
 
             val draft = gmailApiService.createDraft(to, subject, body)
             Timber.d("Successfully created draft with ID: ${draft.id}")
-            ExecutionResult(true)
+            ExecutionResult.Success("Draft created: ${draft.id}", mapOf("draftId" to draft.id))
+        } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
+            throw e
         } catch (e: Exception) {
             Timber.e(e, "Failed to create Gmail draft")
-            ExecutionResult(false, e.message)
+            ExecutionResult.Error("Failed to create draft: ${e.message}")
         }
     }
 }

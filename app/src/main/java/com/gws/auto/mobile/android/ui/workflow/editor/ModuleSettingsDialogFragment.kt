@@ -129,6 +129,7 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
             "chat_post" -> setupChatPostUI()
             "SHOW_TOAST" -> setupToastNotificationUI()
             "LOG_MESSAGE" -> setupLogMessageUI()
+            "tasks_create_task" -> setupGoogleTasksCreateTaskUI()
             else -> setupDefaultUI()
         }
         binding.cancelButton.setOnClickListener { dismiss() }
@@ -662,6 +663,53 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
             }
         }
         return spinner
+    }
+
+    private fun setupGoogleTasksCreateTaskUI() {
+        val titleInput = createTextInputLayout("タスク名", module.parameters["title"])
+        val notesInput = createTextInputLayout("メモ", module.parameters["notes"], isMultiLine = true)
+        val dueDateInput = createTextInputLayout("期限 (YYYY-MM-DD)", module.parameters["due_date"])
+        
+        // Recurrence UI (Simple Spinner)
+        val recurrenceOptions = listOf("繰り返しなし", "毎日", "毎週", "毎月")
+        val recurrenceSpinner = createSpinner(recurrenceOptions, module.parameters["recurrence"])
+        
+        // Date Picker for Due Date
+        dueDateInput.editText?.setOnClickListener {
+            val calendar = java.util.Calendar.getInstance()
+            val dateSetListener = android.app.DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                val dateStr = String.format("%d-%02d-%02d", year, month + 1, dayOfMonth)
+                dueDateInput.editText?.setText(dateStr)
+            }
+            android.app.DatePickerDialog(requireContext(), dateSetListener,
+                calendar.get(java.util.Calendar.YEAR),
+                calendar.get(java.util.Calendar.MONTH),
+                calendar.get(java.util.Calendar.DAY_OF_MONTH)).show()
+        }
+        dueDateInput.editText?.isFocusable = false // Make it read-only for typing, force picker or allow typing? 
+        // Better to allow typing but show picker on click. 
+        // Actually, if I set onClickListener, I should probably make it not focusableInTouchMode or similar to prevent keyboard.
+        // For simplicity, let's just leave it as text input but add a "Select Date" button or icon? 
+        // Or just make it focusable=false so clicking opens dialog.
+        dueDateInput.editText?.isFocusable = false
+        dueDateInput.editText?.isClickable = true
+
+        binding.parametersContainer.addView(titleInput)
+        binding.parametersContainer.addView(notesInput)
+        binding.parametersContainer.addView(dueDateInput)
+        binding.parametersContainer.addView(createSectionHeader("繰り返し設定"))
+        binding.parametersContainer.addView(recurrenceSpinner)
+
+        binding.saveButton.setOnClickListener {
+            val params = mapOf(
+                "title" to titleInput.editText?.text.toString(),
+                "notes" to notesInput.editText?.text.toString(),
+                "due_date" to dueDateInput.editText?.text.toString(),
+                "recurrence" to recurrenceSpinner.selectedItem.toString()
+            )
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
     }
 
     override fun onDestroyView() {

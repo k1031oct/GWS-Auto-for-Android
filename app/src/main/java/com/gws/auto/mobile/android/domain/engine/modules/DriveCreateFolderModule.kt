@@ -16,7 +16,7 @@ class DriveCreateFolderModule @Inject constructor(
             val newFolderName = context.resolveVariables(context.module.parameters["newFolderName"] ?: "")
 
             if (newFolderName.isBlank()) {
-                return ExecutionResult(false, "New folder name is required.")
+                return ExecutionResult.Error("New folder name is required.")
             }
 
             val newFolder = driveApiService.createFolder(newFolderName, parentFolderId)
@@ -26,10 +26,12 @@ class DriveCreateFolderModule @Inject constructor(
                 Timber.d("New folder ID ${newFolder.id} saved to variable '$outputVar'")
             }
 
-            ExecutionResult(true, "Successfully created folder with ID: ${newFolder.id}")
+            ExecutionResult.Success("Successfully created folder with ID: ${newFolder.id}", mapOf("folderId" to newFolder.id))
+        } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
+            throw e
         } catch (e: Exception) {
             Timber.e(e, "Failed to create Google Drive folder")
-            ExecutionResult(false, e.message)
+            ExecutionResult.Error("Failed to create folder: ${e.message}")
         }
     }
 }

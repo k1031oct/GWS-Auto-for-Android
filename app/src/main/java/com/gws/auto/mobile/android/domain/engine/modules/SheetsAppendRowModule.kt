@@ -17,21 +17,24 @@ class SheetsAppendRowModule @Inject constructor(
             val rowData = context.resolveVariables(context.module.parameters["rowData"] ?: "")
 
             if (spreadsheetUrl.isBlank() || rowData.isBlank()) {
-                return ExecutionResult(false, "Spreadsheet URL and row data are required.")
+                return ExecutionResult.Error("Spreadsheet URL and row data are required.")
             }
 
             val spreadsheetId = extractFileId(spreadsheetUrl)
             val values = rowData.split(",").map { it.trim() }
+
             sheetsApiService.appendRow(spreadsheetId, sheetName, values)
 
-            ExecutionResult(true, "Successfully appended row to sheet.")
+            ExecutionResult.Success("Appended row to $sheetName")
+        } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
+            throw e
         } catch (e: Exception) {
             Timber.e(e, "Failed to append row to Google Sheet")
-            ExecutionResult(false, e.message)
+            ExecutionResult.Error("Failed to append row: ${e.message}")
         }
     }
 
-    private fun extractFileId(source: String): String {
-        return "/d/([a-zA-Z0-9_-]+)".toRegex().find(source)?.groupValues?.get(1) ?: source
+    private fun extractFileId(urlOrId: String): String {
+        return "/d/([a-zA-Z0-9_-]+)".toRegex().find(urlOrId)?.groupValues?.get(1) ?: urlOrId
     }
 }

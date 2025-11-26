@@ -179,7 +179,7 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
 
     private fun setupFolderRecyclerView() {
         val folders = listOf(
-            "Input", "Output", "Process", "Core", "Gmail", "Drive", "Sheets", "Calendar", "Custom"
+            "Input", "Output", "Process", "Core", "Gmail", "Drive", "Sheets", "Calendar", "Tasks", "Custom"
         )
 
         folderAdapter = FolderAdapter(folders) { folder ->
@@ -221,6 +221,9 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
                 )
                 "Calendar" -> listOf(
                     Module(id = "", type = "calendar_create_event", parameters = emptyMap())
+                )
+                "Tasks" -> listOf(
+                    Module(id = "", type = "tasks_create_task", parameters = emptyMap())
                 )
                 else -> emptyList()
             }

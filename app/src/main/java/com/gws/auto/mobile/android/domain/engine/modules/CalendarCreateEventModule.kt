@@ -22,7 +22,7 @@ class CalendarCreateEventModule @Inject constructor(
             val description = context.resolveVariables(context.module.parameters["description"] ?: "")
 
             if (summary.isBlank() || start.isBlank() || end.isBlank()) {
-                return ExecutionResult(false, "Summary, start, and end are required.")
+                return ExecutionResult.Error("Summary, start, and end are required.")
             }
 
             val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
@@ -31,10 +31,12 @@ class CalendarCreateEventModule @Inject constructor(
 
             val event = calendarApiService.createEvent(calendarId, summary, startTime, endTime, description)
 
-            ExecutionResult(true, "Successfully created event with ID: ${event.id}")
+            ExecutionResult.Success("Event created: ${event.htmlLink}", mapOf("eventId" to event.id))
+        } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
+            throw e
         } catch (e: Exception) {
             Timber.e(e, "Failed to create calendar event")
-            ExecutionResult(false, e.message)
+            ExecutionResult.Error("Failed to create event: ${e.message}")
         }
     }
 }

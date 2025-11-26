@@ -18,7 +18,7 @@ class DuplicateSpreadsheetModule @Inject constructor(
             val outputVar = context.module.parameters["outputSpreadsheetId"]
 
             if (sourceId.isBlank() || newName.isBlank()) {
-                return ExecutionResult(false, "sourceSpreadsheetId and newSpreadsheetName are required.")
+                return ExecutionResult.Error("sourceSpreadsheetId and newSpreadsheetName are required.")
             }
 
             // A simple regex to extract file ID from a URL
@@ -32,10 +32,12 @@ class DuplicateSpreadsheetModule @Inject constructor(
             }
 
             Timber.d("Successfully duplicated spreadsheet with new ID: ${newFile.id}")
-            ExecutionResult(true)
+            ExecutionResult.Success("Duplicated spreadsheet: ${newFile.id}", mapOf("newFileId" to newFile.id))
+        } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
+            throw e
         } catch (e: Exception) {
             Timber.e(e, "Failed to duplicate spreadsheet")
-            ExecutionResult(false, e.message)
+            ExecutionResult.Error("Failed to duplicate spreadsheet: ${e.message}")
         }
     }
 }

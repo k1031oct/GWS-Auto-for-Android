@@ -26,16 +26,16 @@ class ChatApiService @Inject constructor(private val googleApiAuthorizer: Google
      * @param messageText The plain text content of the message.
      * @return `true` if the message was posted successfully, `false` otherwise.
      */
-    suspend fun postMessage(spaceId: String, messageText: String): Boolean {
+    suspend fun postMessage(spaceId: String, messageText: String): Result<Unit> {
         if (!googleApiAuthorizer.isSignedIn()) {
             Timber.w("postMessage called but user is not signed in.")
-            return false
+            return Result.failure(IllegalStateException("User is not signed in."))
         }
 
-        val credential = googleApiAuthorizer.getCredential(listOf(Scope.ChatBot.scopeUri))
+        val credential = googleApiAuthorizer.getCredential(listOf(Scope.ChatMessages.scopeUri))
         if (credential == null) {
             Timber.e("Failed to get Google credential for Chat API.")
-            return false
+            return Result.failure(IllegalStateException("Failed to get Google credential."))
         }
 
         return withContext(Dispatchers.IO) {
@@ -64,17 +64,17 @@ class ChatApiService @Inject constructor(private val googleApiAuthorizer: Google
                 val responseCode = connection.responseCode
                 if (responseCode in 200..299) {
                     Timber.d("Successfully posted message to space: $formattedSpaceId")
-                    true
+                    Result.success(Unit)
                 } else {
                     val errorStream = connection.errorStream?.bufferedReader()?.readText()
                     Timber.e("Failed to post message. Response code: $responseCode, Error: $errorStream")
-                    false
+                    Result.failure(Exception("HTTP $responseCode: $errorStream"))
                 }
             } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
                 throw e
             } catch (e: Exception) {
                 Timber.e(e, "Failed to post message to Google Chat.")
-                false
+                Result.failure(e)
             } finally {
                 connection?.disconnect()
             }

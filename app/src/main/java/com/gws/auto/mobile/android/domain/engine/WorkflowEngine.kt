@@ -129,8 +129,8 @@ class LocalWorkflowEngine @Inject constructor(
             Timber.d("Saving execution history: workflowId=$workflowId, workflowName=${workflow.name}, status=$status, triggerType=$triggerType")
             historyRepository.insertHistory(history)
             Timber.d("Execution history saved successfully for workflow: ${workflow.name} (triggerType=$triggerType)")
-            return status == "Success"
         }
+        return status == "Success"
     }
 
     override suspend fun executeSingleModule(module: Module): ExecutionResult {
@@ -145,7 +145,7 @@ class LocalWorkflowEngine @Inject constructor(
         if (executor == null) {
             val errorMsg = "No executor found for module type: ${module.type}"
             Timber.e(errorMsg)
-            return ExecutionResult(isSuccess = false, outputMessage = errorMsg)
+            return ExecutionResult.Error(errorMsg)
         }
 
         try {
@@ -153,7 +153,7 @@ class LocalWorkflowEngine @Inject constructor(
         } catch (e: Exception) {
             val errorMsg = "Exception during module execution: ${module.type}"
             Timber.e(e, errorMsg)
-            return ExecutionResult(isSuccess = false, outputMessage = "$errorMsg - ${e.message}")
+            return ExecutionResult.Error("$errorMsg - ${e.message}")
         }
     }
 }

@@ -8,11 +8,11 @@ import javax.inject.Inject
 
 class DefineVariableModule @Inject constructor() : ModuleExecutor {
     override suspend fun execute(context: ExecutionContext): ExecutionResult {
-        val variableName = context.module.parameters["variableName"] ?: return ExecutionResult(false, "Missing variableName parameter")
+        val variableName = context.module.parameters["variableName"] ?: return ExecutionResult.Error("Missing variableName parameter")
         val value = context.resolveVariables(context.module.parameters["value"] ?: "")
         
         context.setVariable(variableName, value)
         Timber.d("Defined variable '$variableName' with value '$value'")
-        return ExecutionResult(true)
+        return ExecutionResult.Success("Variable '$variableName' set to '$value'", mapOf(variableName to value))
     }
 }

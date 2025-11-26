@@ -44,7 +44,8 @@ object ApiModule {
                 Scope(DriveScopes.DRIVE),
                 Scope(SheetsScopes.SPREADSHEETS),
                 Scope(GmailScopes.GMAIL_COMPOSE),
-                Scope(CalendarScopes.CALENDAR)
+                Scope(CalendarScopes.CALENDAR),
+                Scope(com.gws.auto.mobile.android.domain.service.Scope.TasksFullAccess.scopeUri)
             )
             .build()
         return GoogleSignIn.getClient(context, gso)

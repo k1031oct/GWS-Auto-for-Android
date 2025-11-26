@@ -17,20 +17,24 @@ class SheetsClearValuesModule @Inject constructor(
             val targetRange = context.resolveVariables(context.module.parameters["targetRange"] ?: "")
 
             if (targetUrl.isBlank() || targetSheet.isBlank() || targetRange.isBlank()) {
-                return ExecutionResult(false, "Target URL, sheet, and range are required.")
+                return ExecutionResult.Error("Target URL, sheet, and range are required.")
             }
 
             val spreadsheetId = extractFileId(targetUrl)
-            sheetsApiService.clearValues(spreadsheetId, "'$targetSheet'!$targetRange")
+            val fullRange = "$targetSheet!$targetRange"
 
-            ExecutionResult(true, "Successfully cleared values in range $targetRange")
+            sheetsApiService.clearValues(spreadsheetId, fullRange)
+
+            ExecutionResult.Success("Cleared values in $fullRange")
+        } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
+            throw e
         } catch (e: Exception) {
             Timber.e(e, "Failed to clear values in Google Sheet")
-            ExecutionResult(false, e.message)
+            ExecutionResult.Error("Failed to clear values: ${e.message}")
         }
     }
 
-    private fun extractFileId(source: String): String {
-        return "/d/([a-zA-Z0-9_-]+)".toRegex().find(source)?.groupValues?.get(1) ?: source
+    private fun extractFileId(urlOrId: String): String {
+        return "/d/([a-zA-Z0-9_-]+)".toRegex().find(urlOrId)?.groupValues?.get(1) ?: urlOrId
     }
 }

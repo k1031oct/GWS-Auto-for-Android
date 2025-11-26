@@ -17,7 +17,7 @@ class DriveCopyFileModule @Inject constructor(
             val newFileName = context.resolveVariables(context.module.parameters["newFileName"] ?: "")
 
             if (sourceFileId.isBlank() || destFolderId.isBlank() || newFileName.isBlank()) {
-                return ExecutionResult(false, "Source file ID, destination folder ID, and new file name are required.")
+                return ExecutionResult.Error("Source file ID, destination folder ID, and new file name are required.")
             }
             
             val copiedFile = driveApiService.copyFile(sourceFileId, destFolderId, newFileName)
@@ -26,10 +26,12 @@ class DriveCopyFileModule @Inject constructor(
                 context.setVariable(outputVar, copiedFile.id)
             }
 
-            ExecutionResult(true, "Successfully copied file with new ID: ${copiedFile.id}")
+            ExecutionResult.Success("Copied file: ${copiedFile.id}", mapOf("newFileId" to copiedFile.id))
+        } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
+            throw e
         } catch (e: Exception) {
             Timber.e(e, "Failed to copy Google Drive file")
-            ExecutionResult(false, e.message)
+            ExecutionResult.Error("Failed to copy file: ${e.message}")
         }
     }
 }

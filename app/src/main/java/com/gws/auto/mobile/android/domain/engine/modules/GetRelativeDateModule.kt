@@ -11,34 +11,36 @@ import javax.inject.Inject
 
 class GetRelativeDateModule @Inject constructor() : ModuleExecutor {
     override suspend fun execute(context: ExecutionContext): ExecutionResult {
-        try {
-            val baseDateStr = context.resolveVariables(context.module.parameters["baseDate"] ?: "TODAY")
-            val offsetValue = context.resolveVariables(context.module.parameters["offsetValue"] ?: "0").toLong()
+        return try {
+            val baseDateStr = context.resolveVariables(context.module.parameters["baseDate"] ?: "")
+            val offsetValueStr = context.resolveVariables(context.module.parameters["offsetValue"] ?: "0")
             val offsetUnit = context.resolveVariables(context.module.parameters["offsetUnit"] ?: "DAYS")
-            val outputVariableName = context.module.parameters["outputVariableName"] ?: return ExecutionResult(false, "Missing outputVariableName parameter")
+            val outputVariableName = context.module.parameters["outputVariableName"]
 
-            val baseDate = if (baseDateStr.equals("TODAY", ignoreCase = true)) {
-                LocalDate.now()
-            } else {
-                LocalDate.parse(baseDateStr, DateTimeFormatter.ISO_LOCAL_DATE)
+            if (baseDateStr.isBlank() || outputVariableName.isNullOrBlank()) {
+                return ExecutionResult.Error("Base date and output variable name are required.")
             }
+
+            val baseDate = LocalDate.parse(baseDateStr, DateTimeFormatter.ISO_LOCAL_DATE)
+            val offsetValue = offsetValueStr.toLongOrNull() ?: 0L
 
             val chronoUnit = when (offsetUnit.uppercase()) {
                 "DAYS" -> ChronoUnit.DAYS
                 "WEEKS" -> ChronoUnit.WEEKS
                 "MONTHS" -> ChronoUnit.MONTHS
                 "YEARS" -> ChronoUnit.YEARS
-                else -> return ExecutionResult(false, "Invalid offsetUnit: $offsetUnit")
+                else -> return ExecutionResult.Error("Invalid offsetUnit: $offsetUnit")
             }
 
             val resultDate = baseDate.plus(offsetValue, chronoUnit)
             val formattedDate = resultDate.format(DateTimeFormatter.ISO_LOCAL_DATE)
             context.setVariable(outputVariableName, formattedDate)
             Timber.d("Calculated date: $formattedDate, saved to '$outputVariableName'")
-            return ExecutionResult(true)
+            
+            ExecutionResult.Success("Date calculated: $formattedDate", mapOf(outputVariableName to formattedDate))
         } catch (e: Exception) {
             Timber.e(e, "Failed to execute GetRelativeDateModule")
-            return ExecutionResult(false, e.message)
+            ExecutionResult.Error("Failed to calculate date: ${e.message}")
         }
     }
 }

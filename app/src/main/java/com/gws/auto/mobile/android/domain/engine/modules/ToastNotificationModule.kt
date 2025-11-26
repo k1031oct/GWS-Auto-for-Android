@@ -32,6 +32,6 @@ class ToastNotificationModule @Inject constructor() : ModuleExecutor {
         }
 
         // This module is generally considered successful once the Toast is shown.
-        return ExecutionResult(true, "Toast notification displayed.")
+        return ExecutionResult.Success("Toast notification displayed.")
     }
 }

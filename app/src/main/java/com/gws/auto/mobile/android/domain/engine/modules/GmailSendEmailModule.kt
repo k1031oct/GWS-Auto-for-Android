@@ -19,14 +19,16 @@ class GmailSendEmailModule @Inject constructor(
             val bcc = context.resolveVariables(context.module.parameters["bcc"] ?: "")
 
             if (to.isBlank() || subject.isBlank()) {
-                return ExecutionResult(false, "To and Subject fields are required.")
+                return ExecutionResult.Error("To and Subject fields are required.")
             }
 
             gmailApiService.sendEmail(to, cc, bcc, subject, body)
-            ExecutionResult(true, "Email sent successfully.")
+            ExecutionResult.Success("Email sent to $to successfully.")
+        } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
+            throw e
         } catch (e: Exception) {
             Timber.e(e, "Failed to send email")
-            ExecutionResult(false, e.message)
+            ExecutionResult.Error("Failed to send email: ${e.message}")
         }
     }
 }

@@ -31,17 +31,16 @@ class ChatPostModule @Inject constructor(
 
         if (spaceId.isNullOrEmpty() || message.isNullOrEmpty()) {
             // Missing required parameters for this module.
-            return ExecutionResult(isSuccess = false, outputMessage = "Missing required parameters for ChatPostModule.")
+            return ExecutionResult.Error("Missing required parameters for ChatPostModule.")
         }
 
         // Use the modern ChatApiService to post the message.
-        val success = chatApiService.postMessage(spaceId, message)
-        return if (success) {
-            ExecutionResult(isSuccess = true)
+        val result = chatApiService.postMessage(spaceId, message)
+        return if (result.isSuccess) {
+            ExecutionResult.Success("Message posted to $spaceId")
         } else {
-            ExecutionResult(isSuccess = false, outputMessage = "Failed to post message using ChatApiService.")
+            val error = result.exceptionOrNull()
+            ExecutionResult.Error("Failed to post message: ${error?.message}")
         }
     }
 }
-
-

@@ -16,22 +16,24 @@ class DriveMoveFileModule @Inject constructor(
             val destinationFolderUrl = context.resolveVariables(context.module.parameters["destinationFolderUrl"] ?: "")
 
             if (sourceFileUrl.isBlank() || destinationFolderUrl.isBlank()) {
-                return ExecutionResult(false, "Source file URL and destination folder URL are required.")
+                return ExecutionResult.Error("Source file URL and destination folder URL are required.")
             }
 
-            val sourceFileId = extractFileId(sourceFileUrl)
-            val destinationFolderId = extractFileId(destinationFolderUrl)
+            val fileId = extractFileId(sourceFileUrl)
+            val folderId = extractFileId(destinationFolderUrl)
 
-            driveApiService.moveFile(sourceFileId, destinationFolderId)
+            driveApiService.moveFile(fileId, folderId)
 
-            ExecutionResult(true, "Successfully moved file.")
+            ExecutionResult.Success("Moved file $fileId to folder $folderId")
+        } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
+            throw e
         } catch (e: Exception) {
             Timber.e(e, "Failed to move Google Drive file")
-            ExecutionResult(false, e.message)
+            ExecutionResult.Error("Failed to move file: ${e.message}")
         }
     }
 
-    private fun extractFileId(source: String): String {
-        return "/d/([a-zA-Z0-9_-]+)".toRegex().find(source)?.groupValues?.get(1) ?: source
+    private fun extractFileId(urlOrId: String): String {
+        return "/d/([a-zA-Z0-9_-]+)".toRegex().find(urlOrId)?.groupValues?.get(1) ?: urlOrId
     }
 }

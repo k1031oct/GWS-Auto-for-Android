@@ -26,6 +26,7 @@ googleApiServicesSheets = "v4-rev20230815-2.0.0"
 googleApiServicesCalendar = "v3-rev20251028-2.0.0"
 googleApiServicesGmail = "v1-rev20220404-2.0.0"
 googleOauthClient = "1.39.0"
+googleApiServicesTasks = "v1-rev20251102-2.0.0"
 coroutinesPlayServices = "1.10.2"
 splashscreen = "1.2.0"
 appcompat = "1.7.1"
@@ -79,6 +80,7 @@ google-api-services-sheets = { group = "com.google.apis", name = "google-api-ser
 google-api-services-calendar = { group = "com.google.apis", name = "google-api-services-calendar", version.ref = "googleApiServicesCalendar" }
 google-api-services-gmail = { group = "com.google.apis", name = "google-api-services-gmail", version.ref = "googleApiServicesGmail" }
 google-oauth-client = { group = "com.google.oauth-client", name = "google-oauth-client", version.ref = "googleOauthClient" }
+google-api-services-tasks = { group = "com.google.apis", name = "google-api-services-tasks", version.ref = "googleApiServicesTasks" }
 kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutinesPlayServices" }
 androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }

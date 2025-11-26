@@ -10,8 +10,8 @@ import com.google.api.services.sheets.v4.SheetsScopes
  * This sealed class provides a type-safe way to manage OAuth 2.0 scopes.
  */
 sealed class Scope(val scopeUri: String) {
-    // Google Chat: Permission to run as a chatbot.
-    object ChatBot : Scope("https://www.googleapis.com/auth/chat.bot")
+    // Google Chat: Permission to create and update messages (User account).
+    object ChatMessages : Scope("https://www.googleapis.com/auth/chat.messages")
 
     // Google Calendar: Read-only access to calendars.
     object CalendarReadOnly : Scope(CalendarScopes.CALENDAR_READONLY)
@@ -27,4 +27,7 @@ sealed class Scope(val scopeUri: String) {
 
     // Google Sheets: Full access to spreadsheets for reading and writing data.
     object SheetsFullAccess : Scope(SheetsScopes.SPREADSHEETS)
+
+    // Google Tasks: Full access to tasks.
+    object TasksFullAccess : Scope("https://www.googleapis.com/auth/tasks")
 }

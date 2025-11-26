@@ -19,21 +19,26 @@ class SheetsSetValueModule @Inject constructor(
             val valueToSet = context.resolveVariables(context.module.parameters["valueToSet"] ?: "")
 
             if (targetUrl.isBlank() || targetSheet.isBlank() || targetCell.isBlank()) {
-                return ExecutionResult(false, "Target URL, sheet, and cell are required.")
+                return ExecutionResult.Error("Target URL, sheet, and cell are required.")
             }
 
             val spreadsheetId = extractFileId(targetUrl)
+            val fullRange = "$targetSheet!$targetCell"
+            
             val valueRange = ValueRange().setValues(listOf(listOf(valueToSet)))
-            sheetsApiService.updateValues(spreadsheetId, "'$targetSheet'!$targetCell", valueRange)
 
-            ExecutionResult(true, "Successfully set value in cell $targetCell")
+            sheetsApiService.updateValues(spreadsheetId, fullRange, valueRange)
+
+            ExecutionResult.Success("Set value '$valueToSet' in $fullRange")
+        } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
+            throw e
         } catch (e: Exception) {
             Timber.e(e, "Failed to set value in Google Sheet")
-            ExecutionResult(false, e.message)
+            ExecutionResult.Error("Failed to set value: ${e.message}")
         }
     }
 
-    private fun extractFileId(source: String): String {
-        return "/d/([a-zA-Z0-9_-]+)".toRegex().find(source)?.groupValues?.get(1) ?: source
+    private fun extractFileId(urlOrId: String): String {
+        return "/d/([a-zA-Z0-9_-]+)".toRegex().find(urlOrId)?.groupValues?.get(1) ?: urlOrId
     }
 }
