@@ -28,4 +28,10 @@
     <color name="md_theme_dark_inverseSurface">#FFFFFF</color>
     <color name="md_theme_dark_inverseOnSurface">#121212</color>
     <color name="md_theme_dark_inversePrimary">#E0E0E0</color>
+
+    <!-- Dynamic Colors for Dark Theme -->
+    <color name="bottom_nav_icon_tint">@color/neon_yellow</color>
+    <color name="fab_icon_tint">@color/black</color>
+    <color name="module_icon_tint">@color/white</color>
+    <color name="module_text_color">@color/white</color>
 </resources>

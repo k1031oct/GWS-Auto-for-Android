@@ -14,11 +14,18 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.gws.auto.mobile.android.R
+import android.widget.Toast
+import com.gws.auto.mobile.android.MainApplication
 import com.gws.auto.mobile.android.data.repository.ScheduleRepository
+import com.gws.auto.mobile.android.data.repository.SettingsRepository
 import com.gws.auto.mobile.android.domain.engine.WorkflowEngine
 import com.gws.auto.mobile.android.domain.model.Schedule
+import com.gws.auto.mobile.android.domain.notification.NotificationHelper
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.time.Duration
 import java.time.ZonedDateTime
@@ -29,12 +36,13 @@ class ScheduleWorker @AssistedInject constructor(
     @Assisted private val appContext: Context,
     @Assisted workerParams: WorkerParameters,
     private val workflowEngine: WorkflowEngine,
-    private val scheduleRepository: ScheduleRepository
+    private val scheduleRepository: ScheduleRepository,
+    private val settingsRepository: SettingsRepository,
+    private val notificationHelper: NotificationHelper
 ) : CoroutineWorker(appContext, workerParams) {
 
     companion object {
         const val KEY_SCHEDULE_ID = "scheduleId"
-        private const val NOTIFICATION_CHANNEL_ID = "schedule_notifications"
     }
 
     override suspend fun doWork(): Result {
@@ -101,29 +109,29 @@ class ScheduleWorker @AssistedInject constructor(
         Timber.d("Rescheduled work for schedule ${schedule.id} to run in ${Duration.ofMillis(delay).toMinutes()} minutes.")
     }
 
-    private fun sendNotification(schedule: Schedule, isSuccess: Boolean, errorMessage: String? = null) {
-        if (ContextCompat.checkSelfPermission(appContext, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            Timber.w("POST_NOTIFICATIONS permission not granted. Cannot send notification.")
-            return
-        }
+    private suspend fun sendNotification(schedule: Schedule, isSuccess: Boolean, errorMessage: String? = null) {
+        val isForeground = MainApplication.isForeground
+        val notifyInForeground = settingsRepository.notifyInForeground.first()
         
         val title = if (isSuccess) "Schedule Executed" else "Schedule Failed"
-        val content = if (isSuccess) {
+        val message = if (isSuccess) {
             "Successfully executed workflow: ${schedule.workflowName}"
         } else {
             "Failed to execute workflow: ${schedule.workflowName}. Error: ${errorMessage ?: "Unknown"}"
         }
 
-        val builder = NotificationCompat.Builder(appContext, NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification) // Ensure this drawable exists
-            .setContentTitle(title)
-            .setContentText(content)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(content))
-
-        with(NotificationManagerCompat.from(appContext)) {
-            // notificationId is a unique int for each notification that you must define
-            notify(schedule.id.hashCode(), builder.build())
+        if (!isForeground || notifyInForeground) {
+            if (ContextCompat.checkSelfPermission(appContext, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                Timber.w("POST_NOTIFICATIONS permission not granted. Cannot send notification.")
+                return
+            }
+            notificationHelper.showExecutionNotification(title, message, schedule.id.hashCode())
+        }
+        
+        if (isForeground && !notifyInForeground) {
+             withContext(Dispatchers.Main) {
+                 Toast.makeText(appContext, message, Toast.LENGTH_LONG).show()
+             }
         }
     }
 }

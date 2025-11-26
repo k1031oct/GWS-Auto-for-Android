@@ -32,10 +32,6 @@
         "source": "com.gws.auto.mobile.android.app-main-9:/layout/list_item_history_header.xml"
     },
     {
-        "merged": "com.gws.auto.mobile.android.app-mergeDebugResources-6:/layout/list_item_module.xml",
-        "source": "com.gws.auto.mobile.android.app-main-9:/layout/list_item_module.xml"
-    },
-    {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-6:\\layout\\list_item_announcement.xml",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\list_item_announcement.xml"
     },
@@ -92,10 +88,6 @@
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\list_item_schedule.xml"
     },
     {
-        "merged": "com.gws.auto.mobile.android.app-mergeDebugResources-6:/layout/list_item_module_library.xml",
-        "source": "com.gws.auto.mobile.android.app-main-9:/layout/list_item_module_library.xml"
-    },
-    {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-6:\\layout\\list_item_timeline.xml",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\list_item_timeline.xml"
     },
@@ -122,10 +114,6 @@
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-6:\\layout\\list_item_file.xml",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\list_item_file.xml"
-    },
-    {
-        "merged": "com.gws.auto.mobile.android.app-mergeDebugResources-6:/layout/activity_main.xml",
-        "source": "com.gws.auto.mobile.android.app-main-9:/layout/activity_main.xml"
     },
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-6:\\layout\\fragment_settings.xml",

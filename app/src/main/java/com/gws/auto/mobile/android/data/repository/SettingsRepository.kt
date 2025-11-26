@@ -25,6 +25,7 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
         val HIGHLIGHT_COLOR = stringPreferencesKey("highlight_color")
         val LANGUAGE = stringPreferencesKey("language")
         val WIZARD_COMPLETED = booleanPreferencesKey("wizard_completed")
+        val NOTIFY_IN_FOREGROUND = booleanPreferencesKey("notify_in_foreground")
     }
 
     val firstDayOfWeek: Flow<String> = context.dataStore.data.map { it[PreferencesKeys.FIRST_DAY_OF_WEEK] ?: "Sunday" }
@@ -33,6 +34,7 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
     val highlightColor: Flow<String> = context.dataStore.data.map { it[PreferencesKeys.HIGHLIGHT_COLOR] ?: "default" }
     val language: Flow<String> = context.dataStore.data.map { it[PreferencesKeys.LANGUAGE] ?: "en" }
     val isWizardCompleted: Flow<Boolean> = context.dataStore.data.map { it[PreferencesKeys.WIZARD_COMPLETED] ?: false }
+    val notifyInForeground: Flow<Boolean> = context.dataStore.data.map { it[PreferencesKeys.NOTIFY_IN_FOREGROUND] ?: false }
 
     suspend fun saveFirstDayOfWeek(firstDayOfWeek: String) {
         context.dataStore.edit { it[PreferencesKeys.FIRST_DAY_OF_WEEK] = firstDayOfWeek }
@@ -56,5 +58,9 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
 
     suspend fun setWizardCompleted(completed: Boolean) {
         context.dataStore.edit { it[PreferencesKeys.WIZARD_COMPLETED] = completed }
+    }
+
+    suspend fun saveNotifyInForeground(notify: Boolean) {
+        context.dataStore.edit { it[PreferencesKeys.NOTIFY_IN_FOREGROUND] = notify }
     }
 }

@@ -188,7 +188,7 @@ public final class WorkflowDao_Impl implements WorkflowDao {
 
   @Override
   public Flow<List<Workflow>> getAllWorkflows() {
-    final String _sql = "SELECT * FROM workflows ORDER BY `order` ASC";
+    final String _sql = "SELECT * FROM workflows ORDER BY `order` ASC, id ASC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     return CoroutinesRoom.createFlow(__db, false, new String[] {"workflows"}, new Callable<List<Workflow>>() {
       @Override

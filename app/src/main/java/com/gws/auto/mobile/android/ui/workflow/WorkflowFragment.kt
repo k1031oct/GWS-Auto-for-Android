@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
@@ -24,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+import com.gws.auto.mobile.android.R
 
 @AndroidEntryPoint
 class WorkflowFragment : Fragment() {
@@ -59,8 +61,14 @@ class WorkflowFragment : Fragment() {
                             onRunClicked = { workflow ->
                                 lifecycleScope.launch {
                                     try {
-                                        workflowEngine.executeWorkflow(workflow.id)
+                                        val isSuccess = workflowEngine.executeWorkflow(workflow.id)
                                         Timber.d("Workflow execution requested: ${workflow.name}")
+                                        val message = if (isSuccess) {
+                                            getString(R.string.workflow_executed_successfully, workflow.name)
+                                        } else {
+                                            getString(R.string.workflow_execution_failed, workflow.name)
+                                        }
+                                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                                     } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
                                         e.intent?.let { startActivity(it) }
                                     } catch (e: Exception) {

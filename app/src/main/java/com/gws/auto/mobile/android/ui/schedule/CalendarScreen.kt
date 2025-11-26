@@ -452,7 +452,13 @@ fun DayCell(
             Text(
                 text = date.dayOfMonth.toString(),
                 textAlign = TextAlign.Center,
-                color = if (holidays.isNotEmpty()) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+                color = if (isToday) {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                } else if (holidays.isNotEmpty()) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                }
             )
         }
 

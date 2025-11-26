@@ -216,6 +216,7 @@ private fun SettingsSection(
     var language by remember { mutableStateOf("") }
     var theme by remember { mutableStateOf("") }
     var highlightColor by remember { mutableStateOf("") }
+    var notifyInForeground by remember { mutableStateOf(false) }
     
     // Load settings
     LaunchedEffect(Unit) {
@@ -225,6 +226,7 @@ private fun SettingsSection(
             language = settingsRepository.language.first()
             theme = settingsRepository.theme.first()
             highlightColor = settingsRepository.highlightColor.first()
+            notifyInForeground = settingsRepository.notifyInForeground.first()
         }
     }
 
@@ -328,6 +330,32 @@ private fun SettingsSection(
                 color = indicatorColor,
                 shape = RoundedCornerShape(4.dp)
             ) {}
+        }
+        
+        // Notify in Foreground
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = stringResource(R.string.notify_in_foreground),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = stringResource(R.string.notify_in_foreground_desc),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Switch(
+                checked = notifyInForeground,
+                onCheckedChange = { checked ->
+                    notifyInForeground = checked
+                    scope.launch { settingsRepository.saveNotifyInForeground(checked) }
+                }
+            )
         }
     }
 }

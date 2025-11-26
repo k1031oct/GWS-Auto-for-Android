@@ -21,10 +21,12 @@ color badge_background
 color badge_manual_background
 color badge_scheduled_background
 color black
+color bottom_nav_icon_tint
 color chart_red
 color chip_default_color
 color chip_failure_color
 color chip_success_color
+color fab_icon_tint
 color grey_400
 color md_theme_dark_background
 color md_theme_dark_error
@@ -80,6 +82,8 @@ color md_theme_light_surface
 color md_theme_light_surfaceVariant
 color md_theme_light_tertiary
 color md_theme_light_tertiaryContainer
+color module_icon_tint
+color module_text_color
 color neon_green
 color neon_pink
 color neon_turquoise
@@ -463,6 +467,8 @@ string no_history_prompt_no_workflow
 string no_history_prompt_with_workflow
 string none
 string not_signed_in
+string notify_in_foreground
+string notify_in_foreground_desc
 string ok
 string open_dropdown
 string open_popover
@@ -611,6 +617,8 @@ string wizard_welcome_title
 string workflow_actions_menu
 string workflow_delete_confirmation
 string workflow_description
+string workflow_executed_successfully
+string workflow_execution_failed
 string workflow_fragment
 string workflow_id_label
 string workflow_label

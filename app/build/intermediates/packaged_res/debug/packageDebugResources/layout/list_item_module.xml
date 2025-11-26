@@ -43,7 +43,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@drawable/ic_module"
-                app:tint="@color/white"
+                app:tint="@color/module_icon_tint"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:textAppearance="?attr/textAppearanceBodyLarge"
-                android:textColor="@color/white"
+                android:textColor="@color/module_text_color"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@id/module_icon"
                 app:layout_constraintTop_toTopOf="parent"

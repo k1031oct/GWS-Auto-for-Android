@@ -52,4 +52,10 @@
     <color name="badge_background">#BDBDBD</color> <!-- Original Grey -->
     <color name="badge_manual_background">#FF0099</color> <!-- Neon Pink for manual -->
     <color name="badge_scheduled_background">#80D8FF</color> <!-- Turquoise for scheduled -->
+
+    <!-- Dynamic Colors for Light Theme -->
+    <color name="bottom_nav_icon_tint">@color/white</color>
+    <color name="fab_icon_tint">@color/white</color>
+    <color name="module_icon_tint">@color/white</color>
+    <color name="module_text_color">@color/white</color>
 </resources>

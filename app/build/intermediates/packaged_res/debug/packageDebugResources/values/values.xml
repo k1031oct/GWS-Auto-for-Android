@@ -124,7 +124,9 @@
     <color name="badge_manual_background">#FF0099</color>
     <color name="badge_scheduled_background">#80D8FF</color>
     <color name="black">#FF000000</color>
+    <color name="bottom_nav_icon_tint">@color/white</color>
     <color name="chart_red">#F44336</color>
+    <color name="fab_icon_tint">@color/white</color>
     <color name="grey_400">#BDBDBD</color>
     <color name="md_theme_light_background">#FFFFFF</color>
     <color name="md_theme_light_error">#FF80AB</color>
@@ -153,6 +155,8 @@
     <color name="md_theme_light_surfaceVariant">#E0E0E0</color>
     <color name="md_theme_light_tertiary">#FF80AB</color>
     <color name="md_theme_light_tertiaryContainer">#FF80AB</color>
+    <color name="module_icon_tint">@color/white</color>
+    <color name="module_text_color">@color/white</color>
     <color name="neon_green">#00FF41</color>
     <color name="neon_pink">#FF0099</color>
     <color name="neon_turquoise">#00F0FF</color>
@@ -298,6 +302,8 @@
     <string name="no_history_prompt_with_workflow">No execution history for this workflow</string>
     <string name="none">None</string>
     <string name="not_signed_in">Not signed in.</string>
+    <string name="notify_in_foreground">Notify in Foreground</string>
+    <string name="notify_in_foreground_desc">Show notification even when app is open</string>
     <string name="ok">OK</string>
     <string name="open_dropdown">Open Dropdown</string>
     <string name="open_popover">Open Popover</string>
@@ -446,6 +452,8 @@
     <string name="workflow_actions_menu">Actions</string>
     <string name="workflow_delete_confirmation">Are you sure you want to delete this workflow?</string>
     <string name="workflow_description">Workflow Description</string>
+    <string name="workflow_executed_successfully">Workflow \'%1$s\' executed successfully</string>
+    <string name="workflow_execution_failed">Workflow \'%1$s\' execution failed</string>
     <string name="workflow_fragment">Workflow Fragment</string>
     <string name="workflow_id_label">Workflow ID: %1$s</string>
     <string name="workflow_label">Workflow: %1$s</string>

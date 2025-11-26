@@ -180,15 +180,43 @@ class MainActivity : AppCompatActivity() {
         val blackColorStateList = ColorStateList.valueOf(Color.BLACK)
 
         // Bottom Navigation Styling
-        // Icons: always black
-        binding.bottomNav.itemIconTintList = blackColorStateList
-        // Text: black in light theme, white in dark theme
-        binding.bottomNav.itemTextColor = if (isDarkTheme) whiteColorStateList else blackColorStateList
+        // Bottom Navigation Styling
+        if (isDarkTheme) {
+            // Dark Theme: Dynamic Primary (Selected) / White (Unselected)
+            val darkSelector = ColorStateList(
+                arrayOf(
+                    intArrayOf(android.R.attr.state_checked),
+                    intArrayOf(-android.R.attr.state_checked)
+                ),
+                intArrayOf(
+                    colorInt,
+                    Color.WHITE
+                )
+            )
+            binding.bottomNav.itemIconTintList = darkSelector
+            binding.bottomNav.itemTextColor = whiteColorStateList
+        } else {
+            // Light Theme: White (Selected) / Black (Unselected)
+            val lightSelector = ColorStateList(
+                arrayOf(
+                    intArrayOf(android.R.attr.state_checked),
+                    intArrayOf(-android.R.attr.state_checked)
+                ),
+                intArrayOf(
+                    Color.WHITE,
+                    Color.BLACK
+                )
+            )
+            binding.bottomNav.itemIconTintList = lightSelector
+            binding.bottomNav.itemTextColor = blackColorStateList
+        }
         binding.bottomNav.itemActiveIndicatorColor = highlightColorStateList
 
         // FAB Styling
         binding.fabMain.backgroundTintList = highlightColorStateList
-        binding.fabMain.imageTintList = blackColorStateList
+        // FAB Icon: White in Light Theme, Black in Dark Theme
+        val fabIconColor = if (isDarkTheme) Color.BLACK else Color.WHITE
+        binding.fabMain.imageTintList = ColorStateList.valueOf(fabIconColor)
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
@@ -270,6 +298,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
             binding.searchFragmentContainer.visibility = if (hasFocus) View.VISIBLE else View.GONE
+            if (hasFocus) {
+                binding.fabMain.hide()
+            } else {
+                updateFab(binding.viewPager.currentItem)
+            }
         }
     }
 

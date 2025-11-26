@@ -55,7 +55,10 @@ class SettingsActivity : AppCompatActivity() {
                 }
                 val title = getTitleForFragment(fragmentKey)
                 val spannableTitle = SpannableString(title)
-                spannableTitle.setSpan(ForegroundColorSpan(android.graphics.Color.WHITE), 0, title.length, 0)
+                val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                val isDarkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+                val textColor = if (isDarkTheme) android.graphics.Color.BLACK else android.graphics.Color.WHITE
+                spannableTitle.setSpan(ForegroundColorSpan(textColor), 0, title.length, 0)
                 supportActionBar?.title = spannableTitle
 
                 supportFragmentManager.beginTransaction()
@@ -89,7 +92,8 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.toolbar.setBackgroundColor(color.toArgb())
-        binding.toolbar.navigationIcon?.setTint(android.graphics.Color.WHITE)
+        val iconColor = if (isDarkTheme) android.graphics.Color.BLACK else android.graphics.Color.WHITE
+        binding.toolbar.navigationIcon?.setTint(iconColor)
     }
 
     private fun getTitleForFragment(key: String?): String {

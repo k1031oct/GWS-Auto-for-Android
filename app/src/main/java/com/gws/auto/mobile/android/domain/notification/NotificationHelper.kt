@@ -12,9 +12,9 @@ class NotificationHelper(private val context: Context) {
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     companion object {
-        private const val CHANNEL_ID = "workflow_status_channel"
-        private const val CHANNEL_NAME = "Workflow Status"
-        private const val CHANNEL_DESCRIPTION = "Notifications for workflow execution status"
+        private const val CHANNEL_ID = "schedule_notifications"
+        private const val CHANNEL_NAME = "Schedule Notifications"
+        private const val CHANNEL_DESCRIPTION = "Notifications for scheduled workflow executions"
     }
 
     fun createNotificationChannel() {
@@ -30,20 +30,13 @@ class NotificationHelper(private val context: Context) {
         }
     }
 
-    fun showStatusNotification(workflowName: String, isSuccess: Boolean) {
-        val title = if (isSuccess) "Workflow Succeeded" else "Workflow Failed"
-        val message = if (isSuccess) {
-            "'$workflowName' has completed successfully."
-        } else {
-            "'$workflowName' failed to complete."
-        }
-        val notificationId = System.currentTimeMillis().toInt()
-
+    fun showExecutionNotification(title: String, message: String, notificationId: Int = System.currentTimeMillis().toInt()) {
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification) // You need to add this icon
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(message))
             .setAutoCancel(true)
 
         notificationManager.notify(notificationId, builder.build())

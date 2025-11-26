@@ -88,5 +88,8 @@ class MainApplication : Application() {
 
     companion object {
         var currentActivity: WeakReference<Activity>? = null
+        
+        val isForeground: Boolean
+            get() = currentActivity?.get() != null
     }
 }

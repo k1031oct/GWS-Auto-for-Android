@@ -72,6 +72,10 @@
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\drawable\\ic_file.xml"
     },
     {
+        "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\color-night_selector_bottom_nav_icon.xml.flat",
+        "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\color-night\\selector_bottom_nav_icon.xml"
+    },
+    {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\layout_fragment_schedule.xml.flat",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\fragment_schedule.xml"
     },
@@ -216,10 +220,6 @@
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\item_workflow.xml"
     },
     {
-        "merged": "com.gws.auto.mobile.android.app-debug-7:/layout_list_item_module.xml.flat",
-        "source": "com.gws.auto.mobile.android.app-main-9:/layout/list_item_module.xml"
-    },
-    {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\layout_spinner_item_right_aligned.xml.flat",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\spinner_item_right_aligned.xml"
     },
@@ -230,10 +230,6 @@
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\layout_item_history_table.xml.flat",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\item_history_table.xml"
-    },
-    {
-        "merged": "com.gws.auto.mobile.android.app-debug-7:/layout_activity_main.xml.flat",
-        "source": "com.gws.auto.mobile.android.app-main-9:/layout/activity_main.xml"
     },
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\layout_fragment_history.xml.flat",
@@ -292,10 +288,6 @@
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\drawable\\ic_folder.xml"
     },
     {
-        "merged": "com.gws.auto.mobile.android.app-debug-7:/layout_list_item_module_library.xml.flat",
-        "source": "com.gws.auto.mobile.android.app-main-9:/layout/list_item_module_library.xml"
-    },
-    {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\drawable_ic_menu.xml.flat",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\drawable\\ic_menu.xml"
     },
@@ -342,6 +334,10 @@
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\layout_fragment_theme_settings.xml.flat",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\fragment_theme_settings.xml"
+    },
+    {
+        "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\color_selector_bottom_nav_icon.xml.flat",
+        "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\color\\selector_bottom_nav_icon.xml"
     },
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\drawable_badge_dot.xml.flat",
@@ -474,10 +470,6 @@
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\drawable_ic_add.xml.flat",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\drawable\\ic_add.xml"
-    },
-    {
-        "merged": "com.gws.auto.mobile.android.app-debug-7:/color_selector_bottom_nav_icon.xml.flat",
-        "source": "com.gws.auto.mobile.android.app-main-9:/color/selector_bottom_nav_icon.xml"
     },
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-debug-7:\\drawable_sl_bookmark.xml.flat",

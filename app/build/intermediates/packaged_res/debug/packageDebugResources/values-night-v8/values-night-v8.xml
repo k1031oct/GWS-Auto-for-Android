@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="bottom_nav_icon_tint">@color/neon_yellow</color>
+    <color name="fab_icon_tint">@color/black</color>
     <color name="md_theme_dark_background">#050505</color>
     <color name="md_theme_dark_error">#FF0099</color>
     <color name="md_theme_dark_errorContainer">#FF0099</color>
@@ -27,6 +29,8 @@
     <color name="md_theme_dark_surfaceVariant">#1E1E1E</color>
     <color name="md_theme_dark_tertiary">#FF0099</color>
     <color name="md_theme_dark_tertiaryContainer">#FF0099</color>
+    <color name="module_icon_tint">@color/white</color>
+    <color name="module_text_color">@color/white</color>
     <style name="Base.Theme.GWSAutoForAndroid" parent="Theme.Material3.Dark.NoActionBar">
         <item name="colorPrimary">@color/md_theme_dark_primary</item>
         <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
