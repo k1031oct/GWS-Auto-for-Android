@@ -26,4 +26,8 @@ class WorkflowRepository @Inject constructor(
     suspend fun getWorkflowById(id: String): Workflow? {
         return workflowDao.getWorkflowById(id)
     }
+
+    suspend fun updateWorkflowOrders(workflows: List<Workflow>) {
+        workflowDao.updateWorkflows(workflows)
+    }
 }

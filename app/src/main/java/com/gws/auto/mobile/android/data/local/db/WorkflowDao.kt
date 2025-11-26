@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WorkflowDao {
-    @Query("SELECT * FROM workflows")
+    @Query("SELECT * FROM workflows ORDER BY `order` ASC")
     fun getAllWorkflows(): Flow<List<Workflow>>
 
     @Query("SELECT * FROM workflows WHERE id = :id")
@@ -17,6 +17,9 @@ interface WorkflowDao {
 
     @Update
     suspend fun updateWorkflow(workflow: Workflow)
+
+    @Update
+    suspend fun updateWorkflows(workflows: List<Workflow>)
 
     @Delete
     suspend fun deleteWorkflow(workflow: Workflow)

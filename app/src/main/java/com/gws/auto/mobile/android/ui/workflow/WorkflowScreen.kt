@@ -51,6 +51,7 @@ fun WorkflowScreen(
     onFavoriteClicked: (Workflow) -> Unit,
     onFolderClicked: (WorkflowFolder) -> Unit,
     onMoveWorkflowToFolder: (String, String) -> Unit,
+    onReorder: (String, String) -> Unit,
     fabClickFlow: kotlinx.coroutines.flow.Flow<Unit>,
     onCreateFolder: (String) -> Unit
 ) {
@@ -165,7 +166,8 @@ fun WorkflowScreen(
                         onFavoriteClicked = onFavoriteClicked,
                         onMoveToRoot = { workflowId ->
                             onMoveWorkflowToFolder(workflowId, "")
-                        }
+                        },
+                        onReorder = onReorder
                     )
                 }
                 is WorkflowListItem.FolderItem -> {
@@ -198,17 +200,40 @@ fun DraggableWorkflowItemRow(
     onEditClicked: (Workflow) -> Unit,
     onDeleteClicked: (Workflow) -> Unit,
     onFavoriteClicked: (Workflow) -> Unit,
-    onMoveToRoot: (String) -> Unit
+    onMoveToRoot: (String) -> Unit,
+    onReorder: (String, String) -> Unit
 ) {
     var isDragging by remember { mutableStateOf(false) }
+    var isDraggingOver by remember { mutableStateOf(false) }
     val isInFolder = item.isIndented
     val dropZoneWidth = 120.dp
 
     val sourceDragTarget = remember {
         object : DragAndDropTarget {
-            override fun onDrop(event: DragAndDropEvent): Boolean = false
+            override fun onDrop(event: DragAndDropEvent): Boolean {
+                isDraggingOver = false
+                val clipData = event.toAndroidDragEvent().clipData
+                if (clipData != null && clipData.itemCount > 0) {
+                    val workflowId = clipData.getItemAt(0).text.toString()
+                    if (workflowId != item.workflow.id) {
+                        onReorder(workflowId, item.workflow.id)
+                        return true
+                    }
+                }
+                return false
+            }
+
+            override fun onEntered(event: DragAndDropEvent) {
+                isDraggingOver = true
+            }
+
+            override fun onExited(event: DragAndDropEvent) {
+                isDraggingOver = false
+            }
+
             override fun onEnded(event: DragAndDropEvent) {
                 isDragging = false
+                isDraggingOver = false
             }
         }
     }
@@ -218,7 +243,9 @@ fun DraggableWorkflowItemRow(
             modifier = Modifier
                 .weight(1f)
                 .dragAndDropTarget(
-                    shouldStartDragAndDrop = { true },
+                    shouldStartDragAndDrop = { event ->
+                        event.mimeTypes().contains(ClipDescription.MIMETYPE_TEXT_PLAIN)
+                    },
                     target = sourceDragTarget
                 )
                 .dragAndDropSource(
@@ -235,17 +262,17 @@ fun DraggableWorkflowItemRow(
                             },
                             onDrag = { _, _ -> }
                         )
-                        }
-                    )
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = LocalIndication.current,
-                        onClick = { onEditClicked(item.workflow) }
-                    ),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    }
+                )
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = LocalIndication.current,
+                    onClick = { onEditClicked(item.workflow) }
                 ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            colors = CardDefaults.cardColors(
+                containerColor = if (isDraggingOver) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
                 Row(
                     modifier = Modifier

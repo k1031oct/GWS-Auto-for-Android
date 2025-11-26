@@ -164,4 +164,51 @@ class WorkflowViewModel @Inject constructor(
         val updatedTargetIds = targetFolder.workflowIds.toMutableList().also { it.add(workflowId) }
         workflowFolderRepository.updateWorkflowFolder(targetFolder.copy(workflowIds = updatedTargetIds))
     }
+
+    fun reorderWorkflows(fromId: String, toId: String) = viewModelScope.launch {
+        val allWorkflows = workflowRepository.getAllWorkflows().first()
+        val allFolders = workflowFolderRepository.getAllWorkflowFolders().first()
+
+        val fromWorkflow = allWorkflows.find { it.id == fromId } ?: return@launch
+        val toWorkflow = allWorkflows.find { it.id == toId } ?: return@launch
+
+        // Check if both are root workflows
+        val isFromRoot = allFolders.none { it.workflowIds.contains(fromId) }
+        val isToRoot = allFolders.none { it.workflowIds.contains(toId) }
+
+        if (isFromRoot && isToRoot) {
+            val rootWorkflows = allWorkflows.filter { workflow ->
+                allFolders.none { it.workflowIds.contains(workflow.id) }
+            }.sortedBy { it.order }.toMutableList()
+
+            val fromIndex = rootWorkflows.indexOfFirst { it.id == fromId }
+            val toIndex = rootWorkflows.indexOfFirst { it.id == toId }
+
+            if (fromIndex != -1 && toIndex != -1) {
+                val item = rootWorkflows.removeAt(fromIndex)
+                rootWorkflows.add(toIndex, item)
+
+                val updatedWorkflows = rootWorkflows.mapIndexed { index, workflow ->
+                    workflow.copy(order = index)
+                }
+                workflowRepository.updateWorkflowOrders(updatedWorkflows)
+            }
+        } else {
+            // Handle reordering within the same folder
+            val fromFolder = allFolders.find { it.workflowIds.contains(fromId) }
+            val toFolder = allFolders.find { it.workflowIds.contains(toId) }
+
+            if (fromFolder != null && fromFolder.id == toFolder?.id) {
+                val workflowIds = fromFolder.workflowIds.toMutableList()
+                val fromIndex = workflowIds.indexOf(fromId)
+                val toIndex = workflowIds.indexOf(toId)
+
+                if (fromIndex != -1 && toIndex != -1) {
+                    val item = workflowIds.removeAt(fromIndex)
+                    workflowIds.add(toIndex, item)
+                    workflowFolderRepository.updateWorkflowFolder(fromFolder.copy(workflowIds = workflowIds))
+                }
+            }
+        }
+    }
 }

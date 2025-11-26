@@ -94,6 +94,9 @@ class WorkflowFragment : Fragment() {
                             fabClickFlow = mainSharedViewModel.fabClick,
                             onCreateFolder = { name ->
                                 viewModel.createFolder(name)
+                            },
+                            onReorder = { fromId, toId ->
+                                viewModel.reorderWorkflows(fromId, toId)
                             }
                         )
                     }
