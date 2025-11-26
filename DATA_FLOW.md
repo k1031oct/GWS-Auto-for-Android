@@ -50,7 +50,24 @@
 | ├─ Validation | `workflow.modules` | `modules.isNotEmpty()` | Boolean | 最低1モジュール必須 |
 | ├─ `generateId` | None | 新規の場合はID生成 | String | UUID |
 | ├─ `workflow.copy(updatedAt)` | `Timestamp.now()` | タイムスタンプ更新 | Workflow | |
+| ├─ `workflow.copy(updatedAt)` | `Timestamp.now()` | タイムスタンプ更新 | Workflow | |
 | └─ `Firestore.document(id).set` | `workflow.toMap()` | Firestoreへ保存 | `Task<Void>` | 書き込み権限 |
+
+### 2.5 ワークフロー並び替え (Workflow Reordering)
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **WorkflowViewModel.reorderWorkflows** | `fromId, toId` | ワークフローの並び替え | Unit | |
+| ├─ `allWorkflows` | None | 全ワークフロー取得 | List<Workflow> | |
+| ├─ `rootWorkflows` | None | ルート要素の抽出・ソート | MutableList | `order` ASC, `id` ASC |
+| ├─ `fromIndex, toIndex` | `fromId, toId` | インデックス特定 | Int | 範囲外チェック |
+| ├─ `removeAt(fromIndex)` | `fromIndex` | 移動元削除 | Workflow | |
+| ├─ `calculateInsertionIndex` | `fromIndex, toIndex` | 挿入位置計算 | Int | **Insert Above Logic** |
+| │  ├─ `Moving Down (from < to)` | | `toIndex - 1` | | 削除によるズレ補正 |
+| │  └─ `Moving Up (from > to)` | | `toIndex` | | |
+| ├─ `add(insertionIndex, item)` | `index, item` | リストへ挿入 | Unit | |
+| ├─ `updateOrders` | `list` | `order`フィールド再採番 | List<Workflow> | 0-based index |
+| └─ **WorkflowRepository.updateWorkflowOrders** | `workflows` | DB更新 | Unit | |
 
 ### 2.3 モジュール操作 (エディタ)
 

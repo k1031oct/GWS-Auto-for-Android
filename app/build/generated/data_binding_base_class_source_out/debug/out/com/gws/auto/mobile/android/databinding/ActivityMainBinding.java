@@ -4,6 +4,7 @@ package com.gws.auto.mobile.android.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +16,7 @@ import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gws.auto.mobile.android.R;
 import java.lang.NullPointerException;
@@ -32,7 +34,13 @@ public final class ActivityMainBinding implements ViewBinding {
   public final BottomNavigationView bottomNav;
 
   @NonNull
+  public final HorizontalScrollView chipScrollView;
+
+  @NonNull
   public final FloatingActionButton fabMain;
+
+  @NonNull
+  public final ChipGroup searchChipGroup;
 
   @NonNull
   public final FragmentContainerView searchFragmentContainer;
@@ -47,13 +55,16 @@ public final class ActivityMainBinding implements ViewBinding {
   public final ViewPager2 viewPager;
 
   private ActivityMainBinding(@NonNull ConstraintLayout rootView, @NonNull ImageView actionSettings,
-      @NonNull BottomNavigationView bottomNav, @NonNull FloatingActionButton fabMain,
+      @NonNull BottomNavigationView bottomNav, @NonNull HorizontalScrollView chipScrollView,
+      @NonNull FloatingActionButton fabMain, @NonNull ChipGroup searchChipGroup,
       @NonNull FragmentContainerView searchFragmentContainer, @NonNull SearchView searchView,
       @NonNull Toolbar toolbar, @NonNull ViewPager2 viewPager) {
     this.rootView = rootView;
     this.actionSettings = actionSettings;
     this.bottomNav = bottomNav;
+    this.chipScrollView = chipScrollView;
     this.fabMain = fabMain;
+    this.searchChipGroup = searchChipGroup;
     this.searchFragmentContainer = searchFragmentContainer;
     this.searchView = searchView;
     this.toolbar = toolbar;
@@ -99,9 +110,21 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.chip_scroll_view;
+      HorizontalScrollView chipScrollView = ViewBindings.findChildViewById(rootView, id);
+      if (chipScrollView == null) {
+        break missingId;
+      }
+
       id = R.id.fab_main;
       FloatingActionButton fabMain = ViewBindings.findChildViewById(rootView, id);
       if (fabMain == null) {
+        break missingId;
+      }
+
+      id = R.id.search_chip_group;
+      ChipGroup searchChipGroup = ViewBindings.findChildViewById(rootView, id);
+      if (searchChipGroup == null) {
         break missingId;
       }
 
@@ -130,7 +153,8 @@ public final class ActivityMainBinding implements ViewBinding {
       }
 
       return new ActivityMainBinding((ConstraintLayout) rootView, actionSettings, bottomNav,
-          fabMain, searchFragmentContainer, searchView, toolbar, viewPager);
+          chipScrollView, fabMain, searchChipGroup, searchFragmentContainer, searchView, toolbar,
+          viewPager);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

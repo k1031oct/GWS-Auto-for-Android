@@ -18,6 +18,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <HorizontalScrollView
+                android:id="@+id/chip_scroll_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:scrollbars="none"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/search_view"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintHorizontal_bias="0.0">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/search_chip_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleLine="true" />
+
+            </HorizontalScrollView>
+
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/search_view"
                 android:layout_width="0dp"
@@ -25,7 +47,7 @@
                 android:layout_marginEnd="8dp"
                 app:queryHint="@string/search_workflows_hint"
                 app:iconifiedByDefault="false"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/chip_scroll_view"
                 app:layout_constraintEnd_toStartOf="@+id/action_settings"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
@@ -60,6 +82,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:itemIconTint="@color/selector_bottom_nav_icon"
         app:menu="@menu/bottom_nav_menu" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -68,6 +91,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:visibility="gone"
+        app:tint="@color/white"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav"
         app:layout_constraintEnd_toEndOf="parent" />
 

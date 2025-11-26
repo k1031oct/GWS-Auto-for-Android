@@ -189,6 +189,7 @@
     <string name="badge_destructive">Destructive</string>
     <string name="badge_outline">Outline</string>
     <string name="badge_secondary">Secondary</string>
+    <string name="bookmarks_filter_label">🔖 Bookmarks</string>
     <string name="calendar_next_month_button">></string>
     <string name="calendar_previous_month_button">&lt;</string>
     <string name="cancel">Cancel</string>
@@ -257,6 +258,7 @@
     <string name="export_failed">Export failed: %1$s</string>
     <string name="export_history_csv">Export History to CSV</string>
     <string name="favorite">Favorite</string>
+    <string name="favorites_filter_label">★ Favorites</string>
     <string name="file_info_resolve_failed">Failed to resolve file information.</string>
     <string name="file_name">File Name</string>
     <string name="firebase_auth_failed">Firebase authentication failed.</string>

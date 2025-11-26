@@ -28,6 +28,7 @@ class WorkflowViewModel @Inject constructor(
 
     private val _searchQuery = MutableStateFlow("")
     private val _isFavoriteFilterActive = MutableStateFlow(false)
+    private val _selectedTag = MutableStateFlow<String?>(null)
     private val _expandedFolderIds = MutableStateFlow<Set<String>>(emptySet())
 
     val isFavoriteFilterActive: StateFlow<Boolean> = _isFavoriteFilterActive
@@ -37,8 +38,18 @@ class WorkflowViewModel @Inject constructor(
         workflowFolderRepository.getAllWorkflowFolders(),
         _searchQuery,
         _isFavoriteFilterActive,
+        _selectedTag,
         _expandedFolderIds
-    ) { workflows, folders, query, isFavoriteFilterActive, expandedIds ->
+    ) { args ->
+        @Suppress("UNCHECKED_CAST")
+        val workflows = args[0] as List<Workflow>
+        @Suppress("UNCHECKED_CAST")
+        val folders = args[1] as List<WorkflowFolder>
+        val query = args[2] as String
+        val isFavoriteFilterActive = args[3] as Boolean
+        val selectedTag = args[4] as String?
+        @Suppress("UNCHECKED_CAST")
+        val expandedIds = args[5] as Set<String>
 
         val workflowMap = workflows.associateBy { it.id }
         val allWorkflowIdsInFolders = folders.flatMap { it.workflowIds }.toSet()
@@ -47,8 +58,9 @@ class WorkflowViewModel @Inject constructor(
             val matchesQuery = query.isBlank() ||
                     workflow.name.contains(query, ignoreCase = true) ||
                     workflow.tags.any { it.contains(query, ignoreCase = true) }
+            val matchesTag = selectedTag == null || workflow.tags.any { it.equals(selectedTag, ignoreCase = true) }
             val matchesFavorite = !isFavoriteFilterActive || workflow.isFavorite
-            matchesQuery && matchesFavorite
+            matchesQuery && matchesTag && matchesFavorite
         }
 
         val topLevelWorkflows = workflows.filter { it.id !in allWorkflowIdsInFolders }
@@ -110,8 +122,12 @@ class WorkflowViewModel @Inject constructor(
         workflowRepository.saveWorkflow(updatedWorkflow)
     }
 
-    fun toggleFavoriteFilter() {
-        _isFavoriteFilterActive.value = !_isFavoriteFilterActive.value
+    fun setFavoriteFilter(isActive: Boolean) {
+        _isFavoriteFilterActive.value = isActive
+    }
+
+    fun onSelectedTagChanged(tag: String?) {
+        _selectedTag.value = tag
     }
 
     fun createFolder(name: String) = viewModelScope.launch {
@@ -188,7 +204,7 @@ class WorkflowViewModel @Inject constructor(
                  // Move from root to root bottom
                  val rootWorkflows = allWorkflows.filter { workflow ->
                     allFolders.none { it.workflowIds.contains(workflow.id) }
-                 }.sortedBy { it.order }.toMutableList()
+                 }.sortedWith(compareBy({ it.order }, { it.id })).toMutableList()
                  
                  val fromIndex = rootWorkflows.indexOfFirst { it.id == fromId }
                  if (fromIndex != -1) {
@@ -213,7 +229,7 @@ class WorkflowViewModel @Inject constructor(
         if (isFromRoot && isToRoot) {
             val rootWorkflows = allWorkflows.filter { workflow ->
                 allFolders.none { it.workflowIds.contains(workflow.id) }
-            }.sortedBy { it.order }.toMutableList()
+            }.sortedWith(compareBy({ it.order }, { it.id })).toMutableList()
 
             val fromIndex = rootWorkflows.indexOfFirst { it.id == fromId }
             val toIndex = rootWorkflows.indexOfFirst { it.id == toId }

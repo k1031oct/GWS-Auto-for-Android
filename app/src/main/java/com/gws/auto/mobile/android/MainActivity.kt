@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var googleApiAuthorizer: GoogleApiAuthorizer
     
     private var settingsPopupMenu: PopupMenu? = null
+    private var currentHighlightColorName: String = "default"
 
     private val requestPermissionLauncher =
         registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
@@ -149,6 +150,7 @@ class MainActivity : AppCompatActivity() {
     private fun observeSettings() {
         settingsRepository.highlightColor
             .onEach { colorName ->
+                currentHighlightColorName = colorName
                 applyHighlightColor(colorName)
             }
             .launchIn(lifecycleScope)
@@ -296,7 +298,80 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        // All icon visibility is now managed within SearchFragment
+        // Observe selected tag
+        mainSharedViewModel.selectedTag.onEach { tag ->
+            updateSearchChips()
+        }.launchIn(lifecycleScope)
+
+        // Observe favorite filter
+        mainSharedViewModel.isFavoriteFilterActive.onEach { isActive ->
+            updateSearchChips()
+        }.launchIn(lifecycleScope)
+
+        // Observe bookmark filter
+        mainSharedViewModel.isBookmarkFilterActive.onEach { isActive ->
+            updateSearchChips()
+        }.launchIn(lifecycleScope)
+    }
+
+    private fun updateSearchChips() {
+        binding.searchChipGroup.removeAllViews()
+
+        val selectedTag = mainSharedViewModel.selectedTag.value
+        val isFavorite = mainSharedViewModel.isFavoriteFilterActive.value
+        val isBookmark = mainSharedViewModel.isBookmarkFilterActive.value
+
+        if (selectedTag != null) {
+            addChip(selectedTag) {
+                mainSharedViewModel.setSelectedTag(null)
+            }
+        }
+
+        if (isFavorite) {
+            addChip(getString(R.string.favorites_filter_label)) {
+                mainSharedViewModel.setFavoriteFilter(false)
+            }
+        }
+
+        if (isBookmark) {
+            addChip(getString(R.string.bookmarks_filter_label)) {
+                mainSharedViewModel.setBookmarkFilter(false)
+            }
+        }
+        
+        // Adjust SearchView visibility/width if needed, but ConstraintLayout should handle it.
+        // If chips exist, SearchView might get squeezed.
+        // We might want to ensure SearchView has a minimum width or expands when focused.
+        // For now, let's rely on the layout.
+    }
+
+    private fun addChip(text: String, onClose: () -> Unit) {
+        val chip = com.google.android.material.chip.Chip(this)
+        chip.text = text
+        chip.isCloseIconVisible = true
+        chip.setOnCloseIconClickListener { onClose() }
+        chip.setOnClickListener { onClose() } // Also close on click for easier dismissal
+        
+        // Style the chip
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val isDarkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+        
+        // Use highlight color for background
+        currentHighlightColorName.let { colorName ->
+             val color = when (colorName) {
+                "forest" -> if (isDarkTheme) ForestPrimaryDark else ForestPrimaryLight
+                "ocean" -> if (isDarkTheme) OceanPrimaryDark else OceanPrimaryLight
+                "sakura" -> if (isDarkTheme) SakuraPrimaryDark else SakuraPrimaryLight
+                "neon" -> if (isDarkTheme) NeonPrimaryDark else NeonPrimaryLight
+                else -> if (isDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight
+            }
+            chip.chipBackgroundColor = ColorStateList.valueOf(color.toArgb())
+            val textColor = if (isDarkTheme) Color.BLACK else Color.WHITE
+            chip.setTextColor(textColor)
+            chip.closeIconTint = ColorStateList.valueOf(textColor)
+        }
+        
+        binding.searchChipGroup.addView(chip)
     }
 
     private fun setupBackButtonHandler() {

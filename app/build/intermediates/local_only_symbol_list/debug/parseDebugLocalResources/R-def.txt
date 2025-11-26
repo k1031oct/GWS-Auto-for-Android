@@ -87,6 +87,7 @@ color neon_yellow
 color purple_200
 color purple_500
 color purple_700
+color selector_bottom_nav_icon
 color teal_200
 color teal_700
 color white
@@ -145,6 +146,7 @@ id bookmark_button
 id bottom_nav
 id button_bar
 id cancel_button
+id chip_scroll_view
 id clear_history_button
 id compose_view
 id confirm_button
@@ -215,6 +217,7 @@ id schedule_status
 id schedule_title_text
 id schedule_type_and_time
 id schedule_workflow_name
+id search_chip_group
 id search_fragment_container
 id search_view
 id setting_title
@@ -351,6 +354,7 @@ string badge_default
 string badge_destructive
 string badge_outline
 string badge_secondary
+string bookmarks_filter_label
 string calendar_next_month_button
 string calendar_previous_month_button
 string cancel
@@ -419,6 +423,7 @@ string exit_confirmation_title
 string export_failed
 string export_history_csv
 string favorite
+string favorites_filter_label
 string file_info_resolve_failed
 string file_name
 string firebase_auth_failed

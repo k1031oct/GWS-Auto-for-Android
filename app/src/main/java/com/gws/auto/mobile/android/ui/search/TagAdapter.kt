@@ -65,7 +65,7 @@ class TagAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is TagViewHolder -> holder.bind(getItem(position) as Tag)
-            is FilterTagViewHolder -> holder.bind(getItem(position) as FilterTag)
+            is FilterTagViewHolder -> holder.bind(getItem(position) as FilterTag, highlightColor)
             is AddTagViewHolder -> holder.bind(highlightColor)
         }
     }
@@ -89,8 +89,40 @@ class TagAdapter(
         private val binding: ListItemTagBinding,
         private val onTagClicked: (FilterTag) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(tag: FilterTag) {
+        fun bind(tag: FilterTag, highlightColor: Int?) {
             binding.tagName.text = tag.displayName // e.g., "★ Favorites"
+            
+            if (tag.isActive && highlightColor != null) {
+                val chip = binding.root as? com.google.android.material.chip.Chip
+                chip?.chipBackgroundColor = ColorStateList.valueOf(highlightColor)
+                
+                val context = binding.root.context
+                val nightModeFlags = context.resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK
+                val isDarkTheme = nightModeFlags == android.content.res.Configuration.UI_MODE_NIGHT_YES
+                val textColor = if (isDarkTheme) android.graphics.Color.BLACK else android.graphics.Color.WHITE
+                
+                chip?.setTextColor(textColor)
+                chip?.chipIconTint = ColorStateList.valueOf(textColor)
+            } else {
+                // Reset to default style if not active
+                val chip = binding.root as? com.google.android.material.chip.Chip
+                // We need to reset to default colors. Since we don't have easy access to original theme attributes here without context resolution,
+                // we might need to rely on the fact that RecyclerView rebinding usually clears state if we are careful, 
+                // but for Chips, manual reset is safer.
+                // However, getting the default "surfaceVariant" or similar from here is tricky without context.
+                // A better approach is to invalidate the view or let the theme handle the default state.
+                // But since we are manually setting it for active, we must manually unset it.
+                
+                // Let's try to get the default color from the context of the view
+                val context = binding.root.context
+                val defaultBackgroundColor = com.google.android.material.color.MaterialColors.getColor(binding.root, com.google.android.material.R.attr.colorSurfaceVariant)
+                val defaultTextColor = com.google.android.material.color.MaterialColors.getColor(binding.root, com.google.android.material.R.attr.colorOnSurfaceVariant)
+                
+                chip?.chipBackgroundColor = ColorStateList.valueOf(defaultBackgroundColor)
+                chip?.setTextColor(defaultTextColor)
+                chip?.chipIconTint = ColorStateList.valueOf(defaultTextColor)
+            }
+
             binding.root.setOnClickListener { onTagClicked(tag) }
             // No long click for filter tags
         }
@@ -110,12 +142,14 @@ class TagAdapter(
             if (highlightColor != null) {
                 val chip = binding.root as? com.google.android.material.chip.Chip
                 chip?.chipBackgroundColor = ColorStateList.valueOf(highlightColor)
-                // Also tint the icon to be white for better contrast if the background is dark
-                // For now, let's assume the icon tint should match the text color or be white/black based on theme
-                // But the user only complained about the chip color.
-                // Let's also set the icon tint to white to be safe as highlight colors are usually dark/vibrant
-                chip?.chipIconTint = ColorStateList.valueOf(android.graphics.Color.BLACK)
-                chip?.setTextColor(android.graphics.Color.BLACK)
+                
+                val context = binding.root.context
+                val nightModeFlags = context.resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK
+                val isDarkTheme = nightModeFlags == android.content.res.Configuration.UI_MODE_NIGHT_YES
+                val textColor = if (isDarkTheme) android.graphics.Color.BLACK else android.graphics.Color.WHITE
+
+                chip?.chipIconTint = ColorStateList.valueOf(textColor)
+                chip?.setTextColor(textColor)
             }
         }
     }

@@ -20,13 +20,14 @@
             android:layout_height="24dp"
             android:layout_marginEnd="8dp"
             android:src="@drawable/ic_module"
-            app:tint="?attr/colorOnSurfaceVariant" />
+            app:tint="@color/white" />
 
         <TextView
             android:id="@+id/module_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="@color/white"
             tools:text="Module Name" />
 
     </LinearLayout>

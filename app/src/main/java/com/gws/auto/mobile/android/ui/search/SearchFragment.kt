@@ -80,13 +80,21 @@ class SearchFragment : Fragment() {
         binding.historyRecyclerView.adapter = historyAdapter
 
         suggestionAdapter = SearchSuggestionAdapter { suggestion ->
-            val query = when (suggestion) {
-                is SearchSuggestion.WorkflowItem -> suggestion.workflow.name
-                is SearchSuggestion.FolderItem -> suggestion.folder.name
-                is SearchSuggestion.TagItem -> suggestion.tag.name
+            when (suggestion) {
+                is SearchSuggestion.WorkflowItem -> {
+                    mainSharedViewModel.setSearchQuery(suggestion.workflow.name)
+                    viewModel.addSearchHistory(suggestion.workflow.name)
+                }
+                is SearchSuggestion.FolderItem -> {
+                    mainSharedViewModel.setSearchQuery(suggestion.folder.name)
+                    viewModel.addSearchHistory(suggestion.folder.name)
+                }
+                is SearchSuggestion.TagItem -> {
+                    mainSharedViewModel.setSelectedTag(suggestion.tag.name)
+                    mainSharedViewModel.setSearchQuery("")
+                    viewModel.addSearchHistory(suggestion.tag.name)
+                }
             }
-            mainSharedViewModel.setSearchQuery(query)
-            viewModel.addSearchHistory(query)
             requireActivity().findViewById<View>(R.id.search_fragment_container).visibility = View.GONE
         }
     }
@@ -95,12 +103,14 @@ class SearchFragment : Fragment() {
         when (tag) {
             is FilterTag -> {
                 when (tag.type) {
-                    FilterType.FAVORITE -> workflowViewModel.toggleFavoriteFilter()
-                    FilterType.BOOKMARK -> historyViewModel.toggleBookmarkFilter()
+                    FilterType.FAVORITE -> mainSharedViewModel.toggleFavoriteFilter()
+                    FilterType.BOOKMARK -> mainSharedViewModel.toggleBookmarkFilter()
                 }
             }
             is Tag -> {
-                mainSharedViewModel.setSearchQuery(tag.name)
+                // Set selected tag and clear query
+                mainSharedViewModel.setSelectedTag(tag.name)
+                mainSharedViewModel.setSearchQuery("")
                 viewModel.addSearchHistory(tag.name)
                 requireActivity().findViewById<View>(R.id.search_fragment_container).visibility = View.GONE
             }
@@ -108,10 +118,15 @@ class SearchFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        val favoriteFilterTag = FilterTag("★ Favorites", FilterType.FAVORITE)
-        val bookmarkFilterTag = FilterTag("🔖 Bookmarks", FilterType.BOOKMARK)
+        combine(
+            mainSharedViewModel.currentPage,
+            viewModel.tags,
+            mainSharedViewModel.isFavoriteFilterActive,
+            mainSharedViewModel.isBookmarkFilterActive
+        ) { page, tags, isFavoriteActive, isBookmarkActive ->
+            val favoriteFilterTag = FilterTag("★ Favorites", FilterType.FAVORITE, isFavoriteActive)
+            val bookmarkFilterTag = FilterTag("🔖 Bookmarks", FilterType.BOOKMARK, isBookmarkActive)
 
-        combine(mainSharedViewModel.currentPage, viewModel.tags) { page, tags ->
             val filterTags = when (page) {
                 0 -> listOf(favoriteFilterTag)
                 2 -> listOf(bookmarkFilterTag)

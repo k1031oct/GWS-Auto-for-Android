@@ -71,6 +71,7 @@ fun WorkflowScreen(
             onDismissRequest = { showDeleteWorkflowDialog = null },
             title = { Text(showDeleteWorkflowDialog!!.name) },
             text = { Text(stringResource(R.string.workflow_delete_confirmation)) },
+            containerColor = MaterialTheme.colorScheme.surface,
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -94,6 +95,7 @@ fun WorkflowScreen(
             onDismissRequest = { showDeleteFolderDialog = null },
             title = { Text(showDeleteFolderDialog!!.name) },
             text = { Text(stringResource(R.string.folder_delete_confirmation)) },
+            containerColor = MaterialTheme.colorScheme.surface,
             confirmButton = {
                 TextButton(
                     onClick = {

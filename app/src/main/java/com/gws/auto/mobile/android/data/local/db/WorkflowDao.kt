@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WorkflowDao {
-    @Query("SELECT * FROM workflows ORDER BY `order` ASC")
+    @Query("SELECT * FROM workflows ORDER BY `order` ASC, id ASC")
     fun getAllWorkflows(): Flow<List<Workflow>>
 
     @Query("SELECT * FROM workflows WHERE id = :id")
