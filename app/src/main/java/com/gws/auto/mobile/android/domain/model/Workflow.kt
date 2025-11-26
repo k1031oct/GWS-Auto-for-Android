@@ -20,5 +20,6 @@ data class Workflow(
     val status: String = "",
     val trigger: String = "",
     val tags: List<String> = emptyList(),
-    val isFavorite: Boolean = false
+    val isFavorite: Boolean = false,
+    val order: Int = 0
 )
