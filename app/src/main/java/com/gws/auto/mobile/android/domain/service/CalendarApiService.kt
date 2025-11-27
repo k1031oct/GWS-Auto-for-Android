@@ -90,4 +90,37 @@ class CalendarApiService @Inject constructor(
             emptyList()
         }
     }
+
+    suspend fun getHolidaysInRange(countryCode: String, startDate: LocalDate, endDate: LocalDate): List<Holiday> = withContext(Dispatchers.IO) {
+        val service = getService()
+        val calendarId = getHolidayCalendarId(countryCode)
+
+        val timeMin = DateTime(Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+        val timeMax = DateTime(Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+
+        try {
+            val events = service.events().list(calendarId)
+                .setTimeMin(timeMin)
+                .setTimeMax(timeMax)
+                .setOrderBy("startTime")
+                .setSingleEvents(true)
+                .execute()
+
+            events.items.mapNotNull { event ->
+                val dateString = event.start?.date?.toStringRfc3339()?.substring(0, 10)
+                if (dateString != null) {
+                    try {
+                        Holiday(LocalDate.parse(dateString, DateTimeFormatter.ISO_DATE), event.summary)
+                    } catch (e: Exception) {
+                        null
+                    }
+                } else {
+                    null
+                }
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to fetch holidays for $calendarId")
+            emptyList()
+        }
+    }
 }

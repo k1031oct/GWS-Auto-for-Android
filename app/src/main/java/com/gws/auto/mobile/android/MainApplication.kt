@@ -17,19 +17,21 @@ import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 @HiltAndroidApp
-class MainApplication : Application() {
+class MainApplication : Application(), Configuration.Provider {
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
+
     override fun onCreate() {
         super.onCreate()
 
-        // Initialize WorkManager with Hilt
-        val workManagerConfig = Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
-        WorkManager.initialize(this, workManagerConfig)
+        // WorkManager initialization is now handled by Configuration.Provider
+        // WorkManager.initialize(this, workManagerConfig) - Removed manual init
 
         FirebaseApp.initializeApp(this)
         if (BuildConfig.DEBUG) {

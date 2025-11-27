@@ -82,34 +82,51 @@
 
     <string-array name="module_display_names">
         <!-- Gmail -->
-        <item>Gmail: メール送信</item>
-        <item>Gmail: 下書き作成</item>
+        <item>@string/module_gmail_send_email</item>
+        <item>@string/module_gmail_create_draft</item>
+        <item>@string/module_gmail_save_attachments</item>
         <!-- Google Sheets -->
-        <item>Sheets: 行追加</item>
-        <item>Sheets: セル更新</item>
-        <item>Sheets: 新規作成</item>
-        <item>Sheets: クリア</item>
-        <item>Sheets: コピー\u0026ペースト</item>
-        <item>Sheets: 複製</item>
+        <item>@string/module_sheets_append_row</item>
+        <item>@string/module_sheets_set_value</item>
+        <item>@string/module_sheets_create_new</item>
+        <item>@string/module_sheets_clear_values</item>
+        <item>@string/module_sheets_copy_paste</item>
+        <item>@string/module_sheets_duplicate</item>
+        <item>@string/module_sheets_unhide</item>
+        <item>@string/module_sheets_hide</item>
+        <item>@string/module_sheets_delete</item>
+        <item>@string/module_sheets_insert</item>
+        <item>@string/module_sheets_import_csv</item>
+        <item>@string/module_sheets_export_pdf</item>
+        <item>@string/module_sheets_export_excel</item>
         <!-- Google Drive -->
-        <item>Drive: フォルダ作成</item>
-        <item>Drive: ファイルコピー</item>
-        <item>Drive: ファイル移動</item>
+        <item>@string/module_drive_create_folder</item>
+        <item>@string/module_drive_copy_file</item>
+        <item>@string/module_drive_move_file</item>
+        <item>@string/module_drive_excel_to_sheets</item>
+        <item>@string/module_drive_delete_file</item>
+        <item>@string/module_drive_list_files</item>
         <!-- Google Calendar -->
-        <item>Calendar: イベント作成</item>
+        <item>@string/module_calendar_create_event</item>
         <!-- Google Chat -->
-        <item>Chat: メッセージ送信</item>
+        <item>@string/module_chat_post</item>
         <!-- ユーティリティ -->
-        <item>変数定義</item>
-        <item>相対日付取得</item>
-        <item>Toast通知</item>
-        <item>ログ出力</item>
+        <item>@string/module_util_define_variable</item>
+        <item>@string/module_util_relative_date</item>
+        <item>@string/module_util_show_toast</item>
+        <item>@string/module_util_log_message</item>
+        <item>@string/module_util_if_else</item>
+        <item>@string/module_util_no_op</item>
+        <item>@string/module_util_delay</item>
+        <item>@string/module_util_run_workflow</item>
+        <item>@string/module_util_get_holidays</item>
     </string-array>
 
     <string-array name="module_keys">
         <!-- Gmail -->
         <item>gmail_send_email</item>
         <item>CREATE_GMAIL_DRAFT</item>
+        <item>gmail_save_attachments</item>
         <!-- Google Sheets -->
         <item>sheets_append_row</item>
         <item>sheets_set_value</item>
@@ -117,10 +134,20 @@
         <item>sheets_clear_values</item>
         <item>COPY_PASTE_SHEET_VALUES</item>
         <item>DUPLICATE_SPREADSHEET</item>
+        <item>sheets_unhide_rows_cols</item>
+        <item>sheets_hide_rows_cols</item>
+        <item>sheets_delete_rows_cols</item>
+        <item>sheets_insert_rows_cols</item>
+        <item>sheets_import_csv</item>
+        <item>sheets_export_pdf</item>
+        <item>sheets_export_excel</item>
         <!-- Google Drive -->
         <item>drive_create_folder</item>
         <item>drive_copy_file</item>
         <item>drive_move_file</item>
+        <item>drive_convert_excel_to_sheets</item>
+        <item>drive_delete_file</item>
+        <item>drive_list_files_to_sheet</item>
         <!-- Google Calendar -->
         <item>calendar_create_event</item>
         <!-- Google Chat -->
@@ -130,5 +157,10 @@
         <item>GET_RELATIVE_DATE</item>
         <item>SHOW_TOAST</item>
         <item>LOG_MESSAGE</item>
+        <item>if_else</item>
+        <item>no_op</item>
+        <item>delay</item>
+        <item>run_workflow</item>
+        <item>get_holidays</item>
     </string-array>
 </resources>

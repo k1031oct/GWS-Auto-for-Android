@@ -31,6 +31,7 @@ class HistoryFragment : Fragment() {
     private val workflowViewModel: WorkflowViewModel by viewModels()
     private val mainSharedViewModel: MainSharedViewModel by activityViewModels()
     private lateinit var historyAdapter: HistoryAdapter
+    private lateinit var itemTouchHelper: ItemTouchHelper
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,6 +50,12 @@ class HistoryFragment : Fragment() {
             },
             onBookmarkClick = { headerItem ->
                 viewModel.toggleBookmark(headerItem.history)
+            },
+            onItemLongClick = { viewHolder ->
+                android.widget.Toast.makeText(requireContext(), R.string.history_swipe_to_delete_instruction, android.widget.Toast.LENGTH_SHORT).show()
+                if (::itemTouchHelper.isInitialized) {
+                    itemTouchHelper.startSwipe(viewHolder)
+                }
             }
         )
         binding.historyRecyclerView.layoutManager = LinearLayoutManager(context)
@@ -59,7 +66,11 @@ class HistoryFragment : Fragment() {
     }
 
     private fun setupItemTouchHelper() {
-        val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun isItemViewSwipeEnabled(): Boolean {
+                return false
+            }
+
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
                 return false
             }

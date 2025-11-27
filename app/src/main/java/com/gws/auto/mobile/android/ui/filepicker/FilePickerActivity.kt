@@ -168,30 +168,6 @@ class FilePickerActivity : AppCompatActivity() {
     }
 
     private fun confirmCurrentFolder() {
-        // When selecting current folder, we need the ID of the folder we are currently IN.
-        // But the ViewModel only exposes currentFolderName.
-        // We need the current folder ID from the ViewModel.
-        // Let's assume we can get it or we need to expose it.
-        // Wait, ViewModel has folderStack. The top is the current folder.
-        // I should probably expose currentFolderId in ViewModel.
-        // For now, let's see if I can get it from the stack or if I need to change ViewModel.
-        // ViewModel has `currentFolderName` LiveData.
-        // I should add `currentFolderId` LiveData to ViewModel.
-        // For now, I will modify ViewModel to expose currentFolderId.
-        // But since I can't modify ViewModel in this tool call, I will assume it's there or I will add it in next step.
-        // Actually, I can just use the selectedFile logic if I select a folder from the list.
-        // But "Select Current Folder" means the one we are INSIDE.
-        // So I need the ID of the folder currently displayed.
-        
-        // Let's modify ViewModel first to expose currentFolderId.
-        // I will revert this thought and go modify ViewModel first.
-        // But I am already in the middle of modifying Activity.
-        // I will comment out the implementation of confirmCurrentFolder for now and fix it after updating ViewModel.
-        
-        // Actually, I can just ask ViewModel for current folder ID if I expose it.
-        // Let's finish this file update assuming `viewModel.currentFolderId.value` will be available.
-        // I will add `currentFolderId` to ViewModel in the next step.
-        
         val folderId = viewModel.currentFolderId.value
         val folderName = viewModel.currentFolderName.value
         

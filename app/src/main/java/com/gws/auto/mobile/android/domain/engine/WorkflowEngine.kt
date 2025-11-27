@@ -73,13 +73,17 @@ class LocalWorkflowEngine @Inject constructor(
 
         try {
             logBuilder.append("Workflow '${workflow.name}' started.\n")
-            for ((index, module) in modules.withIndex()) {
+            var currentIndex = 0
+            while (currentIndex < modules.size) {
+                val module = modules[currentIndex]
+                
                 if (!module.isEnabled) {
-                    logBuilder.append("[Step ${index + 1}: ${module.type}] - Skipped (disabled)\n")
+                    logBuilder.append("[Step ${currentIndex + 1}: ${module.type}] - Skipped (disabled)\n")
+                    currentIndex++
                     continue
                 }
 
-                val context = ExecutionContext(module, variables)
+                val context = ExecutionContext(module, variables, this)
                 var executor = moduleExecutorProvider.get(module.type)
 
                 if (executor == null && module.type == "LOG_MESSAGE") {
@@ -95,7 +99,7 @@ class LocalWorkflowEngine @Inject constructor(
                     break
                 }
 
-                logBuilder.append("[Step ${index + 1}: ${module.type}]\n")
+                logBuilder.append("[Step ${currentIndex + 1}: ${module.type}]\n")
                 try {
                     val result = executor.execute(context)
                     logBuilder.append("Output: ${result.outputMessage ?: "No message"}\n")
@@ -104,6 +108,19 @@ class LocalWorkflowEngine @Inject constructor(
                         status = "Failure"
                         break
                     }
+                    
+                    // Check for flow control
+                    if (context.nextModuleId != null) {
+                        val nextIndex = modules.indexOfFirst { it.id == context.nextModuleId }
+                        if (nextIndex != -1) {
+                            currentIndex = nextIndex
+                            continue
+                        } else {
+                            Timber.w("Next module ID '${context.nextModuleId}' not found. Continuing to next step.")
+                        }
+                    }
+                    
+                    currentIndex++
                 } catch (e: com.google.android.gms.auth.UserRecoverableAuthException) {
                     status = "Failure"
                     logBuilder.append("ERROR: Need remote consent - ${e.message}\n")

@@ -59,33 +59,50 @@
     </string-array>
     <string-array name="module_display_names">
         
-        <item>Gmail: メール送信</item>
-        <item>Gmail: 下書き作成</item>
+        <item>@string/module_gmail_send_email</item>
+        <item>@string/module_gmail_create_draft</item>
+        <item>@string/module_gmail_save_attachments</item>
         
-        <item>Sheets: 行追加</item>
-        <item>Sheets: セル更新</item>
-        <item>Sheets: 新規作成</item>
-        <item>Sheets: クリア</item>
-        <item>Sheets: コピー\u0026ペースト</item>
-        <item>Sheets: 複製</item>
+        <item>@string/module_sheets_append_row</item>
+        <item>@string/module_sheets_set_value</item>
+        <item>@string/module_sheets_create_new</item>
+        <item>@string/module_sheets_clear_values</item>
+        <item>@string/module_sheets_copy_paste</item>
+        <item>@string/module_sheets_duplicate</item>
+        <item>@string/module_sheets_unhide</item>
+        <item>@string/module_sheets_hide</item>
+        <item>@string/module_sheets_delete</item>
+        <item>@string/module_sheets_insert</item>
+        <item>@string/module_sheets_import_csv</item>
+        <item>@string/module_sheets_export_pdf</item>
+        <item>@string/module_sheets_export_excel</item>
         
-        <item>Drive: フォルダ作成</item>
-        <item>Drive: ファイルコピー</item>
-        <item>Drive: ファイル移動</item>
+        <item>@string/module_drive_create_folder</item>
+        <item>@string/module_drive_copy_file</item>
+        <item>@string/module_drive_move_file</item>
+        <item>@string/module_drive_excel_to_sheets</item>
+        <item>@string/module_drive_delete_file</item>
+        <item>@string/module_drive_list_files</item>
         
-        <item>Calendar: イベント作成</item>
+        <item>@string/module_calendar_create_event</item>
         
-        <item>Chat: メッセージ送信</item>
+        <item>@string/module_chat_post</item>
         
-        <item>変数定義</item>
-        <item>相対日付取得</item>
-        <item>Toast通知</item>
-        <item>ログ出力</item>
+        <item>@string/module_util_define_variable</item>
+        <item>@string/module_util_relative_date</item>
+        <item>@string/module_util_show_toast</item>
+        <item>@string/module_util_log_message</item>
+        <item>@string/module_util_if_else</item>
+        <item>@string/module_util_no_op</item>
+        <item>@string/module_util_delay</item>
+        <item>@string/module_util_run_workflow</item>
+        <item>@string/module_util_get_holidays</item>
     </string-array>
     <string-array name="module_keys">
         
         <item>gmail_send_email</item>
         <item>CREATE_GMAIL_DRAFT</item>
+        <item>gmail_save_attachments</item>
         
         <item>sheets_append_row</item>
         <item>sheets_set_value</item>
@@ -93,10 +110,20 @@
         <item>sheets_clear_values</item>
         <item>COPY_PASTE_SHEET_VALUES</item>
         <item>DUPLICATE_SPREADSHEET</item>
+        <item>sheets_unhide_rows_cols</item>
+        <item>sheets_hide_rows_cols</item>
+        <item>sheets_delete_rows_cols</item>
+        <item>sheets_insert_rows_cols</item>
+        <item>sheets_import_csv</item>
+        <item>sheets_export_pdf</item>
+        <item>sheets_export_excel</item>
         
         <item>drive_create_folder</item>
         <item>drive_copy_file</item>
         <item>drive_move_file</item>
+        <item>drive_convert_excel_to_sheets</item>
+        <item>drive_delete_file</item>
+        <item>drive_list_files_to_sheet</item>
         
         <item>calendar_create_event</item>
         
@@ -106,6 +133,11 @@
         <item>GET_RELATIVE_DATE</item>
         <item>SHOW_TOAST</item>
         <item>LOG_MESSAGE</item>
+        <item>if_else</item>
+        <item>no_op</item>
+        <item>delay</item>
+        <item>run_workflow</item>
+        <item>get_holidays</item>
     </string-array>
     <string-array name="theme_entries">
         <item>System Default</item>
@@ -285,6 +317,7 @@
     <string name="highlight_color">Highlight Color</string>
     <string name="history_cleared">All history has been cleared</string>
     <string name="history_exported_success">History exported successfully</string>
+    <string name="history_swipe_to_delete_instruction">Swipe to delete</string>
     <string name="hourly_interval_format">Interval: %1$d hours</string>
     <string name="invoice">Invoice</string>
     <string name="invoice_list_caption">A list of your recent invoices.</string>
@@ -292,8 +325,41 @@
     <string name="language">Language</string>
     <string name="long_scrollable_text">This is a long text that will overflow the container and require scrolling. </string>
     <string name="manage_tags">Manage Tags</string>
+    <string name="module_calendar_create_event">Create Event</string>
+    <string name="module_chat_post">Post Message</string>
+    <string name="module_drive_copy_file">Copy File</string>
+    <string name="module_drive_create_folder">Create Folder</string>
+    <string name="module_drive_delete_file">Delete File</string>
+    <string name="module_drive_excel_to_sheets">Excel to Sheets</string>
+    <string name="module_drive_list_files">List Files</string>
+    <string name="module_drive_move_file">Move File</string>
+    <string name="module_gmail_create_draft">Create Draft</string>
+    <string name="module_gmail_save_attachments">Save Attachments</string>
+    <string name="module_gmail_send_email">Send Email</string>
     <string name="module_library">Module Library</string>
     <string name="module_not_configurable">This module is not configurable yet.</string>
+    <string name="module_sheets_append_row">Append Row</string>
+    <string name="module_sheets_clear_values">Clear Values</string>
+    <string name="module_sheets_copy_paste">Copy &amp; Paste</string>
+    <string name="module_sheets_create_new">Create Sheet</string>
+    <string name="module_sheets_delete">Delete Rows/Cols</string>
+    <string name="module_sheets_duplicate">Duplicate</string>
+    <string name="module_sheets_export_excel">Export Excel</string>
+    <string name="module_sheets_export_pdf">Export PDF</string>
+    <string name="module_sheets_hide">Hide Rows/Cols</string>
+    <string name="module_sheets_import_csv">Import CSV</string>
+    <string name="module_sheets_insert">Insert Rows/Cols</string>
+    <string name="module_sheets_set_value">Set Value</string>
+    <string name="module_sheets_unhide">Unhide Rows/Cols</string>
+    <string name="module_util_define_variable">Define Variable</string>
+    <string name="module_util_delay">Delay</string>
+    <string name="module_util_get_holidays">Get Holidays</string>
+    <string name="module_util_if_else">If / Else</string>
+    <string name="module_util_log_message">Log Message</string>
+    <string name="module_util_no_op">No Op</string>
+    <string name="module_util_relative_date">Relative Date</string>
+    <string name="module_util_run_workflow">Run Workflow</string>
+    <string name="module_util_show_toast">Show Toast</string>
     <string name="monday">Monday</string>
     <string name="new_announcement_notification">New announcement available.</string>
     <string name="next_month">></string>

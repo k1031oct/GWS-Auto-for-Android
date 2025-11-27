@@ -131,7 +131,7 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
         moduleAdapter = ModuleAdapter(
             onEditClicked = { module ->
                 when (module.type) {
-                    "ToastNotificationModule" -> showToastMessageDialog(module)
+                    "ToastNotificationModule", "SHOW_TOAST" -> showToastMessageDialog(module)
                     "tasks_create_task" -> {
                         val dialog = GoogleTasksSettingsDialog(module)
                         dialog.show(supportFragmentManager, "GoogleTasksSettingsDialog")
@@ -204,14 +204,18 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
                     Module(id = "", type = "GET_CLIPBOARD", parameters = emptyMap())
                 )
                 "Output" -> listOf(
-                    Module(id = "", type = "ToastNotificationModule", parameters = emptyMap()),
+                    Module(id = "", type = "SHOW_TOAST", parameters = emptyMap()),
                     Module(id = "", type = "SYSTEM_NOTIFICATION", parameters = emptyMap()),
                     Module(id = "", type = "LOG_MESSAGE", parameters = emptyMap()),
                     Module(id = "", type = "SET_CLIPBOARD", parameters = emptyMap())
                 )
                 "Process" -> listOf(
                     Module(id = "", type = "CALCULATE", parameters = emptyMap()),
-                    Module(id = "", type = "HTTP_REQUEST", parameters = emptyMap())
+                    Module(id = "", type = "HTTP_REQUEST", parameters = emptyMap()),
+                    Module(id = "", type = "if_else", parameters = emptyMap()),
+                    Module(id = "", type = "delay", parameters = emptyMap()),
+                    Module(id = "", type = "run_workflow", parameters = emptyMap()),
+                    Module(id = "", type = "no_op", parameters = emptyMap())
                 )
                 "Core" -> listOf(
                     Module(id = "", type = "DEFINE_VARIABLE", parameters = emptyMap()),
@@ -220,12 +224,16 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
                 "Gmail" -> listOf(
                     Module(id = "", type = "CREATE_GMAIL_DRAFT", parameters = emptyMap()),
                     Module(id = "", type = "gmail_send_email", parameters = emptyMap()),
+                    Module(id = "", type = "gmail_save_attachments", parameters = emptyMap()),
                     Module(id = "", type = "chat_post", parameters = emptyMap())
                 )
                 "Drive" -> listOf(
                     Module(id = "", type = "drive_create_folder", parameters = emptyMap()),
                     Module(id = "", type = "drive_copy_file", parameters = emptyMap()),
-                    Module(id = "", type = "drive_move_file", parameters = emptyMap())
+                    Module(id = "", type = "drive_move_file", parameters = emptyMap()),
+                    Module(id = "", type = "drive_convert_excel_to_sheets", parameters = emptyMap()),
+                    Module(id = "", type = "drive_delete_file", parameters = emptyMap()),
+                    Module(id = "", type = "drive_list_files_to_sheet", parameters = emptyMap())
                 )
                 "Sheets" -> listOf(
                     Module(id = "", type = "DUPLICATE_SPREADSHEET", parameters = emptyMap()),
@@ -233,10 +241,18 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
                     Module(id = "", type = "sheets_create_new", parameters = emptyMap()),
                     Module(id = "", type = "sheets_set_value", parameters = emptyMap()),
                     Module(id = "", type = "sheets_append_row", parameters = emptyMap()),
-                    Module(id = "", type = "sheets_clear_values", parameters = emptyMap())
+                    Module(id = "", type = "sheets_clear_values", parameters = emptyMap()),
+                    Module(id = "", type = "sheets_unhide_rows_cols", parameters = emptyMap()),
+                    Module(id = "", type = "sheets_hide_rows_cols", parameters = emptyMap()),
+                    Module(id = "", type = "sheets_delete_rows_cols", parameters = emptyMap()),
+                    Module(id = "", type = "sheets_insert_rows_cols", parameters = emptyMap()),
+                    Module(id = "", type = "sheets_import_csv", parameters = emptyMap()),
+                    Module(id = "", type = "sheets_export_pdf", parameters = emptyMap()),
+                    Module(id = "", type = "sheets_export_excel", parameters = emptyMap())
                 )
                 "Calendar" -> listOf(
-                    Module(id = "", type = "calendar_create_event", parameters = emptyMap())
+                    Module(id = "", type = "calendar_create_event", parameters = emptyMap()),
+                    Module(id = "", type = "get_holidays", parameters = emptyMap())
                 )
                 "Tasks" -> listOf(
                     Module(id = "", type = "tasks_create_task", parameters = emptyMap())

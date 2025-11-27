@@ -104,6 +104,11 @@ abstract class WorkflowModule {
 
     @Binds
     @IntoMap
+    @StringKey("ToastNotificationModule")
+    abstract fun bindToastNotificationModuleAlias(impl: ToastNotificationModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
     @StringKey("LOG_MESSAGE")
     abstract fun bindLogMessageModule(impl: LogMessageModule): ModuleExecutor
 
@@ -117,4 +122,88 @@ abstract class WorkflowModule {
     @IntoMap
     @StringKey("tasks_create_task")
     abstract fun bindGoogleTasksExecutor(impl: GoogleTasksExecutor): ModuleExecutor
+
+    // New Drive Modules
+    @Binds
+    @IntoMap
+    @StringKey("drive_convert_excel_to_sheets")
+    abstract fun bindDriveConvertExcelToSheetsModule(impl: DriveConvertExcelToSheetsModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("drive_delete_file")
+    abstract fun bindDriveDeleteFilesModule(impl: DriveDeleteFilesModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("drive_list_files_to_sheet")
+    abstract fun bindDriveListFilesToSheetModule(impl: DriveListFilesToSheetModule): ModuleExecutor
+
+    // New Sheets Modules
+    @Binds
+    @IntoMap
+    @StringKey("sheets_unhide_rows_cols")
+    abstract fun bindSheetsUnhideRowsColsModule(impl: SheetsUnhideRowsColsModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("sheets_hide_rows_cols")
+    abstract fun bindSheetsHideRowsColsModule(impl: SheetsHideRowsColsModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("sheets_delete_rows_cols")
+    abstract fun bindSheetsDeleteRowsColsModule(impl: SheetsDeleteRowsColsModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("sheets_insert_rows_cols")
+    abstract fun bindSheetsInsertRowsColsModule(impl: SheetsInsertRowsColsModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("sheets_import_csv")
+    abstract fun bindSheetsImportCsvModule(impl: SheetsImportCsvModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("sheets_export_pdf")
+    abstract fun bindSheetsExportPdfModule(impl: SheetsExportPdfModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("sheets_export_excel")
+    abstract fun bindSheetsExportExcelModule(impl: SheetsExportExcelModule): ModuleExecutor
+
+    // New Gmail Modules
+    @Binds
+    @IntoMap
+    @StringKey("gmail_save_attachments")
+    abstract fun bindGmailSaveAttachmentsModule(impl: GmailSaveAttachmentsModule): ModuleExecutor
+
+    // New Utility Modules
+    @Binds
+    @IntoMap
+    @StringKey("if_else")
+    abstract fun bindIfElseModule(impl: IfElseModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("no_op")
+    abstract fun bindNoOpModule(impl: NoOpModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("delay")
+    abstract fun bindDelayModule(impl: DelayModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("run_workflow")
+    abstract fun bindRunWorkflowModule(impl: RunWorkflowModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("get_holidays")
+    abstract fun bindGetHolidaysModule(impl: GetHolidaysModule): ModuleExecutor
 }

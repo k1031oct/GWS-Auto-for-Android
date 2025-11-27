@@ -319,4 +319,42 @@
     <!-- SignInActivity -->
     <string name="firebase_auth_failed">Firebase認証に失敗しました。</string>
     <!-- XML Layouts -->
+    <!-- Module Names -->
+    <string name="module_gmail_send_email">メール送信</string>
+    <string name="module_gmail_create_draft">下書き作成</string>
+    <string name="module_gmail_save_attachments">添付保存</string>
+    
+    <string name="module_sheets_append_row">行追加</string>
+    <string name="module_sheets_set_value">値設定</string>
+    <string name="module_sheets_create_new">新規作成</string>
+    <string name="module_sheets_clear_values">値クリア</string>
+    <string name="module_sheets_copy_paste">コピペ</string>
+    <string name="module_sheets_duplicate">複製</string>
+    <string name="module_sheets_unhide">再表示</string>
+    <string name="module_sheets_hide">非表示</string>
+    <string name="module_sheets_delete">行/列削除</string>
+    <string name="module_sheets_insert">行/列挿入</string>
+    <string name="module_sheets_import_csv">CSV取込</string>
+    <string name="module_sheets_export_pdf">PDF出力</string>
+    <string name="module_sheets_export_excel">Excel出力</string>
+    
+    <string name="module_drive_create_folder">フォルダ作成</string>
+    <string name="module_drive_copy_file">ファイルコピー</string>
+    <string name="module_drive_move_file">ファイル移動</string>
+    <string name="module_drive_excel_to_sheets">Excel変換</string>
+    <string name="module_drive_delete_file">ファイル削除</string>
+    <string name="module_drive_list_files">ファイル一覧</string>
+    
+    <string name="module_calendar_create_event">イベント作成</string>
+    <string name="module_chat_post">投稿</string>
+    
+    <string name="module_util_define_variable">変数定義</string>
+    <string name="module_util_relative_date">相対日付</string>
+    <string name="module_util_show_toast">Toast表示</string>
+    <string name="module_util_log_message">ログ出力</string>
+    <string name="module_util_if_else">条件分岐</string>
+    <string name="module_util_no_op">何もしない</string>
+    <string name="module_util_delay">待機</string>
+    <string name="module_util_run_workflow">WF実行</string>
+    <string name="module_util_get_holidays">祝日取得</string>
 </resources>

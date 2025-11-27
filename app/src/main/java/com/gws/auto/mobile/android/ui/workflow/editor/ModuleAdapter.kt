@@ -47,7 +47,16 @@ class ModuleAdapter(
 
     class ModuleViewHolder(val binding: ListItemModuleBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(module: Module) {
-            binding.moduleName.text = module.type
+            val context = binding.root.context
+            val moduleKeys = context.resources.getStringArray(com.gws.auto.mobile.android.R.array.module_keys)
+            val moduleDisplayNames = context.resources.getStringArray(com.gws.auto.mobile.android.R.array.module_display_names)
+            
+            val index = moduleKeys.indexOf(module.type)
+            if (index != -1 && index < moduleDisplayNames.size) {
+                binding.moduleName.text = moduleDisplayNames[index]
+            } else {
+                binding.moduleName.text = module.type
+            }
             binding.moduleEnabledSwitch.isChecked = module.isEnabled
         }
     }

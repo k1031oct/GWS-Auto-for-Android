@@ -14,7 +14,8 @@ import java.util.Locale
 
 class HistoryAdapter(
     private val onHeaderClick: (String) -> Unit,
-    private val onBookmarkClick: (HistoryListItem.HeaderItem) -> Unit
+    private val onBookmarkClick: (HistoryListItem.HeaderItem) -> Unit,
+    private val onItemLongClick: (RecyclerView.ViewHolder) -> Unit
 ) : ListAdapter<HistoryListItem, RecyclerView.ViewHolder>(HistoryDiffCallback()) {
 
     override fun getItemViewType(position: Int): Int {
@@ -29,7 +30,7 @@ class HistoryAdapter(
         return when (viewType) {
             VIEW_TYPE_HEADER -> {
                 val binding = ListItemHistoryHeaderBinding.inflate(inflater, parent, false)
-                HeaderViewHolder(binding, onHeaderClick, onBookmarkClick)
+                HeaderViewHolder(binding, onHeaderClick, onBookmarkClick, onItemLongClick)
             }
             else -> {
                 val binding = ListItemHistoryLogBinding.inflate(inflater, parent, false)
@@ -48,7 +49,8 @@ class HistoryAdapter(
     class HeaderViewHolder(
         private val binding: ListItemHistoryHeaderBinding,
         private val onHeaderClick: (String) -> Unit,
-        private val onBookmarkClick: (HistoryListItem.HeaderItem) -> Unit
+        private val onBookmarkClick: (HistoryListItem.HeaderItem) -> Unit,
+        private val onItemLongClick: (RecyclerView.ViewHolder) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: HistoryListItem.HeaderItem) {
             binding.workflowName.text = item.history.workflowName
@@ -77,6 +79,10 @@ class HistoryAdapter(
             }
             binding.bookmarkButton.setOnClickListener {
                 onBookmarkClick(item)
+            }
+            itemView.setOnLongClickListener {
+                onItemLongClick(this)
+                true
             }
         }
     }

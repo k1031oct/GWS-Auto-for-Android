@@ -189,7 +189,7 @@ class MainActivity : AppCompatActivity() {
                     intArrayOf(-android.R.attr.state_checked)
                 ),
                 intArrayOf(
-                    colorInt,
+                    Color.BLACK,
                     Color.WHITE
                 )
             )

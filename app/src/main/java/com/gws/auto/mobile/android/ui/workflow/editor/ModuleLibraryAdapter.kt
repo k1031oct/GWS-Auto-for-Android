@@ -34,7 +34,16 @@ class ModuleLibraryAdapter(
 
     class ModuleViewHolder(private val binding: ListItemModuleLibraryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(module: Module) {
-            binding.moduleName.text = module.type
+            val context = binding.root.context
+            val moduleKeys = context.resources.getStringArray(com.gws.auto.mobile.android.R.array.module_keys)
+            val moduleDisplayNames = context.resources.getStringArray(com.gws.auto.mobile.android.R.array.module_display_names)
+            
+            val index = moduleKeys.indexOf(module.type)
+            if (index != -1 && index < moduleDisplayNames.size) {
+                binding.moduleName.text = moduleDisplayNames[index]
+            } else {
+                binding.moduleName.text = module.type
+            }
         }
     }
 }

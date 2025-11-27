@@ -15,8 +15,8 @@ import javax.mail.internet.MimeMessage
 
 class GmailApiService @Inject constructor(private val authorizer: GoogleApiAuthorizer) {
 
-    private suspend fun getService(): Gmail {
-        val credential = authorizer.getCredential(listOf(GmailScopes.GMAIL_COMPOSE))
+    private suspend fun getService(scopes: List<String>): Gmail {
+        val credential = authorizer.getCredential(scopes)
         return Gmail.Builder(authorizer.httpTransport, authorizer.jsonFactory, credential)
             .setApplicationName("GWS Auto for Android")
             .build()
@@ -26,17 +26,32 @@ class GmailApiService @Inject constructor(private val authorizer: GoogleApiAutho
         val mimeMessage = createMimeMessage(to, null, null, subject, body)
         val rawMessage = createRawMessage(mimeMessage)
         val draft = Draft().setMessage(rawMessage)
-        getService().users().drafts().create("me", draft).execute()
+        getService(listOf(GmailScopes.GMAIL_COMPOSE)).users().drafts().create("me", draft).execute()
     }
 
     suspend fun sendEmail(to: String, cc: String?, bcc: String?, subject: String, body: String): Message = withContext(Dispatchers.IO) {
         val mimeMessage = createMimeMessage(to, cc, bcc, subject, body)
         val rawMessage = createRawMessage(mimeMessage)
-        getService().users().messages().send("me", rawMessage).execute()
+        getService(listOf(GmailScopes.GMAIL_COMPOSE)).users().messages().send("me", rawMessage).execute()
+    }
+
+    suspend fun searchMessages(query: String): List<Message> = withContext(Dispatchers.IO) {
+        val response = getService(listOf(GmailScopes.GMAIL_READONLY)).users().messages().list("me")
+            .setQ(query)
+            .execute()
+        response.messages ?: emptyList()
+    }
+
+    suspend fun getMessage(messageId: String): Message = withContext(Dispatchers.IO) {
+        getService(listOf(GmailScopes.GMAIL_READONLY)).users().messages().get("me", messageId).execute()
+    }
+
+    suspend fun getAttachment(messageId: String, attachmentId: String): com.google.api.services.gmail.model.MessagePartBody = withContext(Dispatchers.IO) {
+        getService(listOf(GmailScopes.GMAIL_READONLY)).users().messages().attachments().get("me", messageId, attachmentId).execute()
     }
 
     private fun createMimeMessage(to: String, cc: String?, bcc: String?, subject: String, body: String): MimeMessage {
-        val props = Properties()
+        val props = java.util.Properties()
         val session = Session.getDefaultInstance(props, null)
         val email = MimeMessage(session)
         email.setFrom(InternetAddress("me"))

@@ -43,7 +43,7 @@ class DriveApiService @Inject constructor(private val authorizer: GoogleApiAutho
 
         service.files().list()
             .setQ(query)
-            .setFields("files(id, name, mimeType)")
+            .setFields("files(id, name, mimeType, webViewLink)")
             .execute()
     }
 
@@ -98,5 +98,62 @@ class DriveApiService @Inject constructor(private val authorizer: GoogleApiAutho
         }
         
         copiedFile
+    }
+
+    @Throws(IOException::class)
+    suspend fun convertExcelToSheets(sourceFileId: String, newFileName: String, parentFolderId: String?): File = withContext(Dispatchers.IO) {
+        val fileMetadata = File()
+            .setName(newFileName)
+            .setMimeType("application/vnd.google-apps.spreadsheet")
+
+        if (!parentFolderId.isNullOrBlank()) {
+            fileMetadata.parents = listOf(parentFolderId)
+        }
+
+        getService().files().copy(sourceFileId, fileMetadata).execute()
+    }
+
+    @Throws(IOException::class)
+    suspend fun deleteFile(fileId: String) = withContext(Dispatchers.IO) {
+        getService().files().delete(fileId).execute()
+    }
+
+    @Throws(IOException::class)
+    suspend fun exportToDrive(fileId: String, mimeType: String, destFolderId: String, newFileName: String): File = withContext(Dispatchers.IO) {
+        val driveService = getService()
+        
+        // 1. Export the file content
+        val exportStream = java.io.ByteArrayOutputStream()
+        driveService.files().export(fileId, mimeType).executeMediaAndDownloadTo(exportStream)
+        val mediaContent = com.google.api.client.http.ByteArrayContent(mimeType, exportStream.toByteArray())
+
+        // 2. Create a new file in the destination folder with the exported content
+        val fileMetadata = File()
+            .setName(newFileName)
+            .setParents(listOf(destFolderId))
+        
+        driveService.files().create(fileMetadata, mediaContent)
+            .setFields("id, name, webViewLink")
+            .execute()
+    }
+
+    @Throws(IOException::class)
+    suspend fun getFileContent(fileId: String): String = withContext(Dispatchers.IO) {
+        val outputStream = java.io.ByteArrayOutputStream()
+        getService().files().get(fileId).executeMediaAndDownloadTo(outputStream)
+        outputStream.toString("UTF-8")
+    }
+
+    @Throws(IOException::class)
+    suspend fun createFile(fileName: String, parentFolderId: String, content: ByteArray, mimeType: String): File = withContext(Dispatchers.IO) {
+        val fileMetadata = File()
+            .setName(fileName)
+            .setParents(listOf(parentFolderId))
+        
+        val mediaContent = com.google.api.client.http.ByteArrayContent(mimeType, content)
+        
+        getService().files().create(fileMetadata, mediaContent)
+            .setFields("id, name, webViewLink")
+            .execute()
     }
 }

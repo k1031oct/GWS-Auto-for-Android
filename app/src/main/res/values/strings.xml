@@ -138,6 +138,7 @@
     <string name="clear_history_button_text">Clear</string>
     <string name="trigger_type_manual">Manual</string>
     <string name="trigger_type_scheduled">Scheduled</string>
+    <string name="history_swipe_to_delete_instruction">Swipe to delete</string>
 
     <!-- Table Headers -->
     <string name="header_workflow_name">Workflow Name</string>
@@ -332,4 +333,42 @@
     <!-- SignInActivity -->
     <string name="firebase_auth_failed">Firebase authentication failed.</string>
     <!-- XML Layouts -->
+    <!-- Module Names -->
+    <string name="module_gmail_send_email">Send Email</string>
+    <string name="module_gmail_create_draft">Create Draft</string>
+    <string name="module_gmail_save_attachments">Save Attachments</string>
+    
+    <string name="module_sheets_append_row">Append Row</string>
+    <string name="module_sheets_set_value">Set Value</string>
+    <string name="module_sheets_create_new">Create Sheet</string>
+    <string name="module_sheets_clear_values">Clear Values</string>
+    <string name="module_sheets_copy_paste">Copy &amp; Paste</string>
+    <string name="module_sheets_duplicate">Duplicate</string>
+    <string name="module_sheets_unhide">Unhide Rows/Cols</string>
+    <string name="module_sheets_hide">Hide Rows/Cols</string>
+    <string name="module_sheets_delete">Delete Rows/Cols</string>
+    <string name="module_sheets_insert">Insert Rows/Cols</string>
+    <string name="module_sheets_import_csv">Import CSV</string>
+    <string name="module_sheets_export_pdf">Export PDF</string>
+    <string name="module_sheets_export_excel">Export Excel</string>
+    
+    <string name="module_drive_create_folder">Create Folder</string>
+    <string name="module_drive_copy_file">Copy File</string>
+    <string name="module_drive_move_file">Move File</string>
+    <string name="module_drive_excel_to_sheets">Excel to Sheets</string>
+    <string name="module_drive_delete_file">Delete File</string>
+    <string name="module_drive_list_files">List Files</string>
+    
+    <string name="module_calendar_create_event">Create Event</string>
+    <string name="module_chat_post">Post Message</string>
+    
+    <string name="module_util_define_variable">Define Variable</string>
+    <string name="module_util_relative_date">Relative Date</string>
+    <string name="module_util_show_toast">Show Toast</string>
+    <string name="module_util_log_message">Log Message</string>
+    <string name="module_util_if_else">If / Else</string>
+    <string name="module_util_no_op">No Op</string>
+    <string name="module_util_delay">Delay</string>
+    <string name="module_util_run_workflow">Run Workflow</string>
+    <string name="module_util_get_holidays">Get Holidays</string>
 </resources>

@@ -59,14 +59,57 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
     private val launchers = mutableMapOf<String, ActivityResultLauncher<Intent>>()
     private val selectedFiles = mutableMapOf<String, Pair<String, String>>()
 
+    private val contactInputs = mutableMapOf<String, EditText>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arrayOf("gmailAttachment", "sourceSheet", "destSheet").forEach { key ->
+        arrayOf("gmailAttachment", "sourceSheet", "destSheet", "sourceFile", "destFolder", "csvFile", "contact_to", "contact_cc", "contact_bcc").forEach { key ->
             launchers[key] = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
-                    result.data?.data?.let { uri -> handleFileSelection(uri, key) }
+                    val data = result.data
+                    if (key.startsWith("contact_")) {
+                        data?.data?.let { uri -> handleContactSelection(uri, key) }
+                    } else {
+                        val fileId = data?.getStringExtra("fileId")
+                        val fileName = data?.getStringExtra("fileName")
+                        if (fileId != null && fileName != null) {
+                            handleFilePickerResult(fileId, fileName, key)
+                        } else {
+                            // Fallback for safety or if we still support system picker for some reason
+                            data?.data?.let { uri -> handleFileSelection(uri, key) }
+                        }
+                    }
                 }
             }
+        }
+    }
+
+    private fun handleContactSelection(uri: Uri, key: String) {
+        val cursor = requireContext().contentResolver.query(uri, null, null, null, null)
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val emailIndex = it.getColumnIndex(android.provider.ContactsContract.CommonDataKinds.Email.ADDRESS)
+                if (emailIndex != -1) {
+                    val email = it.getString(emailIndex)
+                    contactInputs[key]?.let { editText ->
+                        val currentText = editText.text.toString()
+                        if (currentText.isBlank()) {
+                            editText.setText(email)
+                        } else {
+                            editText.setText("$currentText, $email")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun handleFilePickerResult(fileId: String, fileName: String, key: String) {
+        selectedFiles[key] = Pair(fileId, fileName)
+        view?.findViewWithTag<TextView>("${key}Name")?.text = fileName
+
+        if ((key == "sourceSheet" || key == "destSheet") && fileId.isNotEmpty()) {
+            view?.findViewWithTag<Spinner>("${key}SheetSpinner")?.let { fetchSheetNames(fileId, it) }
         }
     }
 
@@ -76,12 +119,7 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
             Toast.makeText(requireContext(), getString(R.string.file_info_resolve_failed), Toast.LENGTH_SHORT).show()
             return
         }
-        selectedFiles[key] = Pair(fileId, fileName)
-        view?.findViewWithTag<TextView>("${key}Name")?.text = fileName
-
-        if ((key == "sourceSheet" || key == "destSheet") && fileId.isNotEmpty()) {
-            view?.findViewWithTag<Spinner>("${key}SheetSpinner")?.let { fetchSheetNames(fileId, it) }
-        }
+        handleFilePickerResult(fileId, fileName, key)
     }
 
     private fun getFileInfoFromUri(uri: Uri): Pair<String?, String?> {
@@ -130,6 +168,22 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
             "SHOW_TOAST" -> setupToastNotificationUI()
             "LOG_MESSAGE" -> setupLogMessageUI()
             "tasks_create_task" -> setupGoogleTasksCreateTaskUI()
+            "drive_convert_excel_to_sheets" -> setupDriveConvertExcelToSheetsUI()
+            "drive_delete_file" -> setupDriveDeleteFileUI()
+            "drive_list_files_to_sheet" -> setupDriveListFilesToSheetUI()
+            "sheets_unhide_rows_cols" -> setupSheetsUnhideRowsColsUI()
+            "sheets_hide_rows_cols" -> setupSheetsHideRowsColsUI()
+            "sheets_delete_rows_cols" -> setupSheetsDeleteRowsColsUI()
+            "sheets_insert_rows_cols" -> setupSheetsInsertRowsColsUI()
+            "sheets_import_csv" -> setupSheetsImportCsvUI()
+            "sheets_export_pdf" -> setupSheetsExportPdfUI()
+            "sheets_export_excel" -> setupSheetsExportExcelUI()
+            "gmail_save_attachments" -> setupGmailSaveAttachmentsUI()
+            "if_else" -> setupIfElseUI()
+            "no_op" -> setupNoOpUI()
+            "delay" -> setupDelayUI()
+            "run_workflow" -> setupRunWorkflowUI()
+            "get_holidays" -> setupGetHolidaysUI()
             else -> setupDefaultUI()
         }
         binding.cancelButton.setOnClickListener { dismiss() }
@@ -205,8 +259,15 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
         val bodyInput = createTextInputLayout("本文", module.parameters["body"], isMultiLine = true)
         val attachmentPicker = createFilePickerViews("gmailAttachment", "ファイルを添付", module.parameters, "*/*")
 
+        contactInputs["contact_to"] = toInput.editText!!
+        contactInputs["contact_cc"] = ccInput.editText!!
+        contactInputs["contact_bcc"] = bccInput.editText!!
+
+        binding.parametersContainer.addView(createContactPickerButton("contact_to", "宛先を選択"))
         binding.parametersContainer.addView(toInput)
+        binding.parametersContainer.addView(createContactPickerButton("contact_cc", "CCを選択"))
         binding.parametersContainer.addView(ccInput)
+        binding.parametersContainer.addView(createContactPickerButton("contact_bcc", "BCCを選択"))
         binding.parametersContainer.addView(bccInput)
         binding.parametersContainer.addView(subjectInput)
         binding.parametersContainer.addView(bodyInput)
@@ -344,8 +405,15 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
         val subjectInput = createTextInputLayout("件名", module.parameters["subject"])
         val bodyInput = createTextInputLayout("本文", module.parameters["body"], isMultiLine = true)
 
+        contactInputs["contact_to"] = toInput.editText!!
+        contactInputs["contact_cc"] = ccInput.editText!!
+        contactInputs["contact_bcc"] = bccInput.editText!!
+
+        binding.parametersContainer.addView(createContactPickerButton("contact_to", "宛先を選択"))
         binding.parametersContainer.addView(toInput)
+        binding.parametersContainer.addView(createContactPickerButton("contact_cc", "CCを選択"))
         binding.parametersContainer.addView(ccInput)
+        binding.parametersContainer.addView(createContactPickerButton("contact_bcc", "BCCを選択"))
         binding.parametersContainer.addView(bccInput)
         binding.parametersContainer.addView(subjectInput)
         binding.parametersContainer.addView(bodyInput)
@@ -597,12 +665,26 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
             Toast.makeText(requireContext(), getString(R.string.please_sign_in_first), Toast.LENGTH_LONG).show()
             return
         }
-        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE)
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            type = mimeType
+        val intent = Intent(requireContext(), com.gws.auto.mobile.android.ui.filepicker.FilePickerActivity::class.java)
+        if (mimeType == "application/vnd.google-apps.folder") {
+            intent.putExtra("expectedType", "folder")
+        } else {
+            intent.putExtra("expectedType", "file")
         }
         launchers[key]?.launch(intent)
+    }
+
+    private fun createContactPickerButton(key: String, text: String): Button {
+        return Button(requireContext()).apply {
+            this.text = text
+            currentHighlightColor?.let {
+                backgroundTintList = ColorStateList.valueOf(it)
+            }
+            setOnClickListener {
+                val intent = Intent(Intent.ACTION_PICK, android.provider.ContactsContract.CommonDataKinds.Email.CONTENT_URI)
+                launchers[key]?.launch(intent)
+            }
+        }
     }
 
     private fun createTextInputLayout(hint: String, initialValue: String?, isNumeric: Boolean = false, isMultiLine: Boolean = false): TextInputLayout {
@@ -707,6 +789,291 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
                 "due_date" to dueDateInput.editText?.text.toString(),
                 "recurrence" to recurrenceSpinner.selectedItem.toString()
             )
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupDriveConvertExcelToSheetsUI() {
+        val sourcePicker = createFilePickerViews("sourceFile", "Excelファイルを選択", module.parameters, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        val newFileNameInput = createTextInputLayout("新しいファイル名", module.parameters["newFileName"])
+        val parentFolderPicker = createFilePickerViews("destFolder", "親フォルダを選択", module.parameters, "application/vnd.google-apps.folder")
+
+        binding.parametersContainer.addView(sourcePicker)
+        binding.parametersContainer.addView(newFileNameInput)
+        binding.parametersContainer.addView(parentFolderPicker)
+
+        binding.saveButton.setOnClickListener {
+            val params = mutableMapOf(
+                "newFileName" to newFileNameInput.editText?.text.toString()
+            )
+            selectedFiles["sourceFile"]?.let { params["sourceFileId"] = it.first; params["sourceFileName"] = it.second }
+            selectedFiles["destFolder"]?.let { params["parentFolderId"] = it.first; params["parentFolderName"] = it.second }
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupDriveDeleteFileUI() {
+        val filePicker = createFilePickerViews("sourceFile", "削除するファイルを選択", module.parameters, "*/*")
+        binding.parametersContainer.addView(filePicker)
+        binding.saveButton.setOnClickListener {
+            val params = mutableMapOf<String, String>()
+            selectedFiles["sourceFile"]?.let { params["fileId"] = it.first; params["fileName"] = it.second }
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupDriveListFilesToSheetUI() {
+        val folderPicker = createFilePickerViews("destFolder", "対象フォルダを選択", module.parameters, "application/vnd.google-apps.folder")
+        val sheetPicker = createFilePickerViews("sourceSheet", "出力先シートを選択", module.parameters, "application/vnd.google-apps.spreadsheet")
+        val sheetNameInput = createTextInputLayout("シート名", module.parameters["sheetName"])
+        
+        binding.parametersContainer.addView(folderPicker)
+        binding.parametersContainer.addView(sheetPicker)
+        binding.parametersContainer.addView(sheetNameInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mutableMapOf(
+                "sheetName" to sheetNameInput.editText?.text.toString()
+            )
+            selectedFiles["destFolder"]?.let { params["folderId"] = it.first; params["folderName"] = it.second }
+            selectedFiles["sourceSheet"]?.let { params["spreadsheetId"] = it.first; params["spreadsheetName"] = it.second }
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupSheetsUnhideRowsColsUI() {
+        val sheetPicker = createFilePickerViews("sourceSheet", "シートを選択", module.parameters, "application/vnd.google-apps.spreadsheet")
+        val sheetNameInput = createTextInputLayout("シート名", module.parameters["sheetName"])
+        binding.parametersContainer.addView(sheetPicker)
+        binding.parametersContainer.addView(sheetNameInput)
+        binding.saveButton.setOnClickListener {
+            val params = mutableMapOf("sheetName" to sheetNameInput.editText?.text.toString())
+            selectedFiles["sourceSheet"]?.let { params["spreadsheetId"] = it.first; params["spreadsheetName"] = it.second }
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupSheetsHideRowsColsUI() {
+        setupSheetsRowColOpUI("HIDE")
+    }
+
+    private fun setupSheetsDeleteRowsColsUI() {
+        setupSheetsRowColOpUI("DELETE")
+    }
+
+    private fun setupSheetsRowColOpUI(opType: String) {
+        val sheetPicker = createFilePickerViews("sourceSheet", "シートを選択", module.parameters, "application/vnd.google-apps.spreadsheet")
+        val sheetNameInput = createTextInputLayout("シート名", module.parameters["sheetName"])
+        val checkRangeInput = createTextInputLayout("チェック範囲 (例: A:A)", module.parameters["checkRange"])
+        val conditionSpinner = createSpinner(listOf("EMPTY", "EQUALS", "CONTAINS"), module.parameters["condition"])
+        val conditionValueInput = createTextInputLayout("条件値", module.parameters["conditionValue"])
+
+        binding.parametersContainer.addView(sheetPicker)
+        binding.parametersContainer.addView(sheetNameInput)
+        binding.parametersContainer.addView(checkRangeInput)
+        binding.parametersContainer.addView(conditionSpinner)
+        binding.parametersContainer.addView(conditionValueInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mutableMapOf(
+                "sheetName" to sheetNameInput.editText?.text.toString(),
+                "checkRange" to checkRangeInput.editText?.text.toString(),
+                "condition" to conditionSpinner.selectedItem.toString(),
+                "conditionValue" to conditionValueInput.editText?.text.toString()
+            )
+            selectedFiles["sourceSheet"]?.let { params["spreadsheetId"] = it.first; params["spreadsheetName"] = it.second }
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupSheetsInsertRowsColsUI() {
+        val sheetPicker = createFilePickerViews("sourceSheet", "シートを選択", module.parameters, "application/vnd.google-apps.spreadsheet")
+        val sheetNameInput = createTextInputLayout("シート名", module.parameters["sheetName"])
+        val insertAtInput = createTextInputLayout("挿入位置 (インデックス)", module.parameters["insertAt"], isNumeric = true)
+        val countInput = createTextInputLayout("挿入数", module.parameters["count"], isNumeric = true)
+
+        binding.parametersContainer.addView(sheetPicker)
+        binding.parametersContainer.addView(sheetNameInput)
+        binding.parametersContainer.addView(insertAtInput)
+        binding.parametersContainer.addView(countInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mutableMapOf(
+                "sheetName" to sheetNameInput.editText?.text.toString(),
+                "insertAt" to insertAtInput.editText?.text.toString(),
+                "count" to countInput.editText?.text.toString()
+            )
+            selectedFiles["sourceSheet"]?.let { params["spreadsheetId"] = it.first; params["spreadsheetName"] = it.second }
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupSheetsImportCsvUI() {
+        val csvPicker = createFilePickerViews("csvFile", "CSVファイルを選択", module.parameters, "text/csv")
+        val sheetPicker = createFilePickerViews("sourceSheet", "出力先シートを選択", module.parameters, "application/vnd.google-apps.spreadsheet")
+        val sheetNameInput = createTextInputLayout("シート名", module.parameters["sheetName"])
+        val delimiterInput = createTextInputLayout("区切り文字 (デフォルト: ,)", module.parameters["delimiter"])
+
+        binding.parametersContainer.addView(csvPicker)
+        binding.parametersContainer.addView(sheetPicker)
+        binding.parametersContainer.addView(sheetNameInput)
+        binding.parametersContainer.addView(delimiterInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mutableMapOf(
+                "sheetName" to sheetNameInput.editText?.text.toString(),
+                "delimiter" to delimiterInput.editText?.text.toString()
+            )
+            selectedFiles["csvFile"]?.let { params["csvFileId"] = it.first; params["csvFileName"] = it.second }
+            selectedFiles["sourceSheet"]?.let { params["spreadsheetId"] = it.first; params["spreadsheetName"] = it.second }
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupSheetsExportPdfUI() {
+        val sheetPicker = createFilePickerViews("sourceSheet", "シートを選択", module.parameters, "application/vnd.google-apps.spreadsheet")
+        val sheetNameInput = createTextInputLayout("シート名", module.parameters["sheetName"])
+        val folderPicker = createFilePickerViews("destFolder", "出力先フォルダを選択", module.parameters, "application/vnd.google-apps.folder")
+        val fileNameInput = createTextInputLayout("ファイル名", module.parameters["fileName"])
+
+        binding.parametersContainer.addView(sheetPicker)
+        binding.parametersContainer.addView(sheetNameInput)
+        binding.parametersContainer.addView(folderPicker)
+        binding.parametersContainer.addView(fileNameInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mutableMapOf(
+                "sheetName" to sheetNameInput.editText?.text.toString(),
+                "fileName" to fileNameInput.editText?.text.toString()
+            )
+            selectedFiles["sourceSheet"]?.let { params["spreadsheetId"] = it.first; params["spreadsheetName"] = it.second }
+            selectedFiles["destFolder"]?.let { params["destFolderId"] = it.first; params["destFolderName"] = it.second }
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupSheetsExportExcelUI() {
+        val sheetPicker = createFilePickerViews("sourceSheet", "シートを選択", module.parameters, "application/vnd.google-apps.spreadsheet")
+        val folderPicker = createFilePickerViews("destFolder", "出力先フォルダを選択", module.parameters, "application/vnd.google-apps.folder")
+        val fileNameInput = createTextInputLayout("ファイル名", module.parameters["fileName"])
+
+        binding.parametersContainer.addView(sheetPicker)
+        binding.parametersContainer.addView(folderPicker)
+        binding.parametersContainer.addView(fileNameInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mutableMapOf(
+                "fileName" to fileNameInput.editText?.text.toString()
+            )
+            selectedFiles["sourceSheet"]?.let { params["spreadsheetId"] = it.first; params["spreadsheetName"] = it.second }
+            selectedFiles["destFolder"]?.let { params["destFolderId"] = it.first; params["destFolderName"] = it.second }
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupGmailSaveAttachmentsUI() {
+        val queryInput = createTextInputLayout("検索クエリ (例: has:attachment)", module.parameters["query"])
+        val folderPicker = createFilePickerViews("destFolder", "保存先フォルダを選択", module.parameters, "application/vnd.google-apps.folder")
+
+        binding.parametersContainer.addView(queryInput)
+        binding.parametersContainer.addView(folderPicker)
+
+        binding.saveButton.setOnClickListener {
+            val params = mutableMapOf(
+                "query" to queryInput.editText?.text.toString()
+            )
+            selectedFiles["destFolder"]?.let { params["destFolderId"] = it.first; params["destFolderName"] = it.second }
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupIfElseUI() {
+        val conditionInput = createTextInputLayout("条件 (例: {{status}} == Success)", module.parameters["condition"])
+        val trueIdInput = createTextInputLayout("Trueの場合のモジュールID", module.parameters["trueModuleId"])
+        val falseIdInput = createTextInputLayout("Falseの場合のモジュールID", module.parameters["falseModuleId"])
+
+        binding.parametersContainer.addView(conditionInput)
+        binding.parametersContainer.addView(trueIdInput)
+        binding.parametersContainer.addView(falseIdInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mapOf(
+                "condition" to conditionInput.editText?.text.toString(),
+                "trueModuleId" to trueIdInput.editText?.text.toString(),
+                "falseModuleId" to falseIdInput.editText?.text.toString()
+            )
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupNoOpUI() {
+        binding.parametersContainer.addView(TextView(requireContext()).apply { text = "設定項目はありません" })
+        binding.saveButton.setOnClickListener { dismiss() }
+    }
+
+    private fun setupDelayUI() {
+        val durationInput = createTextInputLayout("時間", module.parameters["duration"], isNumeric = true)
+        val unitSpinner = createSpinner(listOf("SECONDS", "MINUTES", "HOURS"), module.parameters["unit"])
+        binding.parametersContainer.addView(durationInput)
+        binding.parametersContainer.addView(unitSpinner)
+        binding.saveButton.setOnClickListener {
+            val params = mapOf(
+                "duration" to durationInput.editText?.text.toString(),
+                "unit" to unitSpinner.selectedItem.toString()
+            )
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupRunWorkflowUI() {
+        val workflowIdInput = createTextInputLayout("ワークフローID", module.parameters["workflowId"])
+        val modeSpinner = createSpinner(listOf("SEQUENTIAL", "PARALLEL"), module.parameters["mode"])
+        binding.parametersContainer.addView(workflowIdInput)
+        binding.parametersContainer.addView(modeSpinner)
+        binding.saveButton.setOnClickListener {
+            val params = mapOf(
+                "workflowId" to workflowIdInput.editText?.text.toString(),
+                "mode" to modeSpinner.selectedItem.toString()
+            )
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupGetHolidaysUI() {
+        val startDateInput = createTextInputLayout("開始日 (YYYY-MM-DD)", module.parameters["startDate"])
+        val endDateInput = createTextInputLayout("終了日 (YYYY-MM-DD)", module.parameters["endDate"])
+        val sheetPicker = createFilePickerViews("sourceSheet", "出力先シートを選択", module.parameters, "application/vnd.google-apps.spreadsheet")
+        val sheetNameInput = createTextInputLayout("シート名", module.parameters["sheetName"])
+        val countryInput = createTextInputLayout("国コード (例: JP, US)", module.parameters["countryCode"])
+
+        binding.parametersContainer.addView(startDateInput)
+        binding.parametersContainer.addView(endDateInput)
+        binding.parametersContainer.addView(sheetPicker)
+        binding.parametersContainer.addView(sheetNameInput)
+        binding.parametersContainer.addView(countryInput)
+
+        binding.saveButton.setOnClickListener {
+            val params = mutableMapOf(
+                "startDate" to startDateInput.editText?.text.toString(),
+                "endDate" to endDateInput.editText?.text.toString(),
+                "sheetName" to sheetNameInput.editText?.text.toString(),
+                "countryCode" to countryInput.editText?.text.toString()
+            )
+            selectedFiles["sourceSheet"]?.let { params["spreadsheetId"] = it.first; params["spreadsheetName"] = it.second }
             viewModel.updateModuleParameters(module.id, params)
             dismiss()
         }
