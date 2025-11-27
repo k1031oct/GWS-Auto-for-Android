@@ -61,6 +61,14 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
 
     private val contactInputs = mutableMapOf<String, EditText>()
 
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arrayOf("gmailAttachment", "sourceSheet", "destSheet", "sourceFile", "destFolder", "csvFile", "contact_to", "contact_cc", "contact_bcc").forEach { key ->

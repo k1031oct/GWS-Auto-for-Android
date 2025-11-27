@@ -31,6 +31,8 @@ import androidx.compose.ui.draganddrop.DragAndDropTarget
 import androidx.compose.ui.draganddrop.DragAndDropTransferData
 import androidx.compose.ui.draganddrop.mimeTypes
 import androidx.compose.ui.draganddrop.toAndroidDragEvent
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -337,10 +339,10 @@ fun DraggableWorkflowItemRow(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Default.List,
+                        imageVector = Icons.Default.Star,
                         contentDescription = null,
                         modifier = Modifier.padding(end = 16.dp),
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = if (isSystemInDarkTheme()) Color.White else Color.Black
                     )
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
