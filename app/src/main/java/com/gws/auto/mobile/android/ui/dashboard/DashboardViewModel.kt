@@ -102,8 +102,8 @@ class DashboardViewModel @Inject constructor(
             workflowExecutionCounts = workflowCounts,
 
             // Module Stats
-            moduleUsageCount = filteredHistory.size,
-            moduleErrorCount = filteredHistory.count { it.status != "Success" },
+            moduleUsageCount = moduleStats.sumOf { it.usageCount },
+            moduleErrorCount = moduleStats.sumOf { it.errorCount },
             moduleStats = moduleStats
         )
     }.stateIn(

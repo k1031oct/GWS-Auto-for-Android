@@ -7,7 +7,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,128 +38,221 @@ fun DashboardScreen(
 ) {
     Scaffold(
         floatingActionButton = {
-            // No FAB in Dashboard, but maybe actions could be here?
-            // The original layout had buttons at the top right.
+            // No FAB in Dashboard
         }
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Top Actions
+            var selectedTabIndex by androidx.compose.runtime.remember { androidx.compose.runtime.mutableIntStateOf(0) }
+            val tabs = listOf("Workflows", "Modules")
+
+            // Top Row with Tabs and Actions
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = onRefreshClicked) {
-                    Icon(Icons.Default.Refresh, contentDescription = stringResource(R.string.refresh))
+                ScrollableTabRow(
+                    selectedTabIndex = selectedTabIndex,
+                    edgePadding = 0.dp,
+                    containerColor = androidx.compose.ui.graphics.Color.Transparent,
+                    divider = {},
+                    indicator = { tabPositions ->
+                        if (selectedTabIndex < tabPositions.size) {
+                            TabRowDefaults.SecondaryIndicator(
+                                Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    },
+                    modifier = Modifier.weight(1f, fill = false)
+                ) {
+                    tabs.forEachIndexed { index, title ->
+                        Tab(
+                            selected = selectedTabIndex == index,
+                            onClick = { selectedTabIndex = index },
+                            text = {
+                                Text(
+                                    text = title,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Normal
+                                )
+                            }
+                        )
+                    }
                 }
-                IconButton(onClick = onAnnouncementClicked) {
-                    Icon(Icons.Default.Campaign, contentDescription = "Announcements")
+
+                // Actions
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = onRefreshClicked) {
+                        Icon(Icons.Default.Refresh, contentDescription = stringResource(R.string.refresh))
+                    }
+                    IconButton(onClick = onAnnouncementClicked) {
+                        Icon(Icons.Default.Campaign, contentDescription = "Announcements")
+                    }
                 }
             }
 
-            Text(
-                text = stringResource(R.string.dashboard_summary_title),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
+            when (selectedTabIndex) {
+                0 -> WorkflowDashboardContent(uiState)
+                1 -> ModuleDashboardContent(uiState)
+            }
+        }
+    }
+}
+
+@Composable
+fun WorkflowDashboardContent(uiState: DashboardUiState) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.dashboard_summary_title),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
+        )
+
+        // Summary Cards
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            SummaryCard(
+                title = stringResource(R.string.dashboard_total_runs),
+                value = uiState.totalCountMonth.toString(),
+                dayChange = uiState.totalCountDayChange,
+                monthChange = uiState.totalCountMonthChange,
+                modifier = Modifier.weight(1f)
+            )
+            SummaryCard(
+                title = stringResource(R.string.dashboard_errors),
+                value = uiState.errorCountMonth.toString(),
+                dayChange = uiState.errorCountDayChange,
+                monthChange = uiState.errorCountMonthChange,
+                modifier = Modifier.weight(1f)
+            )
+            SummaryCard(
+                title = stringResource(R.string.dashboard_total_time),
+                value = formatDuration(uiState.totalDurationMonth),
+                dayChange = uiState.totalDurationDayChange,
+                monthChange = uiState.totalDurationMonthChange,
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        // Workflow Statistics
+        Text(
+            text = stringResource(R.string.dashboard_workflow_stats_title),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+
+        if (uiState.workflowExecutionCounts.isEmpty()) {
+            EmptyStatsMessage(message = "No workflow execution history found.\nRun a workflow to see statistics.")
+        } else {
+            PieChartComposable(
+                totalCount = uiState.totalCountMonth,
+                errorCount = uiState.errorCountMonth,
+                centerText = stringResource(R.string.dashboard_workflow_error_rate),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
             )
 
-            // Summary Cards
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                SummaryCard(
-                    title = stringResource(R.string.dashboard_total_runs),
-                    value = uiState.totalCountMonth.toString(),
-                    dayChange = uiState.totalCountDayChange,
-                    monthChange = uiState.totalCountMonthChange,
-                    modifier = Modifier.weight(1f)
-                )
-                SummaryCard(
-                    title = stringResource(R.string.dashboard_errors),
-                    value = uiState.errorCountMonth.toString(),
-                    dayChange = uiState.errorCountDayChange,
-                    monthChange = uiState.errorCountMonthChange,
-                    modifier = Modifier.weight(1f)
-                )
-                SummaryCard(
-                    title = stringResource(R.string.dashboard_total_time),
-                    value = formatDuration(uiState.totalDurationMonth),
-                    dayChange = uiState.totalDurationDayChange,
-                    monthChange = uiState.totalDurationMonthChange,
-                    modifier = Modifier.weight(1f)
-                )
-            }
+            BarChartComposable(
+                entries = uiState.workflowExecutionCounts.mapIndexed { index, it -> BarEntry(index.toFloat(), it.executionCount.toFloat()) },
+                labels = uiState.workflowExecutionCounts.map { it.workflowName },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
+            )
+            
+            // Workflow Stats List
+            WorkflowStatsList(uiState.workflowExecutionCounts)
+        }
+    }
+}
 
-            // Workflow Statistics
-            Text(
-                text = stringResource(R.string.dashboard_workflow_stats_title),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 8.dp)
+@Composable
+fun ModuleDashboardContent(uiState: DashboardUiState) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.dashboard_summary_title),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
+        )
+
+        // Module Summary Cards
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            SummaryCard(
+                title = "Total Module Runs",
+                value = uiState.moduleUsageCount.toString(),
+                dayChange = 0f, // Not implemented for modules
+                monthChange = 0f, // Not implemented for modules
+                modifier = Modifier.weight(1f),
+                showChanges = false
+            )
+            SummaryCard(
+                title = "Total Module Errors",
+                value = uiState.moduleErrorCount.toString(),
+                dayChange = 0f, // Not implemented for modules
+                monthChange = 0f, // Not implemented for modules
+                modifier = Modifier.weight(1f),
+                showChanges = false
+            )
+        }
+
+        // Module Statistics
+        Text(
+            text = stringResource(R.string.dashboard_module_stats_title),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+
+        if (uiState.moduleStats.isEmpty()) {
+            EmptyStatsMessage(message = "No module usage data found.")
+        } else {
+            PieChartComposable(
+                totalCount = uiState.moduleUsageCount,
+                errorCount = uiState.moduleErrorCount,
+                centerText = stringResource(R.string.dashboard_module_error_rate),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
             )
 
-            if (uiState.workflowExecutionCounts.isEmpty()) {
-                EmptyStatsMessage(message = "No workflow execution history found.\nRun a workflow to see statistics.")
-            } else {
-                PieChartComposable(
-                    totalCount = uiState.totalCountMonth,
-                    errorCount = uiState.errorCountMonth,
-                    centerText = stringResource(R.string.dashboard_workflow_error_rate),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                )
-
-                BarChartComposable(
-                    entries = uiState.workflowExecutionCounts.mapIndexed { index, it -> BarEntry(index.toFloat(), it.executionCount.toFloat()) },
-                    labels = uiState.workflowExecutionCounts.map { it.workflowName },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(250.dp)
-                )
-                
-                // Workflow Stats List
-                WorkflowStatsList(uiState.workflowExecutionCounts)
-            }
-
-            // Module Statistics
-            Text(
-                text = stringResource(R.string.dashboard_module_stats_title),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 8.dp)
+            BarChartComposable(
+                entries = uiState.moduleStats.mapIndexed { index, it -> BarEntry(index.toFloat(), it.usageCount.toFloat()) },
+                labels = uiState.moduleStats.map { it.moduleName },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
             )
-
-            if (uiState.moduleStats.isEmpty()) {
-                EmptyStatsMessage(message = "No module usage data found.")
-            } else {
-                PieChartComposable(
-                    totalCount = uiState.moduleUsageCount,
-                    errorCount = uiState.moduleErrorCount,
-                    centerText = stringResource(R.string.dashboard_module_error_rate),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                )
-
-                BarChartComposable(
-                    entries = uiState.moduleStats.mapIndexed { index, it -> BarEntry(index.toFloat(), it.usageCount.toFloat()) },
-                    labels = uiState.moduleStats.map { it.moduleName },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(250.dp)
-                )
-                
-                // Module Stats List
-                ModuleStatsList(uiState.moduleStats)
-            }
+            
+            // Module Stats List
+            ModuleStatsList(uiState.moduleStats)
         }
     }
 }
@@ -265,7 +361,8 @@ fun SummaryCard(
     value: String,
     dayChange: Float,
     monthChange: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showChanges: Boolean = true
 ) {
     Card(
         modifier = modifier,
@@ -286,8 +383,10 @@ fun SummaryCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            ChangeText(change = dayChange, label = "vs Yesterday")
-            ChangeText(change = monthChange, label = "vs Last Month")
+            if (showChanges) {
+                ChangeText(change = dayChange, label = "vs Yesterday")
+                ChangeText(change = monthChange, label = "vs Last Month")
+            }
         }
     }
 }
