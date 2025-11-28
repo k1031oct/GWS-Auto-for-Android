@@ -180,7 +180,12 @@ fun EmptyStatsMessage(message: String) {
 
 @Composable
 fun WorkflowStatsList(items: List<WorkflowExecutionCount>) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(
+        modifier = Modifier
+            .heightIn(max = 300.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         items.forEach { item ->
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -211,7 +216,12 @@ fun WorkflowStatsList(items: List<WorkflowExecutionCount>) {
 
 @Composable
 fun ModuleStatsList(items: List<ModuleStat>) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(
+        modifier = Modifier
+            .heightIn(max = 300.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         items.forEach { item ->
             Card(
                 modifier = Modifier.fillMaxWidth(),
