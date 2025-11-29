@@ -2,32 +2,35 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    app:cardBackgroundColor="#121212"
-    app:cardCornerRadius="8dp">
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
+        android:layout_height="60dp"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:padding="12dp">
+        android:padding="8dp">
 
         <ImageView
+            android:id="@+id/library_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="8dp"
             android:src="@drawable/ic_module"
-            app:tint="@color/module_icon_tint" />
+            app:tint="?attr/colorOnSurface" />
 
         <TextView
             android:id="@+id/module_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="@color/module_text_color"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="?attr/colorOnSurface"
             tools:text="Module Name" />
 
     </LinearLayout>

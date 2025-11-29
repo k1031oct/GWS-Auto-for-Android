@@ -104,6 +104,7 @@ drawable bg_today
 drawable circle_background
 drawable ic_add
 drawable ic_announcement
+drawable ic_arrow_back
 drawable ic_badge
 drawable ic_bookmark
 drawable ic_bookmark_border
@@ -153,6 +154,7 @@ id auth_button
 id back_button
 id bookmark_button
 id bottom_nav
+id btn_add_module
 id button_bar
 id button_container
 id cancel_button
@@ -186,9 +188,11 @@ id file_name
 id folder_icon
 id folder_name
 id folder_recycler_view
+id folder_reel
 id history_item_container
 id history_recycler_view
 id library_container
+id library_icon
 id library_recycler_view
 id licensesRecyclerView
 id licenses_button
@@ -203,6 +207,7 @@ id module_enabled_switch
 id module_icon
 id module_name
 id module_recycler_view
+id module_reel
 id module_type
 id monday_button
 id nav_graph
@@ -240,6 +245,7 @@ id settings_fragment_container
 id settings_icon
 id settings_recycler_view
 id share_button
+id sheet_title
 id sign_in_button
 id skip_button
 id status

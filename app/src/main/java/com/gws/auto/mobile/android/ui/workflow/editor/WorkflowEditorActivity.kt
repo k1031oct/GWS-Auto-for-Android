@@ -16,9 +16,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.databinding.ActivityWorkflowEditorBinding
 import com.gws.auto.mobile.android.domain.model.Module
+import com.gws.auto.mobile.android.domain.model.ModuleCatalog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -41,8 +43,8 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
     private val viewModel: WorkflowEditorViewModel by viewModels()
     private val themeViewModel: ThemeViewModel by viewModels()
     private lateinit var moduleAdapter: ModuleAdapter
-    private lateinit var libraryAdapter: ModuleLibraryAdapter
-    private lateinit var folderAdapter: FolderAdapter
+    // private lateinit var libraryAdapter: ModuleLibraryAdapter // Removed
+    // private lateinit var folderAdapter: FolderAdapter // Removed
     private var isEditingEnabled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,9 +79,8 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
         }
 
         setupRecyclerView()
-        setupLibraryRecyclerView()
-        setupFolderRecyclerView()
-        setupFolderRecyclerView()
+        // setupLibraryRecyclerView() // Removed
+        // setupFolderRecyclerView() // Removed
         setupTagSection()
         setupDragAndDrop()
         observeViewModel()
@@ -190,103 +191,7 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
             .show()
     }
 
-    private fun setupLibraryRecyclerView() {
-        libraryAdapter = ModuleLibraryAdapter(emptyList()) { module, view ->
-            val item = ClipData.Item(module.type)
-            val dragData = ClipData(
-                module.type,
-                arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN),
-                item
-            )
-            val myShadow = View.DragShadowBuilder(view)
-            view.startDragAndDrop(dragData, myShadow, null, 0)
-            true
-        }
-        binding.libraryRecyclerView.apply {
-            adapter = libraryAdapter
-            layoutManager = LinearLayoutManager(this@WorkflowEditorActivity, LinearLayoutManager.HORIZONTAL, false)
-        }
-    }
-
-    private fun setupFolderRecyclerView() {
-        val folders = listOf(
-            "Input", "Output", "Process", "Core", "Gmail", "Drive", "Sheets", "Calendar", "Tasks", "Custom"
-        )
-
-        folderAdapter = FolderAdapter(folders) { folder ->
-            val modules = when (folder) {
-                "Input" -> listOf(
-                    Module(id = "", type = "FILE_PICKER", parameters = emptyMap()),
-                    Module(id = "", type = "GET_CLIPBOARD", parameters = emptyMap())
-                )
-                "Output" -> listOf(
-                    Module(id = "", type = "SHOW_TOAST", parameters = emptyMap()),
-                    Module(id = "", type = "SYSTEM_NOTIFICATION", parameters = emptyMap()),
-                    Module(id = "", type = "LOG_MESSAGE", parameters = emptyMap()),
-                    Module(id = "", type = "SET_CLIPBOARD", parameters = emptyMap())
-                )
-                "Process" -> listOf(
-                    Module(id = "", type = "CALCULATE", parameters = emptyMap()),
-                    Module(id = "", type = "HTTP_REQUEST", parameters = emptyMap()),
-                    Module(id = "", type = "if_else", parameters = emptyMap()),
-                    Module(id = "", type = "delay", parameters = emptyMap()),
-                    Module(id = "", type = "run_workflow", parameters = emptyMap()),
-                    Module(id = "", type = "no_op", parameters = emptyMap())
-                )
-                "Core" -> listOf(
-                    Module(id = "", type = "DEFINE_VARIABLE", parameters = emptyMap()),
-                    Module(id = "", type = "GET_RELATIVE_DATE", parameters = emptyMap())
-                )
-                "Gmail" -> listOf(
-                    Module(id = "", type = "CREATE_GMAIL_DRAFT", parameters = emptyMap()),
-                    Module(id = "", type = "gmail_send_email", parameters = emptyMap()),
-                    Module(id = "", type = "gmail_save_attachments", parameters = emptyMap()),
-                    Module(id = "", type = "chat_post", parameters = emptyMap())
-                )
-                "Drive" -> listOf(
-                    Module(id = "", type = "drive_create_folder", parameters = emptyMap()),
-                    Module(id = "", type = "drive_copy_file", parameters = emptyMap()),
-                    Module(id = "", type = "drive_move_file", parameters = emptyMap()),
-                    Module(id = "", type = "drive_convert_excel_to_sheets", parameters = emptyMap()),
-                    Module(id = "", type = "drive_delete_file", parameters = emptyMap()),
-                    Module(id = "", type = "drive_list_files_to_sheet", parameters = emptyMap())
-                )
-                "Sheets" -> listOf(
-                    Module(id = "", type = "DUPLICATE_SPREADSHEET", parameters = emptyMap()),
-                    Module(id = "", type = "COPY_PASTE_SHEET_VALUES", parameters = emptyMap()),
-                    Module(id = "", type = "sheets_create_new", parameters = emptyMap()),
-                    Module(id = "", type = "sheets_set_value", parameters = emptyMap()),
-                    Module(id = "", type = "sheets_append_row", parameters = emptyMap()),
-                    Module(id = "", type = "sheets_clear_values", parameters = emptyMap()),
-                    Module(id = "", type = "sheets_unhide_rows_cols", parameters = emptyMap()),
-                    Module(id = "", type = "sheets_hide_rows_cols", parameters = emptyMap()),
-                    Module(id = "", type = "sheets_delete_rows_cols", parameters = emptyMap()),
-                    Module(id = "", type = "sheets_insert_rows_cols", parameters = emptyMap()),
-                    Module(id = "", type = "sheets_import_csv", parameters = emptyMap()),
-                    Module(id = "", type = "sheets_export_pdf", parameters = emptyMap()),
-                    Module(id = "", type = "sheets_export_excel", parameters = emptyMap())
-                )
-                "Calendar" -> listOf(
-                    Module(id = "", type = "calendar_create_event", parameters = emptyMap()),
-                    Module(id = "", type = "get_holidays", parameters = emptyMap())
-                )
-                "Tasks" -> listOf(
-                    Module(id = "", type = "tasks_create_task", parameters = emptyMap())
-                )
-                else -> emptyList()
-            }
-            libraryAdapter.updateModules(modules)
-        }
-
-        binding.folderRecyclerView.apply {
-            adapter = folderAdapter
-            layoutManager = LinearLayoutManager(this@WorkflowEditorActivity, LinearLayoutManager.HORIZONTAL, false)
-        }
-        binding.folderRecyclerView.apply {
-            adapter = folderAdapter
-            layoutManager = LinearLayoutManager(this@WorkflowEditorActivity, LinearLayoutManager.HORIZONTAL, false)
-        }
-    }
+    // setupLibraryRecyclerView and setupFolderRecyclerView removed as they are replaced by bottom sheet library
 
     private fun setupTagSection() {
         binding.addTagChip.setOnClickListener {
@@ -450,37 +355,97 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
 
     private fun showModuleLibrary(index: Int) {
         pendingInsertionIndex = index
+        
         val bottomSheet = com.google.android.material.bottomsheet.BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.layout_module_library_bottom_sheet, null)
-        val recyclerView = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.library_recycler_view)
+        val folderReel = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.folder_reel)
+        val moduleReel = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.module_reel)
+        val btnAdd = view.findViewById<android.widget.Button>(R.id.btn_add_module)
+        val titleTextView = view.findViewById<android.widget.TextView>(R.id.sheet_title)
+
+        // Setup Adapters
+        val folderItems = ModuleCatalog.folders.map { ModuleLibraryAdapter.LibraryItem.FolderItem(it) }
+        val folderAdapter = ModuleLibraryAdapter(folderItems)
         
-        // Reuse library adapter logic or create new one
-        // For simplicity, we can use the existing libraryAdapter but we need to handle the click.
-        // The existing libraryAdapter uses drag and drop. We might need a click listener for insertion.
-        // Let's create a new adapter or modify existing one.
-        // Or just show the existing horizontal library in a bottom sheet?
-        // The plan says "ModuleLibrary (bottom sheet)".
-        
-        // Let's assume we want to use the existing library logic but for clicking.
-        // We can create a new ModuleLibraryAdapter instance for the bottom sheet.
-        
-        val adapter = ModuleLibraryAdapter(emptyList()) { module, _ ->
-            onModuleSelectedFromLibrary(module)
-            bottomSheet.dismiss()
-            true
+        // Initial module list (from first folder)
+        val initialFolder = ModuleCatalog.folders.firstOrNull()
+        val initialModuleItems = initialFolder?.modules?.map { ModuleLibraryAdapter.LibraryItem.ModuleItem(it) } ?: emptyList()
+        val moduleAdapter = ModuleLibraryAdapter(initialModuleItems)
+
+        folderReel.adapter = folderAdapter
+        folderReel.layoutManager = LinearLayoutManager(this)
+        moduleReel.adapter = moduleAdapter
+        moduleReel.layoutManager = LinearLayoutManager(this)
+
+        // Setup SnapHelper
+        val folderSnapHelper = androidx.recyclerview.widget.LinearSnapHelper()
+        folderSnapHelper.attachToRecyclerView(folderReel)
+        val moduleSnapHelper = androidx.recyclerview.widget.LinearSnapHelper()
+        moduleSnapHelper.attachToRecyclerView(moduleReel)
+
+        // Setup Scroll Listeners for 3D Effect
+        folderReel.addOnScrollListener(ReelScrollListener())
+        moduleReel.addOnScrollListener(ReelScrollListener())
+
+        // Helper to scroll to middle
+        fun scrollToMiddle(recyclerView: RecyclerView, count: Int) {
+            if (count > 0) {
+                val middle = Int.MAX_VALUE / 2
+                val firstItemOffset = middle % count
+                val targetPosition = middle - firstItemOffset
+                recyclerView.scrollToPosition(targetPosition)
+            }
+        }
+
+        // Logic to update module reel when folder changes
+        folderReel.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    val centerView = folderSnapHelper.findSnapView(recyclerView.layoutManager)
+                    val position = centerView?.let { recyclerView.layoutManager?.getPosition(it) } ?: return
+                    val folderItem = folderAdapter.getItem(position) as? ModuleLibraryAdapter.LibraryItem.FolderItem ?: return
+                    
+                    val newModuleItems = folderItem.folder.modules.map { ModuleLibraryAdapter.LibraryItem.ModuleItem(it) }
+                    moduleAdapter.updateItems(newModuleItems)
+                    
+                    // Reset module reel to middle
+                    scrollToMiddle(moduleReel, newModuleItems.size)
+                    
+                    // Trigger scroll listener manually to update effects
+                    moduleReel.post { 
+                        val listener = ReelScrollListener()
+                        listener.onScrolled(moduleReel, 0, 0)
+                    }
+                    titleTextView.text = folderItem.folder.name
+                }
+            }
+        })
+
+        // Initial positioning
+        folderReel.post { 
+            scrollToMiddle(folderReel, folderItems.size)
+            val listener = ReelScrollListener()
+            listener.onScrolled(folderReel, 0, 0)
+        }
+        moduleReel.post { 
+            scrollToMiddle(moduleReel, initialModuleItems.size)
+            val listener = ReelScrollListener()
+            listener.onScrolled(moduleReel, 0, 0)
         }
         
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        
-        // Populate adapter with all modules (flattened folders?)
-        // Or show folders?
-        // For now, let's show a flattened list of common modules or reuse the folder structure.
-        // Reusing folder structure in a bottom sheet might be complex.
-        // Let's just show a list of all available modules for now.
-        
-        val allModules = getAllModules()
-        adapter.updateModules(allModules)
+        titleTextView.text = initialFolder?.name ?: "Select Module"
+
+        btnAdd.setOnClickListener {
+            val centerView = moduleSnapHelper.findSnapView(moduleReel.layoutManager)
+            val position = centerView?.let { moduleReel.layoutManager?.getPosition(it) }
+            if (position != null) {
+                val moduleItem = moduleAdapter.getItem(position) as? ModuleLibraryAdapter.LibraryItem.ModuleItem
+                if (moduleItem != null) {
+                    onModuleSelectedFromLibrary(moduleItem.module)
+                    bottomSheet.dismiss()
+                }
+            }
+        }
         
         bottomSheet.setContentView(view)
         bottomSheet.show()
@@ -493,42 +458,9 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
         pendingInsertionIndex = null
     }
 
-    private fun getAllModules(): List<Module> {
-        // Aggregate all modules from folders
-        val folders = listOf("Input", "Output", "Process", "Core", "Gmail", "Drive", "Sheets", "Calendar", "Tasks")
-        val allModules = mutableListOf<Module>()
-        // ... logic to get modules from folders ...
-        // This duplicates logic in setupFolderRecyclerView.
-        // Ideally we should have a repository or helper for this.
-        // For now, I'll just return a few common ones to demonstrate.
-        return listOf(
-            Module(id = "", type = "SHOW_TOAST", parameters = emptyMap()),
-            Module(id = "", type = "delay", parameters = emptyMap()),
-            Module(id = "", type = "log_message", parameters = emptyMap())
-        )
-    }
-
     private fun setupDragAndDrop() {
-        val dragListener = View.OnDragListener { _, event ->
-            when (event.action) {
-                DragEvent.ACTION_DROP -> {
-                    val item: ClipData.Item = event.clipData.getItemAt(0)
-                    val moduleType = item.text.toString()
-                    val dialog = ModuleParameterDialogFragment().apply {
-                        arguments = Bundle().apply {
-                            putString(ModuleParameterDialogFragment.ARG_MODULE_TYPE, moduleType)
-                        }
-                        listener = this@WorkflowEditorActivity
-                    }
-                    dialog.show(supportFragmentManager, "ModuleParameterDialog")
-                    true
-                }
-                else -> true
-            }
-        }
-
-        binding.moduleRecyclerView.setOnDragListener(dragListener)
-        binding.emptyStateContainer.setOnDragListener(dragListener)
+        // Drag and drop for reordering is handled by ItemTouchHelper in setupRecyclerView.
+        // Drag and drop from library is removed in favor of insertion points.
     }
 
     private fun observeViewModel() {

@@ -136,7 +136,7 @@ fun GWSAutoForAndroidTheme(
             tertiaryContainer = if (useDarkTheme) NeonPrimaryDark else NeonPrimaryLight,
             outline = if (useDarkTheme) NeonPrimaryDark else NeonPrimaryLight
         )
-        else -> baseColorScheme.copy( // "default" - Monochrome
+        else -> baseColorScheme.copy( // "default" - Neutral Grey
             primary = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight,
             onPrimary = if (useDarkTheme) Color.Black else Color.White,
             primaryContainer = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight,
@@ -149,7 +149,9 @@ fun GWSAutoForAndroidTheme(
             onTertiary = if (useDarkTheme) Color.Black else Color.White,
             tertiaryContainer = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight,
             onTertiaryContainer = if (useDarkTheme) Color.Black else Color.White,
-            outline = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight
+            outline = if (useDarkTheme) MonochromePrimaryDark else MonochromePrimaryLight,
+            surfaceVariant = if (useDarkTheme) Color(0xFF424242) else Color(0xFFE0E0E0), // Neutral Grey Surface
+            onSurfaceVariant = if (useDarkTheme) Color.White else Color.Black
         )
     }
 

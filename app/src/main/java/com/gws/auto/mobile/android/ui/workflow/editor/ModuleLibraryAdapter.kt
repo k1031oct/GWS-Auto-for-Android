@@ -1,55 +1,76 @@
 package com.gws.auto.mobile.android.ui.workflow.editor
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.databinding.ListItemModuleLibraryBinding
 import com.gws.auto.mobile.android.domain.model.Module
+import com.gws.auto.mobile.android.domain.model.ModuleCatalog
 
 class ModuleLibraryAdapter(
-    private var modules: List<Module>,
-    private val onModuleLongClickListener: ((Module, View) -> Boolean)? = null,
-    private val onModuleClickListener: ((Module, View) -> Unit)? = null
-) : RecyclerView.Adapter<ModuleLibraryAdapter.ModuleViewHolder>() {
+    private var items: List<LibraryItem>,
+    private val onItemClickListener: (LibraryItem) -> Unit = {} // Optional click listener
+) : RecyclerView.Adapter<ModuleLibraryAdapter.ReelViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ModuleViewHolder {
-        val binding = ListItemModuleLibraryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ModuleViewHolder(binding)
+    sealed class LibraryItem {
+        data class FolderItem(val folder: ModuleCatalog.Folder) : LibraryItem()
+        data class ModuleItem(val module: Module) : LibraryItem()
     }
 
-    override fun onBindViewHolder(holder: ModuleViewHolder, position: Int) {
-        val module = modules[position]
-        holder.bind(module)
-        
-        holder.itemView.setOnLongClickListener { view ->
-            onModuleLongClickListener?.invoke(module, view) ?: false
-        }
-        
-        holder.itemView.setOnClickListener { view ->
-            onModuleClickListener?.invoke(module, view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReelViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val binding = ListItemModuleLibraryBinding.inflate(layoutInflater, parent, false)
+        return ReelViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: ReelViewHolder, position: Int) {
+        if (items.isNotEmpty()) {
+            val actualPosition = position % items.size
+            val item = items[actualPosition]
+            holder.bind(item)
+            holder.itemView.setOnClickListener { onItemClickListener(item) }
         }
     }
 
-    override fun getItemCount(): Int = modules.size
+    override fun getItemCount(): Int {
+        return if (items.isNotEmpty()) Int.MAX_VALUE else 0
+    }
 
-    fun updateModules(newModules: List<Module>) {
-        this.modules = newModules
+    fun getItem(position: Int): LibraryItem? {
+        if (items.isEmpty()) return null
+        val actualPosition = position % items.size
+        return items[actualPosition]
+    }
+
+    fun updateItems(newItems: List<LibraryItem>) {
+        items = newItems
         notifyDataSetChanged()
     }
 
-    class ModuleViewHolder(private val binding: ListItemModuleLibraryBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(module: Module) {
-            val context = binding.root.context
-            val moduleKeys = context.resources.getStringArray(com.gws.auto.mobile.android.R.array.module_keys)
-            val moduleDisplayNames = context.resources.getStringArray(com.gws.auto.mobile.android.R.array.module_display_names)
-            
-            val index = moduleKeys.indexOf(module.type)
-            if (index != -1 && index < moduleDisplayNames.size) {
-                binding.moduleName.text = moduleDisplayNames[index]
-            } else {
-                binding.moduleName.text = module.type
+    inner class ReelViewHolder(private val binding: ListItemModuleLibraryBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: LibraryItem) {
+            when (item) {
+                is LibraryItem.FolderItem -> {
+                    binding.moduleName.text = item.folder.name
+                    binding.libraryIcon.setImageResource(R.drawable.ic_folder)
+                }
+                is LibraryItem.ModuleItem -> {
+                    val module = item.module
+                    val context = binding.root.context
+                    val moduleKeys = context.resources.getStringArray(R.array.module_keys)
+                    val moduleDisplayNames = context.resources.getStringArray(R.array.module_display_names)
+                    
+                    val index = moduleKeys.indexOf(module.type)
+                    if (index != -1 && index < moduleDisplayNames.size) {
+                        binding.moduleName.text = moduleDisplayNames[index]
+                    } else {
+                        binding.moduleName.text = module.type
+                    }
+                    binding.libraryIcon.setImageResource(R.drawable.ic_module)
+                }
             }
+            // Click listener is handled in onBindViewHolder
         }
     }
 }

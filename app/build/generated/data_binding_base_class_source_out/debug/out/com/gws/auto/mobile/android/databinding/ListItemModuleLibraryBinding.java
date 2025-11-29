@@ -4,6 +4,7 @@ package com.gws.auto.mobile.android.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,11 +21,15 @@ public final class ListItemModuleLibraryBinding implements ViewBinding {
   private final MaterialCardView rootView;
 
   @NonNull
+  public final ImageView libraryIcon;
+
+  @NonNull
   public final TextView moduleName;
 
   private ListItemModuleLibraryBinding(@NonNull MaterialCardView rootView,
-      @NonNull TextView moduleName) {
+      @NonNull ImageView libraryIcon, @NonNull TextView moduleName) {
     this.rootView = rootView;
+    this.libraryIcon = libraryIcon;
     this.moduleName = moduleName;
   }
 
@@ -55,13 +60,19 @@ public final class ListItemModuleLibraryBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.library_icon;
+      ImageView libraryIcon = ViewBindings.findChildViewById(rootView, id);
+      if (libraryIcon == null) {
+        break missingId;
+      }
+
       id = R.id.module_name;
       TextView moduleName = ViewBindings.findChildViewById(rootView, id);
       if (moduleName == null) {
         break missingId;
       }
 
-      return new ListItemModuleLibraryBinding((MaterialCardView) rootView, moduleName);
+      return new ListItemModuleLibraryBinding((MaterialCardView) rootView, libraryIcon, moduleName);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

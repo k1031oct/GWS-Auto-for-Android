@@ -39,7 +39,7 @@
         android:backgroundTint="?attr/colorSurface"
         android:padding="6dp"
         android:src="@drawable/ic_module"
-        app:tint="@color/module_icon_tint"
+        app:tint="?attr/colorOnSurface"
         app:layout_constraintBottom_toBottomOf="@id/module_card"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/module_card" />
@@ -91,6 +91,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/module_enabled_switch"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/module_name"
+                android:lineSpacingExtra="2dp"
                 tools:text="Message: Hello World" />
 
             <com.google.android.material.switchmaterial.SwitchMaterial

@@ -218,7 +218,7 @@ class ModuleAdapter(
                 binding.moduleName.text = module.type
             }
             
-            val description = module.parameters.entries.joinToString(", ") { "${it.key}: ${it.value}" }
+            val description = module.parameters.entries.joinToString("\n") { "• ${it.key}: ${it.value}" }
             if (description.isNotEmpty()) {
                 binding.moduleDescription.text = description
                 binding.moduleDescription.visibility = View.VISIBLE

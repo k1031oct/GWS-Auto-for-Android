@@ -70,8 +70,8 @@ val NeonPrimaryDark = Color(0xFFDFFF00)   // Volt Yellow
 val NeonPrimaryLight = Color(0xFFFFC66D)  // Pastel Yellow-Orange
 
 // Monochrome Theme (New Default)
-val MonochromePrimaryDark = Color(0xFFFFFFFF)   // White
-val MonochromePrimaryLight = Color(0xFF000000)  // Black
+val MonochromePrimaryDark = Color(0xFFE0E0E0)   // Light Grey
+val MonochromePrimaryLight = Color(0xFF424242)  // Dark Grey
 
 // Forest Theme
 val ForestPrimaryDark = Color(0xFF76FF03)   // Bright Lime Green

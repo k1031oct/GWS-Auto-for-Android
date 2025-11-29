@@ -3840,6 +3840,7 @@ int drawable googleg_disabled_color_18 0x7f0800a4
 int drawable googleg_standard_color_18 0x7f0800a5
 int drawable ic_add 0x7f0800a6
 int drawable ic_announcement 0x7f0800a7
+int drawable ic_arrow_back 0x7f080130
 int drawable ic_arrow_back_black_24 0x7f0800a8
 int drawable ic_arrow_down_24dp 0x7f0800a9
 int drawable ic_badge 0x7f0800aa
@@ -4107,6 +4108,7 @@ int id browser_actions_menu_item_icon 0x7f09007f
 int id browser_actions_menu_item_text 0x7f090080
 int id browser_actions_menu_items 0x7f090081
 int id browser_actions_menu_view 0x7f090082
+int id btn_add_module 0x7f0902cc
 int id buttonPanel 0x7f090083
 int id button_bar 0x7f090084
 int id button_container 0x7f090085
@@ -4246,6 +4248,7 @@ int id floating 0x7f09010a
 int id folder_icon 0x7f09010b
 int id folder_name 0x7f09010c
 int id folder_recycler_view 0x7f09010d
+int id folder_reel 0x7f0902cd
 int id forever 0x7f09010e
 int id fragment_container_view_tag 0x7f09010f
 int id frost 0x7f090110
@@ -4297,6 +4300,7 @@ int id left 0x7f09013d
 int id leftToRight 0x7f09013e
 int id legacy 0x7f09013f
 int id library_container 0x7f090140
+int id library_icon 0x7f0902ca
 int id library_recycler_view 0x7f090141
 int id license 0x7f090142
 int id license_activity_scrollview 0x7f090143
@@ -4352,6 +4356,7 @@ int id module_enabled_switch 0x7f090174
 int id module_icon 0x7f090175
 int id module_name 0x7f090176
 int id module_recycler_view 0x7f090177
+int id module_reel 0x7f0902ce
 int id module_type 0x7f090178
 int id monday_button 0x7f090179
 int id month_grid 0x7f09017a
@@ -4528,6 +4533,7 @@ int id settings_recycler_view 0x7f090224
 int id share_button 0x7f090225
 int id sharedValueSet 0x7f090226
 int id sharedValueUnset 0x7f090227
+int id sheet_title 0x7f0902cb
 int id shortcut 0x7f090228
 int id showCustom 0x7f090229
 int id showHome 0x7f09022a

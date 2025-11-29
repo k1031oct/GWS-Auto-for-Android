@@ -28,10 +28,6 @@
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\activity_splash.xml"
     },
     {
-        "merged": "com.gws.auto.mobile.android.app-mergeDebugResources-6:/layout/list_item_module.xml",
-        "source": "com.gws.auto.mobile.android.app-main-9:/layout/list_item_module.xml"
-    },
-    {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-6:\\layout\\list_item_announcement.xml",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\list_item_announcement.xml"
     },
@@ -96,16 +92,16 @@
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\item_workflow_table.xml"
     },
     {
+        "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-6:\\layout\\item_workflow_divider.xml",
+        "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\item_workflow_divider.xml"
+    },
+    {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-6:\\layout\\fragment_licenses.xml",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\fragment_licenses.xml"
     },
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-6:\\layout\\item_folder.xml",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\item_folder.xml"
-    },
-    {
-        "merged": "com.gws.auto.mobile.android.app-mergeDebugResources-6:/layout/item_workflow_footer.xml",
-        "source": "com.gws.auto.mobile.android.app-main-9:/layout/item_workflow_footer.xml"
     },
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-6:\\layout\\fragment_wizard_week_start.xml",
@@ -140,10 +136,6 @@
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\item_workflow_folder.xml"
     },
     {
-        "merged": "com.gws.auto.mobile.android.app-mergeDebugResources-6:/layout/item_workflow_divider.xml",
-        "source": "com.gws.auto.mobile.android.app-main-9:/layout/item_workflow_divider.xml"
-    },
-    {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-6:\\layout\\item_workflow.xml",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\item_workflow.xml"
     },
@@ -156,8 +148,16 @@
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\activity_main.xml"
     },
     {
+        "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-6:\\layout\\item_workflow_footer.xml",
+        "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\item_workflow_footer.xml"
+    },
+    {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-6:\\layout\\menu_item_settings_with_badge.xml",
         "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\menu_item_settings_with_badge.xml"
+    },
+    {
+        "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-6:\\layout\\layout_module_library_bottom_sheet.xml",
+        "source": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-main-9:\\layout\\layout_module_library_bottom_sheet.xml"
     },
     {
         "merged": "C:\\Users\\k1031\\.gradle\\daemon\\8.13\\com.gws.auto.mobile.android.app-mergeDebugResources-6:\\layout\\list_item_tag.xml",
