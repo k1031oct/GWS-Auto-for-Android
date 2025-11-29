@@ -113,6 +113,7 @@ drawable ic_dashboard
 drawable ic_delete
 drawable ic_delete_forever
 drawable ic_delete_sweep
+drawable ic_drag_handle
 drawable ic_edit
 drawable ic_file
 drawable ic_folder
@@ -139,6 +140,9 @@ drawable sl_favorite
 id about_app
 id action_edit
 id action_settings
+id actions_layout
+id add_button
+id add_module_button
 id add_tag_button
 id add_tag_chip
 id announcement_content
@@ -165,6 +169,7 @@ id day_text
 id delete_button
 id delete_folder_button
 id delete_tag_button
+id drag_handle
 id edit_button
 id empty_state_container
 id empty_view_history
@@ -303,8 +308,11 @@ layout item_history
 layout item_history_table
 layout item_module
 layout item_workflow
+layout item_workflow_divider
 layout item_workflow_folder
+layout item_workflow_footer
 layout item_workflow_table
+layout layout_module_library_bottom_sheet
 layout list_item_add_tag
 layout list_item_add_workflow
 layout list_item_announcement

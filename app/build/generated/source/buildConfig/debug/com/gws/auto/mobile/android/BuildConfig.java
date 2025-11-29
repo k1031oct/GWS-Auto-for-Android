@@ -7,6 +7,6 @@ public final class BuildConfig {
   public static final boolean DEBUG = Boolean.parseBoolean("true");
   public static final String APPLICATION_ID = "com.gws.auto.mobile.android";
   public static final String BUILD_TYPE = "debug";
-  public static final int VERSION_CODE = 475;
-  public static final String VERSION_NAME = "1.2.475";
+  public static final int VERSION_CODE = 476;
+  public static final String VERSION_NAME = "1.2.476";
 }

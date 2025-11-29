@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,10 +25,13 @@ public final class ListItemModuleBinding implements ViewBinding {
   private final ConstraintLayout rootView;
 
   @NonNull
+  public final LinearLayout actionsLayout;
+
+  @NonNull
   public final ImageButton deleteButton;
 
   @NonNull
-  public final ImageButton editButton;
+  public final ImageView dragHandle;
 
   @NonNull
   public final View lineBottom;
@@ -54,14 +58,15 @@ public final class ListItemModuleBinding implements ViewBinding {
   public final ImageButton runModuleButton;
 
   private ListItemModuleBinding(@NonNull ConstraintLayout rootView,
-      @NonNull ImageButton deleteButton, @NonNull ImageButton editButton, @NonNull View lineBottom,
-      @NonNull View lineTop, @NonNull MaterialCardView moduleCard,
-      @NonNull TextView moduleDescription, @NonNull SwitchMaterial moduleEnabledSwitch,
-      @NonNull ImageView moduleIcon, @NonNull TextView moduleName,
-      @NonNull ImageButton runModuleButton) {
+      @NonNull LinearLayout actionsLayout, @NonNull ImageButton deleteButton,
+      @NonNull ImageView dragHandle, @NonNull View lineBottom, @NonNull View lineTop,
+      @NonNull MaterialCardView moduleCard, @NonNull TextView moduleDescription,
+      @NonNull SwitchMaterial moduleEnabledSwitch, @NonNull ImageView moduleIcon,
+      @NonNull TextView moduleName, @NonNull ImageButton runModuleButton) {
     this.rootView = rootView;
+    this.actionsLayout = actionsLayout;
     this.deleteButton = deleteButton;
-    this.editButton = editButton;
+    this.dragHandle = dragHandle;
     this.lineBottom = lineBottom;
     this.lineTop = lineTop;
     this.moduleCard = moduleCard;
@@ -99,15 +104,21 @@ public final class ListItemModuleBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.actions_layout;
+      LinearLayout actionsLayout = ViewBindings.findChildViewById(rootView, id);
+      if (actionsLayout == null) {
+        break missingId;
+      }
+
       id = R.id.delete_button;
       ImageButton deleteButton = ViewBindings.findChildViewById(rootView, id);
       if (deleteButton == null) {
         break missingId;
       }
 
-      id = R.id.edit_button;
-      ImageButton editButton = ViewBindings.findChildViewById(rootView, id);
-      if (editButton == null) {
+      id = R.id.drag_handle;
+      ImageView dragHandle = ViewBindings.findChildViewById(rootView, id);
+      if (dragHandle == null) {
         break missingId;
       }
 
@@ -159,9 +170,9 @@ public final class ListItemModuleBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ListItemModuleBinding((ConstraintLayout) rootView, deleteButton, editButton,
-          lineBottom, lineTop, moduleCard, moduleDescription, moduleEnabledSwitch, moduleIcon,
-          moduleName, runModuleButton);
+      return new ListItemModuleBinding((ConstraintLayout) rootView, actionsLayout, deleteButton,
+          dragHandle, lineBottom, lineTop, moduleCard, moduleDescription, moduleEnabledSwitch,
+          moduleIcon, moduleName, runModuleButton);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
