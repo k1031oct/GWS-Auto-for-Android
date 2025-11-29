@@ -9,7 +9,8 @@ import com.gws.auto.mobile.android.domain.model.Module
 
 class ModuleLibraryAdapter(
     private var modules: List<Module>,
-    private val onModuleLongClickListener: (Module, View) -> Boolean
+    private val onModuleLongClickListener: ((Module, View) -> Boolean)? = null,
+    private val onModuleClickListener: ((Module, View) -> Unit)? = null
 ) : RecyclerView.Adapter<ModuleLibraryAdapter.ModuleViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ModuleViewHolder {
@@ -20,8 +21,13 @@ class ModuleLibraryAdapter(
     override fun onBindViewHolder(holder: ModuleViewHolder, position: Int) {
         val module = modules[position]
         holder.bind(module)
+        
         holder.itemView.setOnLongClickListener { view ->
-            onModuleLongClickListener(module, view)
+            onModuleLongClickListener?.invoke(module, view) ?: false
+        }
+        
+        holder.itemView.setOnClickListener { view ->
+            onModuleClickListener?.invoke(module, view)
         }
     }
 

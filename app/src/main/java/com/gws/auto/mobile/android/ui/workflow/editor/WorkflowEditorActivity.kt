@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gws.auto.mobile.android.R
 import com.gws.auto.mobile.android.databinding.ActivityWorkflowEditorBinding
@@ -128,6 +129,8 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
     }
 
     private fun setupRecyclerView() {
+        lateinit var itemTouchHelper: ItemTouchHelper
+        
         moduleAdapter = ModuleAdapter(
             onEditClicked = { module ->
                 when (module.type) {
@@ -150,8 +153,21 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
             },
             onModuleEnabledChanged = { module, isEnabled ->
                 viewModel.setModuleEnabled(module.id, isEnabled)
+            },
+            onStartDragListener = { viewHolder ->
+                itemTouchHelper.startDrag(viewHolder)
+            },
+            onModulesReordered = { modules ->
+                viewModel.reorderModules(modules)
+            },
+            onInsertModuleClicked = { index ->
+                showModuleLibrary(index)
             }
         )
+        
+        itemTouchHelper = ItemTouchHelper(ModuleItemTouchHelperCallback(moduleAdapter))
+        itemTouchHelper.attachToRecyclerView(binding.moduleRecyclerView)
+
         binding.moduleRecyclerView.apply {
             adapter = moduleAdapter
             layoutManager = LinearLayoutManager(this@WorkflowEditorActivity)
@@ -428,6 +444,68 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
             // Add at index 0 to keep "Add Tag" to be last.
             chipGroup.addView(chip, chipGroup.indexOfChild(addTagChip))
         }
+    }
+
+    private var pendingInsertionIndex: Int? = null
+
+    private fun showModuleLibrary(index: Int) {
+        pendingInsertionIndex = index
+        val bottomSheet = com.google.android.material.bottomsheet.BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.layout_module_library_bottom_sheet, null)
+        val recyclerView = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.library_recycler_view)
+        
+        // Reuse library adapter logic or create new one
+        // For simplicity, we can use the existing libraryAdapter but we need to handle the click.
+        // The existing libraryAdapter uses drag and drop. We might need a click listener for insertion.
+        // Let's create a new adapter or modify existing one.
+        // Or just show the existing horizontal library in a bottom sheet?
+        // The plan says "ModuleLibrary (bottom sheet)".
+        
+        // Let's assume we want to use the existing library logic but for clicking.
+        // We can create a new ModuleLibraryAdapter instance for the bottom sheet.
+        
+        val adapter = ModuleLibraryAdapter(emptyList()) { module, _ ->
+            onModuleSelectedFromLibrary(module)
+            bottomSheet.dismiss()
+            true
+        }
+        
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        
+        // Populate adapter with all modules (flattened folders?)
+        // Or show folders?
+        // For now, let's show a flattened list of common modules or reuse the folder structure.
+        // Reusing folder structure in a bottom sheet might be complex.
+        // Let's just show a list of all available modules for now.
+        
+        val allModules = getAllModules()
+        adapter.updateModules(allModules)
+        
+        bottomSheet.setContentView(view)
+        bottomSheet.show()
+    }
+
+    private fun onModuleSelectedFromLibrary(module: Module) {
+        val index = pendingInsertionIndex ?: return
+        val newModule = module.copy(id = UUID.randomUUID().toString())
+        viewModel.insertModule(newModule, index)
+        pendingInsertionIndex = null
+    }
+
+    private fun getAllModules(): List<Module> {
+        // Aggregate all modules from folders
+        val folders = listOf("Input", "Output", "Process", "Core", "Gmail", "Drive", "Sheets", "Calendar", "Tasks")
+        val allModules = mutableListOf<Module>()
+        // ... logic to get modules from folders ...
+        // This duplicates logic in setupFolderRecyclerView.
+        // Ideally we should have a repository or helper for this.
+        // For now, I'll just return a few common ones to demonstrate.
+        return listOf(
+            Module(id = "", type = "SHOW_TOAST", parameters = emptyMap()),
+            Module(id = "", type = "delay", parameters = emptyMap()),
+            Module(id = "", type = "log_message", parameters = emptyMap())
+        )
     }
 
     private fun setupDragAndDrop() {

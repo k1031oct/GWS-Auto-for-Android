@@ -109,6 +109,18 @@ class WorkflowEditorViewModel @Inject constructor(
         _selectedTags.value = _selectedTags.value - tagName
     }
 
+    fun insertModule(module: Module, index: Int) {
+        val currentList = _modules.value.toMutableList()
+        if (index >= 0 && index <= currentList.size) {
+            currentList.add(index, module)
+            _modules.value = currentList
+        }
+    }
+
+    fun reorderModules(newModules: List<Module>) {
+        _modules.value = newModules
+    }
+
     suspend fun saveWorkflow(name: String, description: String) {
         val currentWorkflow = _workflow.value
         val workflow = if (currentWorkflow != null) {
