@@ -338,12 +338,16 @@ fun DraggableWorkflowItemRow(
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Star,
-                        contentDescription = null,
-                        modifier = Modifier.padding(end = 16.dp),
-                        tint = if (isSystemInDarkTheme()) Color.White else Color.Black
-                    )
+                    IconButton(
+                        onClick = { onFavoriteClicked(item.workflow) },
+                        modifier = Modifier.padding(end = 4.dp)
+                    ) {
+                        Icon(
+                            imageVector = if (item.workflow.isFavorite) Icons.Default.Star else Icons.Default.StarBorder,
+                            contentDescription = if (item.workflow.isFavorite) stringResource(R.string.unfavorite) else stringResource(R.string.favorite),
+                            tint = if (isSystemInDarkTheme()) Color.White else Color.Black
+                        )
+                    }
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = item.workflow.name,
