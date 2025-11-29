@@ -15,6 +15,7 @@ playServicesOssLicenses = "17.0.1"
 # AndroidX & Google Libraries
 coreKtx = "1.17.0"
 lifecycleRuntimeKtx = "2.9.4"
+lifecycleRuntimeCompose = "2.8.7"
 activityCompose = "1.11.0"
 composeBom = "2024.06.00"
 credentials = "1.5.0"
@@ -63,6 +64,7 @@ android-desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_li
 androidx-preference = { group = "androidx.preference", name = "preference-ktx", version.ref = "androidx-preference" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }

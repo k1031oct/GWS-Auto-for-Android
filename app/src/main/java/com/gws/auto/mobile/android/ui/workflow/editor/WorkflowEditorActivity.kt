@@ -35,6 +35,8 @@ import androidx.compose.ui.graphics.toArgb
 import com.google.android.material.chip.Chip
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @AndroidEntryPoint
 class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragment.ModuleParameterListener {
@@ -43,8 +45,6 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
     private val viewModel: WorkflowEditorViewModel by viewModels()
     private val themeViewModel: ThemeViewModel by viewModels()
     private lateinit var moduleAdapter: ModuleAdapter
-    // private lateinit var libraryAdapter: ModuleLibraryAdapter // Removed
-    // private lateinit var folderAdapter: FolderAdapter // Removed
     private var isEditingEnabled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,8 +79,6 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
         }
 
         setupRecyclerView()
-        // setupLibraryRecyclerView() // Removed
-        // setupFolderRecyclerView() // Removed
         setupTagSection()
         setupDragAndDrop()
         observeViewModel()
@@ -198,7 +196,7 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
             .show()
     }
 
-    // setupLibraryRecyclerView and setupFolderRecyclerView removed as they are replaced by bottom sheet library
+
 
     private fun setupTagSection() {
         binding.addTagChip.setOnClickListener {
@@ -364,97 +362,32 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
         pendingInsertionIndex = index
         
         val bottomSheet = com.google.android.material.bottomsheet.BottomSheetDialog(this)
-        val view = layoutInflater.inflate(R.layout.layout_module_library_bottom_sheet, null)
-        val folderReel = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.folder_reel)
-        val moduleReel = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.module_reel)
-        val btnAdd = view.findViewById<android.widget.Button>(R.id.btn_add_module)
-        val titleTextView = view.findViewById<android.widget.TextView>(R.id.sheet_title)
+        val composeView = androidx.compose.ui.platform.ComposeView(this).apply {
+            setContent {
+                val theme by themeViewModel.theme.collectAsStateWithLifecycle()
+                val highlightColor by themeViewModel.highlightColor.collectAsStateWithLifecycle()
 
-        // Setup Adapters
-        val folderItems = ModuleCatalog.folders.map { ModuleLibraryAdapter.LibraryItem.FolderItem(it) }
-        val folderAdapter = ModuleLibraryAdapter(folderItems)
-        
-        // Initial module list (from first folder)
-        val initialFolder = ModuleCatalog.folders.firstOrNull()
-        val initialModuleItems = initialFolder?.modules?.map { ModuleLibraryAdapter.LibraryItem.ModuleItem(it) } ?: emptyList()
-        val moduleAdapter = ModuleLibraryAdapter(initialModuleItems)
-
-        folderReel.adapter = folderAdapter
-        folderReel.layoutManager = LinearLayoutManager(this)
-        moduleReel.adapter = moduleAdapter
-        moduleReel.layoutManager = LinearLayoutManager(this)
-
-        // Setup SnapHelper
-        val folderSnapHelper = androidx.recyclerview.widget.LinearSnapHelper()
-        folderSnapHelper.attachToRecyclerView(folderReel)
-        val moduleSnapHelper = androidx.recyclerview.widget.LinearSnapHelper()
-        moduleSnapHelper.attachToRecyclerView(moduleReel)
-
-        // Setup Scroll Listeners for 3D Effect
-        folderReel.addOnScrollListener(ReelScrollListener())
-        moduleReel.addOnScrollListener(ReelScrollListener())
-
-        // Helper to scroll to middle
-        fun scrollToMiddle(recyclerView: RecyclerView, count: Int) {
-            if (count > 0) {
-                val middle = Int.MAX_VALUE / 2
-                val firstItemOffset = middle % count
-                val targetPosition = middle - firstItemOffset
-                recyclerView.scrollToPosition(targetPosition)
-            }
-        }
-
-        // Logic to update module reel when folder changes
-        folderReel.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    val centerView = folderSnapHelper.findSnapView(recyclerView.layoutManager)
-                    val position = centerView?.let { recyclerView.layoutManager?.getPosition(it) } ?: return
-                    val folderItem = folderAdapter.getItem(position) as? ModuleLibraryAdapter.LibraryItem.FolderItem ?: return
-                    
-                    val newModuleItems = folderItem.folder.modules.map { ModuleLibraryAdapter.LibraryItem.ModuleItem(it) }
-                    moduleAdapter.updateItems(newModuleItems)
-                    
-                    // Reset module reel to middle
-                    scrollToMiddle(moduleReel, newModuleItems.size)
-                    
-                    // Trigger scroll listener manually to update effects
-                    moduleReel.post { 
-                        val listener = ReelScrollListener()
-                        listener.onScrolled(moduleReel, 0, 0)
+                GWSAutoForAndroidTheme(
+                    theme = theme,
+                    highlightColor = highlightColor
+                ) {
+                    androidx.compose.material3.Surface {
+                        ModuleLibraryScreen(
+                            onModuleSelected = { module ->
+                                onModuleSelectedFromLibrary(module)
+                                bottomSheet.dismiss()
+                            },
+                            onDismiss = {
+                                bottomSheet.dismiss()
+                            }
+                        )
                     }
-                    titleTextView.text = folderItem.folder.name
-                }
-            }
-        })
-
-        // Initial positioning
-        folderReel.post { 
-            scrollToMiddle(folderReel, folderItems.size)
-            val listener = ReelScrollListener()
-            listener.onScrolled(folderReel, 0, 0)
-        }
-        moduleReel.post { 
-            scrollToMiddle(moduleReel, initialModuleItems.size)
-            val listener = ReelScrollListener()
-            listener.onScrolled(moduleReel, 0, 0)
-        }
-        
-        titleTextView.text = initialFolder?.name ?: "Select Module"
-
-        btnAdd.setOnClickListener {
-            val centerView = moduleSnapHelper.findSnapView(moduleReel.layoutManager)
-            val position = centerView?.let { moduleReel.layoutManager?.getPosition(it) }
-            if (position != null) {
-                val moduleItem = moduleAdapter.getItem(position) as? ModuleLibraryAdapter.LibraryItem.ModuleItem
-                if (moduleItem != null) {
-                    onModuleSelectedFromLibrary(moduleItem.module)
-                    bottomSheet.dismiss()
                 }
             }
         }
         
-        bottomSheet.setContentView(view)
+        bottomSheet.setContentView(composeView)
+        bottomSheet.behavior.isDraggable = false
         bottomSheet.show()
     }
 
@@ -539,6 +472,7 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
         // Apply to Buttons
         binding.saveButton.backgroundTintList = colorStateList
         binding.fabAddModule.backgroundTintList = colorStateList
+        binding.btnAddFirstModule.backgroundTintList = colorStateList
         
         // Apply to TextInputLayouts (input field borders when focused)
         binding.workflowNameLayout.setBoxStrokeColorStateList(colorStateList)

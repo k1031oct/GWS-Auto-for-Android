@@ -99,20 +99,9 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp">
 
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_add"
-                    app:tint="?android:attr/textColorSecondary"
-                    android:contentDescription="@null"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/drop_modules_here"
-                    android:textAppearance="?attr/textAppearanceBodyMedium"
-                    android:textColor="?android:attr/textColorSecondary"
-                    android:layout_marginTop="8dp"/>
+
+
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_add_first_module"
@@ -143,13 +132,7 @@
             android:layout_height="1dp"
             android:background="?android:attr/listDivider"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Module Library"
-            android:paddingStart="16dp"
-            android:paddingTop="8dp"
-            style="@style/TextAppearance.MaterialComponents.Caption"/>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/library_recycler_view"
