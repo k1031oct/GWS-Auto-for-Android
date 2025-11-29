@@ -34,4 +34,6 @@
     <color name="fab_icon_tint">@color/black</color>
     <color name="module_icon_tint">@color/white</color>
     <color name="module_text_color">@color/white</color>
+
+    <color name="neutral_menu_background">#1E1E1E</color>
 </resources>

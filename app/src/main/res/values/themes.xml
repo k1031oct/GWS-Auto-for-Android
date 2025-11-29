@@ -13,6 +13,7 @@
         <item name="colorError">@color/md_theme_light_error</item>
         <item name="colorOnError">@color/md_theme_light_onError</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="popupMenuBackground">@color/neutral_menu_background</item>
     </style>
 
     <style name="Theme.GWSAutoForAndroid" parent="Base.Theme.GWSAutoForAndroid" />

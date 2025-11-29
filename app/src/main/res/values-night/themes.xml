@@ -29,6 +29,7 @@
         <item name="colorPrimaryInverse">@color/md_theme_dark_inversePrimary</item>
         <item name="android:statusBarColor">@color/md_theme_dark_background</item>
         <item name="android:windowLightStatusBar">false</item>
+        <item name="popupMenuBackground">@color/neutral_menu_background</item>
     </style>
 
     <style name="Theme.GWSAutoForAndroid" parent="Base.Theme.GWSAutoForAndroid" />

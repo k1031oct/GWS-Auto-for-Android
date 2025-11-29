@@ -193,6 +193,7 @@
     <color name="neon_pink">#FF0099</color>
     <color name="neon_turquoise">#00F0FF</color>
     <color name="neon_yellow">#DFFF00</color>
+    <color name="neutral_menu_background">#F5F5F5</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -542,6 +543,7 @@
         <item name="colorError">@color/md_theme_light_error</item>
         <item name="colorOnError">@color/md_theme_light_onError</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="popupMenuBackground">@color/neutral_menu_background</item>
     </style>
     <style name="Divider">
         <item name="android:layout_width">match_parent</item>

@@ -88,6 +88,7 @@ color neon_green
 color neon_pink
 color neon_turquoise
 color neon_yellow
+color neutral_menu_background
 color purple_200
 color purple_500
 color purple_700
