@@ -93,6 +93,13 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
 
         binding.cancelButton.setOnClickListener { finish() }
         binding.saveButton.setOnClickListener { saveWorkflow() }
+        
+        binding.btnAddFirstModule.setOnClickListener {
+            showModuleLibrary(0)
+        }
+        binding.emptyStateContainer.setOnClickListener {
+            showModuleLibrary(0)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

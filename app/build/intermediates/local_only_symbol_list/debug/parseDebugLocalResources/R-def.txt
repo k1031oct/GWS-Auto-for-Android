@@ -154,6 +154,7 @@ id auth_button
 id back_button
 id bookmark_button
 id bottom_nav
+id btn_add_first_module
 id btn_add_module
 id button_bar
 id button_container

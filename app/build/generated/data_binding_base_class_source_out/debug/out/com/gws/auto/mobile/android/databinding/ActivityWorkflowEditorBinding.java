@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,6 +29,9 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
 
   @NonNull
   public final Chip addTagChip;
+
+  @NonNull
+  public final MaterialButton btnAddFirstModule;
 
   @NonNull
   public final LinearLayout buttonBar;
@@ -75,7 +79,8 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
   public final TextInputLayout workflowNameLayout;
 
   private ActivityWorkflowEditorBinding(@NonNull ConstraintLayout rootView,
-      @NonNull Chip addTagChip, @NonNull LinearLayout buttonBar, @NonNull Button cancelButton,
+      @NonNull Chip addTagChip, @NonNull MaterialButton btnAddFirstModule,
+      @NonNull LinearLayout buttonBar, @NonNull Button cancelButton,
       @NonNull LinearLayout emptyStateContainer, @NonNull FloatingActionButton fabAddModule,
       @NonNull RecyclerView folderRecyclerView, @NonNull LinearLayout libraryContainer,
       @NonNull RecyclerView libraryRecyclerView, @NonNull RecyclerView moduleRecyclerView,
@@ -85,6 +90,7 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
       @NonNull TextInputEditText workflowNameEditor, @NonNull TextInputLayout workflowNameLayout) {
     this.rootView = rootView;
     this.addTagChip = addTagChip;
+    this.btnAddFirstModule = btnAddFirstModule;
     this.buttonBar = buttonBar;
     this.cancelButton = cancelButton;
     this.emptyStateContainer = emptyStateContainer;
@@ -132,6 +138,12 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
       id = R.id.add_tag_chip;
       Chip addTagChip = ViewBindings.findChildViewById(rootView, id);
       if (addTagChip == null) {
+        break missingId;
+      }
+
+      id = R.id.btn_add_first_module;
+      MaterialButton btnAddFirstModule = ViewBindings.findChildViewById(rootView, id);
+      if (btnAddFirstModule == null) {
         break missingId;
       }
 
@@ -225,11 +237,11 @@ public final class ActivityWorkflowEditorBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityWorkflowEditorBinding((ConstraintLayout) rootView, addTagChip, buttonBar,
-          cancelButton, emptyStateContainer, fabAddModule, folderRecyclerView, libraryContainer,
-          libraryRecyclerView, moduleRecyclerView, saveButton, tagChipGroup, tagSection,
-          workflowDescriptionEditor, workflowDescriptionLayout, workflowNameEditor,
-          workflowNameLayout);
+      return new ActivityWorkflowEditorBinding((ConstraintLayout) rootView, addTagChip,
+          btnAddFirstModule, buttonBar, cancelButton, emptyStateContainer, fabAddModule,
+          folderRecyclerView, libraryContainer, libraryRecyclerView, moduleRecyclerView, saveButton,
+          tagChipGroup, tagSection, workflowDescriptionEditor, workflowDescriptionLayout,
+          workflowNameEditor, workflowNameLayout);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
