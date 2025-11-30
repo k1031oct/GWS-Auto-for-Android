@@ -132,7 +132,9 @@ class MainActivity : AppCompatActivity() {
         // val theme = settingsRepository.theme.first()
 
         val appLocale = LocaleListCompat.forLanguageTags(languageTag)
-        AppCompatDelegate.setApplicationLocales(appLocale)
+        if (AppCompatDelegate.getApplicationLocales() != appLocale) {
+            AppCompatDelegate.setApplicationLocales(appLocale)
+        }
 
         // Initial theme application is also handled by observeSettings, 
         // but we might want to keep it here for immediate application on cold start if needed.
@@ -140,10 +142,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun applyTheme(theme: String) {
-        when (theme) {
-            "Light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            "Dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        val mode = when (theme) {
+            "Light" -> AppCompatDelegate.MODE_NIGHT_NO
+            "Dark" -> AppCompatDelegate.MODE_NIGHT_YES
+            else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        }
+        if (AppCompatDelegate.getDefaultNightMode() != mode) {
+            AppCompatDelegate.setDefaultNightMode(mode)
         }
     }
 
