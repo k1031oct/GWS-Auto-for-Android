@@ -474,6 +474,12 @@ class WorkflowEditorActivity : AppCompatActivity(), ModuleParameterDialogFragmen
         binding.fabAddModule.backgroundTintList = colorStateList
         binding.btnAddFirstModule.backgroundTintList = colorStateList
         
+        if (isDarkTheme) {
+            binding.btnAddFirstModule.setTextColor(Color.BLACK)
+        } else {
+            binding.btnAddFirstModule.setTextColor(Color.WHITE)
+        }
+        
         // Apply to TextInputLayouts (input field borders when focused)
         binding.workflowNameLayout.setBoxStrokeColorStateList(colorStateList)
         binding.workflowDescriptionLayout.setBoxStrokeColorStateList(colorStateList)
