@@ -301,21 +301,33 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
     private fun setupDuplicateSpreadsheetUI() {
         val newFileNameInput = createTextInputLayout("新しいファイル名", module.parameters["newFileName"])
         val sourcePicker = createFilePickerViews("sourceSheet", "ソースシートを選択", module.parameters, "application/vnd.google-apps.spreadsheet")
-        val destFolderIdInput = createTextInputLayout("先のフォルダID (任意)", module.parameters["destinationFolderId"])
+        val destFolderPicker = createFilePickerViews("destFolder", "先のフォルダを選択 (任意)", module.parameters, "application/vnd.google-apps.folder")
 
         binding.parametersContainer.addView(sourcePicker)
         binding.parametersContainer.addView(newFileNameInput)
-        binding.parametersContainer.addView(destFolderIdInput)
+        binding.parametersContainer.addView(destFolderPicker)
 
         binding.saveButton.setOnClickListener {
             val params = mutableMapOf(
-                "newFileName" to newFileNameInput.editText?.text.toString(),
-                "destinationFolderId" to destFolderIdInput.editText?.text.toString()
+                "newFileName" to newFileNameInput.editText?.text.toString()
             )
             selectedFiles["sourceSheet"]?.let {
                 params["sourceFileId"] = it.first
                 params["sourceFileName"] = it.second
             }
+            // destinationFolderId is optional, but if selected via picker, use it
+            selectedFiles["destFolder"]?.let {
+                params["destinationFolderId"] = it.first
+                params["destinationFolderName"] = it.second
+            } ?: run {
+                // If not selected via picker, check if user typed it (though we replaced input with picker, 
+                // but if we want to support manual entry we'd need a text input too. 
+                // For now, let's assume picker is the way or we can keep the text input as fallback?
+                // The original code had a text input. Let's keep it simple and use the picker result if available.
+                // If we want to allow manual entry, we should have kept the text input. 
+                // Given the instruction "Use file picker", we prioritize the picker.
+            }
+            
             viewModel.updateModuleParameters(module.id, params)
             dismiss()
         }
@@ -481,16 +493,19 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
 
     private fun setupSheetsCreateNewUI() {
         val titleInput = createTextInputLayout("タイトル", module.parameters["title"])
-        val parentFolderIdInput = createTextInputLayout("親フォルダID（任意）", module.parameters["parentFolderId"])
+        val parentFolderPicker = createFilePickerViews("destFolder", "親フォルダを選択 (任意)", module.parameters, "application/vnd.google-apps.folder")
 
         binding.parametersContainer.addView(titleInput)
-        binding.parametersContainer.addView(parentFolderIdInput)
+        binding.parametersContainer.addView(parentFolderPicker)
 
         binding.saveButton.setOnClickListener {
-            val params = mapOf(
-                "title" to titleInput.editText?.text.toString(),
-                "parentFolderId" to parentFolderIdInput.editText?.text.toString()
+            val params = mutableMapOf(
+                "title" to titleInput.editText?.text.toString()
             )
+            selectedFiles["destFolder"]?.let {
+                params["parentFolderId"] = it.first
+                params["parentFolderName"] = it.second
+            }
             viewModel.updateModuleParameters(module.id, params)
             dismiss()
         }
@@ -515,56 +530,70 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
 
     private fun setupDriveCreateFolderUI() {
         val newFolderNameInput = createTextInputLayout("フォルダ名", module.parameters["newFolderName"])
-        val parentFolderIdInput = createTextInputLayout("親フォルダID（任意）", module.parameters["parentFolderId"])
+        val parentFolderPicker = createFilePickerViews("destFolder", "親フォルダを選択 (任意)", module.parameters, "application/vnd.google-apps.folder")
         val outputFolderIdInput = createTextInputLayout("出力変数名（任意）", module.parameters["outputFolderId"])
 
         binding.parametersContainer.addView(newFolderNameInput)
-        binding.parametersContainer.addView(parentFolderIdInput)
+        binding.parametersContainer.addView(parentFolderPicker)
         binding.parametersContainer.addView(outputFolderIdInput)
 
         binding.saveButton.setOnClickListener {
-            val params = mapOf(
+            val params = mutableMapOf(
                 "newFolderName" to newFolderNameInput.editText?.text.toString(),
-                "parentFolderId" to parentFolderIdInput.editText?.text.toString(),
                 "outputFolderId" to outputFolderIdInput.editText?.text.toString()
             )
+            selectedFiles["destFolder"]?.let {
+                params["parentFolderId"] = it.first
+                params["parentFolderName"] = it.second
+            }
             viewModel.updateModuleParameters(module.id, params)
             dismiss()
         }
     }
 
     private fun setupDriveCopyFileUI() {
-        val sourceFileIdInput = createTextInputLayout("ソースファイルID", module.parameters["sourceFileId"])
-        val destFolderIdInput = createTextInputLayout("先フォルダID", module.parameters["destinationFolderId"])
+        val sourceFilePicker = createFilePickerViews("sourceFile", "ソースファイルを選択", module.parameters, "*/*")
+        val destFolderPicker = createFilePickerViews("destFolder", "先フォルダを選択", module.parameters, "application/vnd.google-apps.folder")
         val newFileNameInput = createTextInputLayout("新しいファイル名", module.parameters["newFileName"])
 
-        binding.parametersContainer.addView(sourceFileIdInput)
-        binding.parametersContainer.addView(destFolderIdInput)
+        binding.parametersContainer.addView(sourceFilePicker)
+        binding.parametersContainer.addView(destFolderPicker)
         binding.parametersContainer.addView(newFileNameInput)
 
         binding.saveButton.setOnClickListener {
-            val params = mapOf(
-                "sourceFileId" to sourceFileIdInput.editText?.text.toString(),
-                "destinationFolderId" to destFolderIdInput.editText?.text.toString(),
+            val params = mutableMapOf(
                 "newFileName" to newFileNameInput.editText?.text.toString()
             )
+            selectedFiles["sourceFile"]?.let {
+                params["sourceFileId"] = it.first
+                params["sourceFileName"] = it.second
+            }
+            selectedFiles["destFolder"]?.let {
+                params["destinationFolderId"] = it.first
+                params["destinationFolderName"] = it.second
+            }
             viewModel.updateModuleParameters(module.id, params)
             dismiss()
         }
     }
 
     private fun setupDriveMoveFileUI() {
-        val fileIdInput = createTextInputLayout("ファイルID", module.parameters["fileId"])
-        val toFolderIdInput = createTextInputLayout("先フォルダID", module.parameters["toFolderId"])
+        val filePicker = createFilePickerViews("sourceFile", "ファイルを選択", module.parameters, "*/*")
+        val toFolderPicker = createFilePickerViews("destFolder", "先フォルダを選択", module.parameters, "application/vnd.google-apps.folder")
 
-        binding.parametersContainer.addView(fileIdInput)
-        binding.parametersContainer.addView(toFolderIdInput)
+        binding.parametersContainer.addView(filePicker)
+        binding.parametersContainer.addView(toFolderPicker)
 
         binding.saveButton.setOnClickListener {
-            val params = mapOf(
-                "fileId" to fileIdInput.editText?.text.toString(),
-                "toFolderId" to toFolderIdInput.editText?.text.toString()
-            )
+            val params = mutableMapOf<String, String>()
+            selectedFiles["sourceFile"]?.let {
+                params["fileId"] = it.first
+                params["fileName"] = it.second
+            }
+            selectedFiles["destFolder"]?.let {
+                params["toFolderId"] = it.first
+                params["toFolderName"] = it.second
+            }
             viewModel.updateModuleParameters(module.id, params)
             dismiss()
         }
