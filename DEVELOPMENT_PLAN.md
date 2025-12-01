@@ -1,14 +1,5 @@
 # 「GWS Automater for Android」実装計画
 
-## 現在の開発状況 (2025-11-15)
-- **課題:**
-    - Google Calendar APIの利用がプロジェクトで有効になっていないため、祝日取得時に403エラーが発生している。
-- **現在の方針:**
-    - APIを有効化するまでの間、カレンダー機能の実装はエラーを許容しつつ進める。
-    - UI/UXの改善と、Google APIを必要としない内部機能の実装を優先する。
-
----
-
 ## 開発計画
 
 ### 基盤とコア機能
@@ -106,12 +97,12 @@
     - [ ] アプリケーションバージョン表示
 
 ### GWS・外部連携モジュール
-- [ ] **Task (GWS):** Google APIクライアントをセットアップし、GWSアクセスに必要なOAuth2トークンスコープを処理する。
-- [ ] **Task (GWS):** **Gmail**モジュール（受信トリガー、メール送信、添付ファイル保存）を開発する。
-- [ ] **Task (GWS):** **Google Drive**モジュール（ファイルアップロード/ダウンロード、フォルダ作成）を開発する。
-- [ ] **Task (GWS):** **Google Sheets**モジュール（行追加、セル更新、データ取得）を開発する。
-- [ ] **Task (GWS):** **Google Calendar**モジュール（イベント作成、取得）を開発する。
-- [ ] **Task (ユーティリティ):** **条件分岐 (If/Else)** と **待機 (Delay)** モジュールを開発する。
+- [x] **Task (GWS):** Google APIクライアントをセットアップし、GWSアクセスに必要なOAuth2トークンスコープを処理する。
+- [x] **Task (GWS):** **Gmail**モジュール（受信トリガー、メール送信、添付ファイル保存）を開発する。
+- [x] **Task (GWS):** **Google Drive**モジュール（ファイルアップロード/ダウンロード、フォルダ作成）を開発する。
+- [x] **Task (GWS):** **Google Sheets**モジュール（行追加、セル更新、データ取得）を開発する。
+- [x] **Task (GWS):** **Google Calendar**モジュール（イベント作成、取得）を開発する。
+- [x] **Task (ユーティリティ):** **条件分岐 (If/Else)** と **待機 (Delay)** モジュールを開発する。
 - [ ] **Task:** **外部サービス連携**モジュール（Slack/Discord/Teams, Trello/Asanaなど）の開発に着手する。
 
 ### 高度な機能とゲーム性
@@ -135,3 +126,9 @@
 - **Firebase:** Authentication, Crashlytics, Firestore
 - **Google APIs Client Libraries:** Gmail, Drive, Sheets, Calendar
 - **Dependency Injection:** Hilt
+- **Asynchronous Processing:** Coroutines, Flow
+- **Local Database:** Room
+- **Settings/Preferences:** DataStore
+- **Logging:** Timber
+- **Background Tasks:** WorkManager
+

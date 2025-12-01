@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "UIDESIGN_PLAN.md",
+                "file": "DATA_FLOW.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "UIDESIGN_PLAN"
+              "title": "DATA_FLOW"
             }
           }
         ]
@@ -112,6 +112,7 @@
         "state": {
           "type": "backlink",
           "state": {
+            "file": "DATA_FLOW.md",
             "collapseAll": false,
             "extraContext": false,
             "sortOrder": "alphabetical",
@@ -165,12 +166,16 @@
       "bases:Create new base": false
     }
   },
-  "active": "84b3d7c9c6af8f57",
+  "active": "63c41e6fad36c949",
   "lastOpenFiles": [
+    "UI_VOCABULARY.md",
+    "DATA_FLOW.md",
+    "ARCHITECTURE_DIAGRAMS.md",
+    "UIDESIGN_PLAN.md",
+    "DEVELOPMENT_PLAN.md",
     "README.md",
     "RELEASE_PLAN.md",
     "MANUAL_SETUP.md",
-    "DEVELOPMENT_PLAN.md",
     "TSUNAGU 開発計画.md"
   ]
 }

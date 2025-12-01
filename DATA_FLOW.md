@@ -25,11 +25,37 @@
 | **GoogleApiAuthorizer.getCredential** | `scopes: List<String>` | OAuth2資格情報の取得 | `GoogleAccountCredential?` | |
 | ├─ Validation | `isSignedIn` | サインイン状態確認 | Boolean | 未サインイン時はnull |
 | ├─ `GoogleAccountCredential.usingOAuth2` | `context, scopes` | 資格情報の生成 | Credential | |
-| └─ `credential.selectedAccount` | `account` | アカウントの設定 | Unit | アカウント有効性 |
+| ├─ `credential.selectedAccount` | `account` | アカウントの設定 | Unit | アカウント有効性 |
+
+### 1.3 初回起動セットアップ (First-Time Setup)
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **MainViewModel.checkFirstRun** | None | 初回起動かどうかの確認 | `Boolean` | |
+| └─ **SettingsRepository.isFirstRun** | None | DataStoreからフラグ取得 | `Flow<Boolean>` | |
+|   └─ `dataStore.data.map { it[IS_FIRST_RUN_KEY] ?: true }` | `preferences` | フラグ読み込み | Boolean | デフォルトはtrue |
+| **SetupWizardViewModel.saveInitialSettings** | `country: String, language: String` | 初期設定の保存 | Unit | |
+| ├─ **SettingsRepository.saveCountry** | `country` | 国コードの保存 | Unit | |
+| │ └─ `dataStore.edit { it[COUNTRY_KEY] = country }` | `country` | DataStore書き込み | Unit | |
+| ├─ **SettingsRepository.saveLanguage** | `language` | 言語コードの保存 | Unit | |
+| │ └─ `dataStore.edit { it[LANGUAGE_KEY] = language }` | `language` | DataStore書き込み | Unit | |
+| └─ **SettingsRepository.setFirstRunCompleted** | None | 初回起動完了フラグ設定 | Unit | |
+|   └─ `dataStore.edit { it[IS_FIRST_RUN_KEY] = false }` | `false` | フラグをfalseに設定 | Unit | |
 
 ---
 
 ## 2. ワークフロー管理 (Workflow Management)
+
+### 2.0 ナビゲーション引数の取得
+
+詳細画面や編集画面では、`SavedStateHandle` を通じてナビゲーション引数を取得し、データの初期読み込みをトリガーする。
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **[Editor]ViewModel** | `savedStateHandle: SavedStateHandle` | ViewModelのコンストラクタでDI | Unit | |
+| └─ `init { ... }` | None | 初期化ブロック | Unit | |
+|   ├─ `savedStateHandle.get<String>("workflowId")` | `"workflowId"` | ナビゲーション引数を取得 | `String?` | Nullチェック |
+|   └─ `loadWorkflow(workflowId)` | `workflowId` | 取得したIDでデータ読み込みを開始 | Unit | |
 
 ### 2.1 ワークフロー一覧取得
 
@@ -50,8 +76,14 @@
 | ├─ Validation | `workflow.modules` | `modules.isNotEmpty()` | Boolean | 最低1モジュール必須 |
 | ├─ `generateId` | None | 新規の場合はID生成 | String | UUID |
 | ├─ `workflow.copy(updatedAt)` | `Timestamp.now()` | タイムスタンプ更新 | Workflow | |
-| ├─ `workflow.copy(updatedAt)` | `Timestamp.now()` | タイムスタンプ更新 | Workflow | |
 | └─ `Firestore.document(id).set` | `workflow.toMap()` | Firestoreへ保存 | `Task<Void>` | 書き込み権限 |
+
+### 2.2.1 ワークフローお気に入り状態更新
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **WorkflowRepository.updateFavoriteStatus** | `workflowId: String, isFavorite: Boolean` | お気に入り状態の更新 | `Result<Unit>` | |
+| └─ `Firestore.document(id).update` | `"isFavorite", isFavorite` | isFavoriteフィールドを更新 | `Task<Void>` | 書き込み権限 |
 
 ### 2.5 ワークフロー並び替え (Workflow Reordering)
 
@@ -118,6 +150,7 @@
 | :--- | :--- | :--- | :--- | :--- |
 | **ModuleExecutor.execute** | `module: Module, context: ExecutionContext` | モジュール実行の共通インターフェース | `ExecutionResult` | |
 | ├─ `parseParameters` | `module.parameters` | JSONパラメータのパース | Map<String, Any> | 型変換エラー処理 |
+| ├─ `context.resolveVariables` | `params` | パラメータ内の変数 `{{var}}` を解決 | Map<String, Any> | 変数未定義エラー |
 | ├─ `validate` | `params` | 必須パラメータの検証 | Boolean | エラーメッセージ生成 |
 | ├─ **executeInternal** | `params, context` | 各モジュール固有の処理 | Result<Any> | |
 | └─ `ExecutionResult` | `success, message, output` | 結果オブジェクトの生成 | ExecutionResult | |
@@ -436,8 +469,10 @@
 | :--- | :--- | :--- | :--- | :--- |
 | **HistoryRepository.saveHistory** | `history: History` | 実行履歴の保存 | Unit | |
 | └─ `HistoryDao.insertHistory` | `history` | Room Insert | Long (rowId) | |
-| **HistoryRepository.getAllHistory** | None | 全履歴取得 | `Flow<List<History>>` | |
-| └─ `HistoryDao.getAllHistory` | None | Room Query | Flow | `.orderBy("executedAt", DESC)` |
+| **HistoryRepository.getAllHistory** | `isBookmarkedOnly: Boolean` | 全履歴またはブックマーク済み履歴取得 | `Flow<List<History>>` | |
+| └─ `HistoryDao.getAllHistory` | `isBookmarkedOnly` | Room Query (`WHERE isBookmarked = :isBookmarkedOnly` if true) | Flow | `.orderBy("executedAt", DESC)` |
+| **HistoryRepository.updateBookmarkStatus** | `historyId: String, isBookmarked: Boolean` | ブックマーク状態の更新 | Unit | |
+| └─ `HistoryDao.updateBookmark` | `historyId, isBookmarked` | Room Update | Unit | |
 | **HistoryRepository.deleteHistory** | `historyId: String` | 履歴削除 | Unit | |
 | └─ `HistoryDao.deleteHistory` | `history` | Room Delete | Unit | |
 
@@ -449,6 +484,20 @@
 | └─ `dataStore.edit { it[THEME_KEY] = theme }` | `preferences` | DataStore書き込み | Unit | |
 | **SettingsRepository.getTheme** | None | テーマ設定取得 | `Flow<String>` | |
 | └─ `dataStore.data.map { it[THEME_KEY] ?: "System" }` | None | DataStore読み込み | Flow | デフォルト値 |
+
+### 5.3 検索履歴管理
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **SearchHistoryRepository.getHistory** | None | 検索履歴の取得 | `Flow<List<String>>` | |
+| └─ `dataStore.data.map { it[HISTORY_KEY] ?: emptySet() }` | `preferences` | DataStore読み込み | `Flow<Set<String>>` | |
+| **SearchHistoryRepository.addHistory** | `term: String` | 検索履歴の追加 | Unit | |
+| ├─ `dataStore.edit` | `term` | 既存履歴と結合 | `Set<String>` | 重複は自動で排除 |
+| └─ `take(20)` | `Set` | 最新20件に制限 | `Set<String>` | |
+| **SearchHistoryRepository.deleteHistory** | `term: String` | 個別履歴の削除 | Unit | |
+| └─ `dataStore.edit { it[HISTORY_KEY] -= term }` | `term` | 指定した用語を削除 | Unit | |
+| **SearchHistoryRepository.clearAllHistory** | None | 全履歴の削除 | Unit | |
+| └─ `dataStore.edit { it.remove(HISTORY_KEY) }` | None | キーごと削除 | Unit | |
 
 ---
 
@@ -580,6 +629,116 @@ abstract class WorkflowModule {
 @Inject lateinit var executorMap: Map<String, @JvmSuppressWildcards Provider<ModuleExecutor>>
 val executor = executorMap[module.type]?.get()
 ```
+
+---
+
+## 8. トリガー管理 (Trigger Management)
+
+### 8.1 トリガー設定の保存
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **TriggerRepository.saveTrigger** | `trigger: Trigger` | トリガー設定の保存 | `Result<Unit>` | |
+| ├─ Validation | `trigger` | `workflowId.isNotBlank()` | Boolean | 必須項目チェック |
+| ├─ `trigger.copy(updatedAt)` | `Timestamp.now()` | タイムスタンプ更新 | Trigger | |
+| └─ `Firestore.collection("triggers").document(id).set` | `trigger.toMap()` | Firestoreへ保存 | `Task<Void>` | 書き込み権限 |
+
+### 8.2 トリガー一覧の取得
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **TriggerRepository.getAllTriggers** | `userId: String` | Firestoreからトリガー取得 | `Flow<List<Trigger>>` | |
+| └─ `Firestore.collection("triggers")` | `.whereEqualTo("userId", userId)` | クエリ実行 | QuerySnapshot | インデックス確認 |
+|  └─ `Document.toObject<Trigger>()` | `document` | Firestoreドキュメント→Kotlinオブジェクト変換 | Trigger | データ型の一致 |
+
+### 8.3 トリガーの削除
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **TriggerRepository.deleteTrigger** | `triggerId: String` | トリガーの削除 | `Result<Unit>` | |
+| └─ `Firestore.collection("triggers").document(triggerId).delete()` | `triggerId` | Firestoreから削除 | `Task<Void>` | 書き込み権限 |
+
+---
+
+## 9. ダッシュボード (Dashboard)
+
+### 9.1 統計データの集計
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **DashboardViewModel.loadStatistics** | None | ダッシュボード用データの読み込みと集計 | `StateFlow<DashboardStats>` | |
+| ├─ **HistoryRepository.getAllHistory** | `isBookmarkedOnly = false` | 全実行履歴を取得 | `Flow<List<History>>` | |
+| │ ├─ `count()` | `list` | 総実行回数 | Int | |
+| │ ├─ `count { it.isSuccess }` | `list` | 成功回数 | Int | |
+| │ └─ `groupBy { it.workflowName }.mapValues { it.value.size }` | `list` | ワークフロー別実行回数 | `Map<String, Int>` | |
+| ├─ **WorkflowRepository.getAllWorkflows** | `userId` | 全ワークフローを取得 | `Flow<List<Workflow>>` | |
+| │ └─ `count()` | `list` | 総ワークフロー数 | Int | |
+| └─ `combine` | `historyFlow, workflowFlow` | 複数Flowを結合し、`DashboardStats`オブジェクトを生成 | `Flow<DashboardStats>` | |
+
+---
+
+## 10. UI状態管理パターン (UI State Management Pattern)
+
+多くの画面では、以下の`ViewModel-Repository-UI`パターンを用いてUIの状態を管理する。
+
+### 10.1 データ読み込みとUI状態への変換
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **[Screen]Composable** | `viewModel` | `viewModel.uiState.collectAsState()` | `UiState` | |
+| └─ **[Name]ViewModel** | `repository` | `_uiState: MutableStateFlow<UiState>` | `StateFlow<UiState>` | |
+|   ├─ `init { loadData() }` | None | 初期データ読み込み | Unit | |
+|   ├─ `loadData()` | None | データ読み込み処理 | Unit | |
+|   │ ├─ `_uiState.value = UiState.Loading` | None | ローディング状態を通知 | Unit | |
+|   │ ├─ `repository.getData()` | `params` | Repositoryからデータ取得 | `Flow<Result<T>>` | |
+|   │ │ └─ `onEach { result -> ... }` | `result` | 結果の処理 | Unit | |
+|   │ │   ├─ `is Success` | `data` | `_uiState.value = UiState.Success(data)` | Unit | |
+|   │ │   └─ `is Failure` | `error` | `_uiState.value = UiState.Error(error.message)` | Unit | |
+|   │ └─ `.launchIn(viewModelScope)` | `scope` | Coroutine内でFlowを収集 | Job | |
+
+### 10.2 UiState シールドクラス定義
+
+```kotlin
+sealed class UiState<out T> {
+    object Loading : UiState<Nothing>()
+    data class Success<T>(val data: T) : UiState<T>()
+    data class Error(val message: String) : UiState<Nothing>()
+}
+```
+
+---
+
+## 11. 実行時権限の管理 (Runtime Permission Management)
+
+### 11.1 権限要求と結果処理
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **[Screen]Composable** | `permission: String` | `rememberLauncherForActivityResult` | `ActivityResultLauncher` | |
+| ├─ `onClick` | None | ボタンクリック等で処理を開始 | Unit | |
+| │ ├─ `ContextCompat.checkSelfPermission` | `permission` | 権限の有無を確認 | `PERMISSION_GRANTED` or `DENIED` | |
+| │ ├─ `is GRANTED` | None | 権限があれば、機能を直接実行 | Unit | |
+| │ └─ `is DENIED` | None | 権限がなければ、ランチャーを起動 | Unit | |
+| │   └─ `permissionLauncher.launch(permission)` | `permission` | システムの権限要求ダイアログ表示 | Unit | |
+| └─ `onResult` | `isGranted: Boolean` | ユーザーの選択結果を処理 | Unit | |
+|   ├─ `isGranted == true` | None | 権限が許可された場合、機能を実行 | Unit | |
+|   └─ `isGranted == false` | None | 権限が拒否された場合、Toast等で通知 | Unit | |
+
+---
+
+## 12. ファイルロギング (File Logging)
+
+デバッグビルドにおいて、Logcatへの出力と同時に、ログをファイルに保存する仕組み。
+
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **App.onCreate** | None | アプリケーション起動時 | Unit | |
+| └─ `if (BuildConfig.DEBUG)` | None | デバッグビルドか判定 | Unit | |
+|   └─ `Timber.plant(FileLoggingTree(context))` | `context` | カスタムTreeを植える | Unit | |
+| **FileLoggingTree.log** | `priority, tag, message, t` | `Timber.d()`などが呼ばれた時 | Unit | |
+| ├─ `formatLogMsg` | `priority, tag, message` | ログメッセージをフォーマット | String | `[TIME] [TAG]: message` |
+| ├─ `getLogFile()` | `context` | ログファイルの参照を取得 | `File` | `context.filesDir` |
+| └─ `file.appendText(log)` | `log` | ファイルに追記 | Unit | `use`で自動クローズ |
 
 ---
 
