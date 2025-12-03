@@ -156,4 +156,11 @@ class DriveApiService @Inject constructor(private val authorizer: GoogleApiAutho
             .setFields("id, name, webViewLink")
             .execute()
     }
+    @Throws(IOException::class)
+    suspend fun searchFiles(query: String): FileList = withContext(Dispatchers.IO) {
+        getService().files().list()
+            .setQ(query)
+            .setFields("files(id, name, mimeType, webViewLink, parents)")
+            .execute()
+    }
 }

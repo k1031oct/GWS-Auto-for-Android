@@ -278,7 +278,30 @@
 | ├─ **DriveApiService.moveFile** | `fileId, folderId` | Drive API呼び出し | Unit | |
 | └─ Error Handling | `Exception` | try-catch | ExecutionResult(false) | ログ記録 |
 
-### 4.3 Sheets API - データ追記
+### 4.2.5 Drive API - フォルダ内ファイル削除
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **DriveDeleteFilesInFolderModule.executeInternal** | `folderId, filterType` | フォルダ内ファイル削除 | `ExecutionResult` | |
+| ├─ **GoogleApiAuthorizer.getCredential** | `[DriveFullAccess]` | OAuth2資格情報取得 | Credential | |
+| ├─ `Drive.Builder` | `credential` | DriveServiceインスタンス生成 | Drive | |
+| ├─ `constructQuery` | `folderId, filterType` | 検索クエリ構築 | String | 親フォルダ指定 + MIMEタイプ |
+| ├─ `drive.files().list()` | `q=query` | 削除対象ファイル検索 | FileList | |
+| ├─ Loop `files` | `file` | 各ファイルを削除 | | |
+| │  └─ `drive.files().delete(file.id)` | `fileId` | 削除実行 | Void | |
+| └─ Error Handling | `Exception` | try-catch | ExecutionResult(false) | ログ記録 |
+
+### 4.2.6 Drive API - ファイル検出
+| 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
+| :--- | :--- | :--- | :--- | :--- |
+| **DriveDetectFileModule.executeInternal** | `query, searchType` | ファイル検出 | `ExecutionResult` | |
+| ├─ **GoogleApiAuthorizer.getCredential** | `[DriveReadOnly]` | OAuth2資格情報取得 | Credential | |
+| ├─ `Drive.Builder` | `credential` | DriveServiceインスタンス生成 | Drive | |
+| ├─ `constructQuery` | `query, searchType` | 検索クエリ構築 | String | name contains / fullText contains |
+| ├─ `drive.files().list()` | `q=query, pageSize=1` | ファイル検索 | FileList | |
+| ├─ `files.firstOrNull()` | None | 最初の結果を取得 | File? | |
+| ├─ `context.setVariable("detectedFileId", file.id)` | `file.id` | IDを保存 | Unit | |
+| ├─ `context.setVariable("detectedFileUrl", file.webViewLink)` | `file.webViewLink` | URLを保存 | Unit | |
+| └─ Error Handling | `Exception` | try-catch | ExecutionResult(false) | ログ記録 |
 
 | 階層 (Call Stack) | 入力値 (Arguments) | 処理・検証 (Micro Logic) | 出力値 (Return) | 整合性 (Check) |
 | :--- | :--- | :--- | :--- | :--- |

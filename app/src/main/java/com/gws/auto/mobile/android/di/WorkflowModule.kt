@@ -131,8 +131,13 @@ abstract class WorkflowModule {
 
     @Binds
     @IntoMap
-    @StringKey("drive_delete_file")
-    abstract fun bindDriveDeleteFilesModule(impl: DriveDeleteFilesModule): ModuleExecutor
+    @StringKey("drive_delete_files_in_folder")
+    abstract fun bindDriveDeleteFilesInFolderModule(impl: DriveDeleteFilesInFolderModule): ModuleExecutor
+
+    @Binds
+    @IntoMap
+    @StringKey("drive_detect_file")
+    abstract fun bindDriveDetectFileModule(impl: DriveDetectFileModule): ModuleExecutor
 
     @Binds
     @IntoMap
