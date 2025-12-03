@@ -177,7 +177,8 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
             "LOG_MESSAGE" -> setupLogMessageUI()
             "tasks_create_task" -> setupGoogleTasksCreateTaskUI()
             "drive_convert_excel_to_sheets" -> setupDriveConvertExcelToSheetsUI()
-            "drive_delete_file" -> setupDriveDeleteFileUI()
+            "drive_delete_files_in_folder" -> setupDriveDeleteFilesInFolderUI()
+            "drive_detect_file" -> setupDriveDetectFileUI()
             "drive_list_files_to_sheet" -> setupDriveListFilesToSheetUI()
             "sheets_unhide_rows_cols" -> setupSheetsUnhideRowsColsUI()
             "sheets_hide_rows_cols" -> setupSheetsHideRowsColsUI()
@@ -1119,5 +1120,47 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+    private fun setupDriveDeleteFilesInFolderUI() {
+        val folderPicker = createFilePickerViews("destFolder", "対象フォルダを選択", module.parameters, "application/vnd.google-apps.folder")
+        
+        val filterOptions = listOf("ALL", "IMAGES", "DOCUMENTS", "SPREADSHEETS", "PRESENTATIONS", "FOLDERS")
+        val filterSpinner = createSpinner(filterOptions, module.parameters["filterType"])
+        
+        binding.parametersContainer.addView(folderPicker)
+        binding.parametersContainer.addView(createSectionHeader("フィルタタイプ"))
+        binding.parametersContainer.addView(filterSpinner)
+
+        binding.saveButton.setOnClickListener {
+            val params = mutableMapOf(
+                "filterType" to filterSpinner.selectedItem.toString()
+            )
+            selectedFiles["destFolder"]?.let {
+                params["folderId"] = it.first
+                params["folderName"] = it.second
+            }
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
+    }
+
+    private fun setupDriveDetectFileUI() {
+        val queryInput = createTextInputLayout("検索クエリ", module.parameters["query"])
+        
+        val searchTypeOptions = listOf("NAME", "CONTENT")
+        val searchTypeSpinner = createSpinner(searchTypeOptions, module.parameters["searchType"])
+        
+        binding.parametersContainer.addView(queryInput)
+        binding.parametersContainer.addView(createSectionHeader("検索タイプ"))
+        binding.parametersContainer.addView(searchTypeSpinner)
+
+        binding.saveButton.setOnClickListener {
+            val params = mapOf(
+                "query" to queryInput.editText?.text.toString(),
+                "searchType" to searchTypeSpinner.selectedItem.toString()
+            )
+            viewModel.updateModuleParameters(module.id, params)
+            dismiss()
+        }
     }
 }
