@@ -71,7 +71,7 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arrayOf("gmailAttachment", "sourceSheet", "destSheet", "sourceFile", "destFolder", "csvFile", "contact_to", "contact_cc", "contact_bcc").forEach { key ->
+        arrayOf("gmailAttachment", "sourceSheet", "destSheet", "sourceFile", "destFolder", "csvFile", "contact_to", "contact_cc", "contact_bcc", "folderId").forEach { key ->
             launchers[key] = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
                     val data = result.data
@@ -732,6 +732,12 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
             // Apply highlight color if available
             currentHighlightColor?.let {
                 setBoxStrokeColorStateList(ColorStateList.valueOf(it))
+                setEndIconTintList(ColorStateList.valueOf(it))
+            }
+            endIconMode = TextInputLayout.END_ICON_CUSTOM
+            setEndIconDrawable(android.R.drawable.ic_menu_add)
+            setEndIconOnClickListener {
+                showVariablePicker(this.editText)
             }
         }
         val editText = EditText(requireContext()).apply {
@@ -746,6 +752,44 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
         }
         textInputLayout.addView(editText)
         return textInputLayout
+    }
+
+    private fun showVariablePicker(editText: EditText?) {
+        if (editText == null) return
+
+        lifecycleScope.launch {
+            val currentModules = viewModel.modules.value
+            val currentIndex = currentModules.indexOfFirst { it.id == module.id }
+            
+            if (currentIndex <= 0) {
+                Toast.makeText(requireContext(), "利用可能な変数がありません (前のモジュールがありません)", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+
+            val availableVariables = mutableListOf<com.gws.auto.mobile.android.domain.engine.OutputVariable>()
+            for (i in 0 until currentIndex) {
+                val m = currentModules[i]
+                availableVariables.addAll(com.gws.auto.mobile.android.domain.engine.ModuleOutputRegistry.getOutputVariables(m))
+            }
+
+            if (availableVariables.isEmpty()) {
+                Toast.makeText(requireContext(), "利用可能な変数がありません", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+
+            val items = availableVariables.map { "${it.name}\n${it.description}" }.toTypedArray()
+            
+            android.app.AlertDialog.Builder(requireContext())
+                .setTitle("変数を挿入")
+                .setItems(items) { _, which ->
+                    val selectedVar = availableVariables[which]
+                    val insertText = "{{${selectedVar.name}}}"
+                    val start = editText.selectionStart.coerceAtLeast(0)
+                    val end = editText.selectionEnd.coerceAtLeast(0)
+                    editText.text.replace(Math.min(start, end), Math.max(start, end), insertText)
+                }
+                .show()
+        }
     }
 
     private fun createSpinner(items: List<String>, selectedValue: String? = null): Spinner {
