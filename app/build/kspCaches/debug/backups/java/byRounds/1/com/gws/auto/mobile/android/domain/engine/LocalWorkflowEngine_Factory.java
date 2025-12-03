@@ -1,6 +1,7 @@
 package com.gws.auto.mobile.android.domain.engine;
 
 import com.gws.auto.mobile.android.data.repository.HistoryRepository;
+import com.gws.auto.mobile.android.data.repository.ModuleStateRepository;
 import com.gws.auto.mobile.android.data.repository.WorkflowRepository;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
@@ -32,28 +33,34 @@ public final class LocalWorkflowEngine_Factory implements Factory<LocalWorkflowE
 
   private final Provider<WorkflowRepository> workflowRepositoryProvider;
 
+  private final Provider<ModuleStateRepository> moduleStateRepositoryProvider;
+
   private LocalWorkflowEngine_Factory(Provider<ModuleExecutorProvider> moduleExecutorProvider,
       Provider<HistoryRepository> historyRepositoryProvider,
-      Provider<WorkflowRepository> workflowRepositoryProvider) {
+      Provider<WorkflowRepository> workflowRepositoryProvider,
+      Provider<ModuleStateRepository> moduleStateRepositoryProvider) {
     this.moduleExecutorProvider = moduleExecutorProvider;
     this.historyRepositoryProvider = historyRepositoryProvider;
     this.workflowRepositoryProvider = workflowRepositoryProvider;
+    this.moduleStateRepositoryProvider = moduleStateRepositoryProvider;
   }
 
   @Override
   public LocalWorkflowEngine get() {
-    return newInstance(moduleExecutorProvider.get(), historyRepositoryProvider.get(), workflowRepositoryProvider.get());
+    return newInstance(moduleExecutorProvider.get(), historyRepositoryProvider.get(), workflowRepositoryProvider.get(), moduleStateRepositoryProvider.get());
   }
 
   public static LocalWorkflowEngine_Factory create(
       Provider<ModuleExecutorProvider> moduleExecutorProvider,
       Provider<HistoryRepository> historyRepositoryProvider,
-      Provider<WorkflowRepository> workflowRepositoryProvider) {
-    return new LocalWorkflowEngine_Factory(moduleExecutorProvider, historyRepositoryProvider, workflowRepositoryProvider);
+      Provider<WorkflowRepository> workflowRepositoryProvider,
+      Provider<ModuleStateRepository> moduleStateRepositoryProvider) {
+    return new LocalWorkflowEngine_Factory(moduleExecutorProvider, historyRepositoryProvider, workflowRepositoryProvider, moduleStateRepositoryProvider);
   }
 
   public static LocalWorkflowEngine newInstance(ModuleExecutorProvider moduleExecutorProvider,
-      HistoryRepository historyRepository, WorkflowRepository workflowRepository) {
-    return new LocalWorkflowEngine(moduleExecutorProvider, historyRepository, workflowRepository);
+      HistoryRepository historyRepository, WorkflowRepository workflowRepository,
+      ModuleStateRepository moduleStateRepository) {
+    return new LocalWorkflowEngine(moduleExecutorProvider, historyRepository, workflowRepository, moduleStateRepository);
   }
 }

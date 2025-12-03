@@ -1145,20 +1145,39 @@ class ModuleSettingsDialogFragment(private val module: Module) : DialogFragment(
     }
 
     private fun setupDriveDetectFileUI() {
-        val queryInput = createTextInputLayout("検索クエリ", module.parameters["query"])
+        val queryInput = createTextInputLayout("検索クエリ (名前または内容)", module.parameters["query"])
         
         val searchTypeOptions = listOf("NAME", "CONTENT")
         val searchTypeSpinner = createSpinner(searchTypeOptions, module.parameters["searchType"])
+
+        val folderPicker = createFilePickerViews("folderId", "検索対象フォルダ (任意)", module.parameters, "application/vnd.google-apps.folder")
+
+        val detectionModeOptions = listOf("SIMPLE", "NEW_ONLY")
+        val detectionModeSpinner = createSpinner(detectionModeOptions, module.parameters["detectionMode"])
+        
+        val sortOrderOptions = listOf("modifiedTime desc", "modifiedTime asc", "createdTime desc", "createdTime asc")
+        val sortOrderSpinner = createSpinner(sortOrderOptions, module.parameters["sortOrder"])
         
         binding.parametersContainer.addView(queryInput)
         binding.parametersContainer.addView(createSectionHeader("検索タイプ"))
         binding.parametersContainer.addView(searchTypeSpinner)
+        binding.parametersContainer.addView(folderPicker)
+        binding.parametersContainer.addView(createSectionHeader("検出モード (NEW_ONLY: 前回以降の変更のみ)"))
+        binding.parametersContainer.addView(detectionModeSpinner)
+        binding.parametersContainer.addView(createSectionHeader("ソート順"))
+        binding.parametersContainer.addView(sortOrderSpinner)
 
         binding.saveButton.setOnClickListener {
-            val params = mapOf(
+            val params = mutableMapOf(
                 "query" to queryInput.editText?.text.toString(),
-                "searchType" to searchTypeSpinner.selectedItem.toString()
+                "searchType" to searchTypeSpinner.selectedItem.toString(),
+                "detectionMode" to detectionModeSpinner.selectedItem.toString(),
+                "sortOrder" to sortOrderSpinner.selectedItem.toString()
             )
+            selectedFiles["folderId"]?.let {
+                params["folderId"] = it.first
+                params["folderName"] = it.second
+            }
             viewModel.updateModuleParameters(module.id, params)
             dismiss()
         }

@@ -127,24 +127,7 @@
 - [ ] **Task:** ユーザーがテーマやモジュールの一部をカスタマイズできる機能を追加する。
 
 ---
-
-### 技術スタック
-- **Android Native:** Kotlin, Jetpack Compose
-- **Firebase:** Authentication, Crashlytics, Firestore
-- **Google APIs Client Libraries:** Gmail, Drive, Sheets, Calendar
-- **Dependency Injection:** Hilt
-- **Asynchronous Processing:** Coroutines, Flow
-- **Local Database:** Room
-- **Settings/Preferences:** DataStore
-- **Logging:** Timber
-- **Background Tasks:** WorkManager
-
----
-# GWS-Auto-for-Android: Google Playストア リリース計画書
-
-このドキュメントは、GWS-Auto-for-AndroidアプリケーションをGoogle Playストアで新規リリースするために必要な手順をまとめたものです。
-
----
+## リリース計画書
 
 ### フェーズ1: アプリケーションの最終準備（コードとアセット）
 
@@ -157,8 +140,6 @@
 - [ ] **最終版アプリアイコンの作成:** アダプティブアイコン（フォアグラウンドとバックグラウンドのレイヤー）を高解像度で準備します。
 - [ ] **オープンソースライセンス画面の実装（推奨）:** アプリ内で使用しているサードパーティライブラリのライセンス情報を表示する画面を作成します。
 
----
-
 ### フェーズ2: 法務およびコンプライアンス対応
 
 このフェーズでは、アプリが法的な要件とGoogle Playのポリシー、特にユーザーデータのプライバシー保護に準拠していることを確認します。
@@ -168,8 +149,6 @@
     - [ ] プライバシーに関する問い合わせ先を記載します。
     - [ ] プライバシーポリシーを公開し、誰でもアクセスできるURLを準備します。
 - [ ] **アセットの権利確認:** アプリ内で使用するすべての画像、アイコン、フォント等の素材が、商用利用可能なライセンスに基づいていることを確認します。
-
----
 
 ### フェーズ3: Google Play Consoleの設定
 
@@ -190,8 +169,6 @@
     - [ ] 公開したプライバシーポリシーのURLを登録します。
 - [ ] **価格と配信国の設定:** アプリを無料にするか有料にするか、どの国で配信するかを設定します。
 
----
-
 ### フェーズ4: リリースビルドの作成と公開
 
 この最終フェーズでは、署名済みのリリースビルドを作成し、ユーザーに公開するまでの技術的な手順をカバーします。
@@ -209,3 +186,16 @@
 - [ ] **製品版へのプロモート:**
     - [ ] テストで問題がなければ、「内部テスト」から「製品版」トラックへビルドをプロモート（昇格）させます。
     - [ ] リリースを申請します。Googleによる審査（数時間〜数日）が完了すると、ストアで公開されます。
+
+---
+
+### 技術スタック
+- **Android Native:** Kotlin, Jetpack Compose
+- **Firebase:** Authentication, Crashlytics, Firestore
+- **Google APIs Client Libraries:** Gmail, Drive, Sheets, Calendar
+- **Dependency Injection:** Hilt
+- **Asynchronous Processing:** Coroutines, Flow
+- **Local Database:** Room
+- **Settings/Preferences:** DataStore
+- **Logging:** Timber
+- **Background Tasks:** WorkManager

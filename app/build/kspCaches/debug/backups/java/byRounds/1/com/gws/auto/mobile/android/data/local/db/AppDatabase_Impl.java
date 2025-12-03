@@ -38,10 +38,12 @@ public final class AppDatabase_Impl extends AppDatabase {
 
   private volatile ScheduleDao _scheduleDao;
 
+  private volatile ModuleStateDao _moduleStateDao;
+
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(9) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(10) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `workflows` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `modules` TEXT NOT NULL, `status` TEXT NOT NULL, `trigger` TEXT NOT NULL, `tags` TEXT NOT NULL, `isFavorite` INTEGER NOT NULL, `order` INTEGER NOT NULL, PRIMARY KEY(`id`))");
@@ -51,8 +53,9 @@ public final class AppDatabase_Impl extends AppDatabase {
         db.execSQL("CREATE TABLE IF NOT EXISTS `tags` (`name` TEXT NOT NULL, PRIMARY KEY(`name`))");
         db.execSQL("CREATE TABLE IF NOT EXISTS `execution_history` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `workflowId` TEXT NOT NULL, `workflowName` TEXT NOT NULL, `executedAt` INTEGER NOT NULL, `status` TEXT NOT NULL, `logs` TEXT NOT NULL, `durationMs` INTEGER NOT NULL, `isBookmarked` INTEGER NOT NULL, `triggerType` TEXT NOT NULL)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `schedules` (`id` TEXT NOT NULL, `workflowId` TEXT NOT NULL, `workflowName` TEXT NOT NULL, `scheduleType` TEXT NOT NULL, `hourlyInterval` INTEGER, `time` TEXT, `weeklyDays` TEXT, `monthlyDays` TEXT, `yearlyMonth` INTEGER, `yearlyDayOfMonth` INTEGER, `lastRun` INTEGER, `nextRun` INTEGER, `skipHolidays` INTEGER NOT NULL, `isEnabled` INTEGER NOT NULL, PRIMARY KEY(`id`))");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `module_states` (`workflowId` TEXT NOT NULL, `moduleId` TEXT NOT NULL, `key` TEXT NOT NULL, `value` TEXT NOT NULL, `updatedAt` INTEGER NOT NULL, PRIMARY KEY(`workflowId`, `moduleId`, `key`))");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4c28b0e92ef054d664fafb460cf17a17')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bc3840a48e2509574363ca1f0e8a62d5')");
       }
 
       @Override
@@ -64,6 +67,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         db.execSQL("DROP TABLE IF EXISTS `tags`");
         db.execSQL("DROP TABLE IF EXISTS `execution_history`");
         db.execSQL("DROP TABLE IF EXISTS `schedules`");
+        db.execSQL("DROP TABLE IF EXISTS `module_states`");
         final List<? extends RoomDatabase.Callback> _callbacks = mCallbacks;
         if (_callbacks != null) {
           for (RoomDatabase.Callback _callback : _callbacks) {
@@ -219,9 +223,24 @@ public final class AppDatabase_Impl extends AppDatabase {
                   + " Expected:\n" + _infoSchedules + "\n"
                   + " Found:\n" + _existingSchedules);
         }
+        final HashMap<String, TableInfo.Column> _columnsModuleStates = new HashMap<String, TableInfo.Column>(5);
+        _columnsModuleStates.put("workflowId", new TableInfo.Column("workflowId", "TEXT", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsModuleStates.put("moduleId", new TableInfo.Column("moduleId", "TEXT", true, 2, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsModuleStates.put("key", new TableInfo.Column("key", "TEXT", true, 3, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsModuleStates.put("value", new TableInfo.Column("value", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsModuleStates.put("updatedAt", new TableInfo.Column("updatedAt", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysModuleStates = new HashSet<TableInfo.ForeignKey>(0);
+        final HashSet<TableInfo.Index> _indicesModuleStates = new HashSet<TableInfo.Index>(0);
+        final TableInfo _infoModuleStates = new TableInfo("module_states", _columnsModuleStates, _foreignKeysModuleStates, _indicesModuleStates);
+        final TableInfo _existingModuleStates = TableInfo.read(db, "module_states");
+        if (!_infoModuleStates.equals(_existingModuleStates)) {
+          return new RoomOpenHelper.ValidationResult(false, "module_states(com.gws.auto.mobile.android.domain.model.ModuleState).\n"
+                  + " Expected:\n" + _infoModuleStates + "\n"
+                  + " Found:\n" + _existingModuleStates);
+        }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "4c28b0e92ef054d664fafb460cf17a17", "a10e9e55452acca7d98e0fc496941fec");
+    }, "bc3840a48e2509574363ca1f0e8a62d5", "9120cb70f18ac3a73cba30fb95348325");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;
@@ -232,7 +251,7 @@ public final class AppDatabase_Impl extends AppDatabase {
   protected InvalidationTracker createInvalidationTracker() {
     final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
     final HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
-    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "workflows","modules","search_history","workflow_folders","tags","execution_history","schedules");
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "workflows","modules","search_history","workflow_folders","tags","execution_history","schedules","module_states");
   }
 
   @Override
@@ -248,6 +267,7 @@ public final class AppDatabase_Impl extends AppDatabase {
       _db.execSQL("DELETE FROM `tags`");
       _db.execSQL("DELETE FROM `execution_history`");
       _db.execSQL("DELETE FROM `schedules`");
+      _db.execSQL("DELETE FROM `module_states`");
       super.setTransactionSuccessful();
     } finally {
       super.endTransaction();
@@ -268,6 +288,7 @@ public final class AppDatabase_Impl extends AppDatabase {
     _typeConvertersMap.put(TagDao.class, TagDao_Impl.getRequiredConverters());
     _typeConvertersMap.put(HistoryDao.class, HistoryDao_Impl.getRequiredConverters());
     _typeConvertersMap.put(ScheduleDao.class, ScheduleDao_Impl.getRequiredConverters());
+    _typeConvertersMap.put(ModuleStateDao.class, ModuleStateDao_Impl.getRequiredConverters());
     return _typeConvertersMap;
   }
 
@@ -366,6 +387,20 @@ public final class AppDatabase_Impl extends AppDatabase {
           _scheduleDao = new ScheduleDao_Impl(this);
         }
         return _scheduleDao;
+      }
+    }
+  }
+
+  @Override
+  public ModuleStateDao moduleStateDao() {
+    if (_moduleStateDao != null) {
+      return _moduleStateDao;
+    } else {
+      synchronized(this) {
+        if(_moduleStateDao == null) {
+          _moduleStateDao = new ModuleStateDao_Impl(this);
+        }
+        return _moduleStateDao;
       }
     }
   }

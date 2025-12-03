@@ -10,6 +10,7 @@ import timber.log.Timber
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.gws.auto.mobile.android.data.repository.ModuleStateRepository
 
 /**
  * Defines the contract for a workflow execution engine.
@@ -36,6 +37,7 @@ interface WorkflowEngine {
     suspend fun executeSingleModule(module: Module): ExecutionResult
 }
 
+
 /**
  * The default, local implementation of the [WorkflowEngine].
  * It executes workflows directly on the user's device.
@@ -44,7 +46,8 @@ interface WorkflowEngine {
 class LocalWorkflowEngine @Inject constructor(
     private val moduleExecutorProvider: ModuleExecutorProvider,
     private val historyRepository: HistoryRepository,
-    private val workflowRepository: WorkflowRepository
+    private val workflowRepository: WorkflowRepository,
+    private val moduleStateRepository: ModuleStateRepository
 ) : WorkflowEngine {
 
     private val logMessageModule = LogMessageModule()
@@ -83,7 +86,11 @@ class LocalWorkflowEngine @Inject constructor(
                     continue
                 }
 
-                val context = ExecutionContext(module, variables, this)
+                // Fetch module state
+                val lastDetectedTime = moduleStateRepository.getState(workflowId, module.id, "lastDetectedTime")
+                val states = if (lastDetectedTime != null) mapOf("lastDetectedTime" to lastDetectedTime) else emptyMap()
+
+                val context = ExecutionContext(module, variables, this, states)
                 var executor = moduleExecutorProvider.get(module.type)
 
                 if (executor == null && module.type == "LOG_MESSAGE") {
@@ -103,6 +110,12 @@ class LocalWorkflowEngine @Inject constructor(
                 try {
                     val result = executor.execute(context)
                     logBuilder.append("Output: ${result.outputMessage ?: "No message"}\n")
+                    
+                    // Save updated states
+                    result.updatedStates?.forEach { (key, value) ->
+                        moduleStateRepository.updateIfNewer(workflowId, module.id, key, value)
+                    }
+
                     if (!result.isSuccess) {
                         Timber.e("Module execution failed: ${result.outputMessage}")
                         status = "Failure"

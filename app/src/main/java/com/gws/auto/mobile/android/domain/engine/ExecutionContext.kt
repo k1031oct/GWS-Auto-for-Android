@@ -9,12 +9,15 @@ import com.gws.auto.mobile.android.domain.model.Module
 data class ExecutionContext(
     val module: Module,
     private val variables: MutableMap<String, Any> = mutableMapOf(),
-    val workflowEngine: WorkflowEngine? = null
+    val workflowEngine: WorkflowEngine? = null,
+    private val states: Map<String, String> = emptyMap()
 ) {
     var nextModuleId: String? = null
         private set
 
     fun getVariable(name: String): Any? = variables[name]
+
+    fun getState(key: String): String? = states[key]
 
     fun setVariable(name: String, value: Any) {
         variables[name] = value

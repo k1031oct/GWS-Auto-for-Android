@@ -157,10 +157,15 @@ class DriveApiService @Inject constructor(private val authorizer: GoogleApiAutho
             .execute()
     }
     @Throws(IOException::class)
-    suspend fun searchFiles(query: String): FileList = withContext(Dispatchers.IO) {
-        getService().files().list()
+    suspend fun searchFiles(query: String, orderBy: String? = null): FileList = withContext(Dispatchers.IO) {
+        val request = getService().files().list()
             .setQ(query)
-            .setFields("files(id, name, mimeType, webViewLink, parents)")
-            .execute()
+            .setFields("files(id, name, mimeType, webViewLink, parents, modifiedTime, createdTime)")
+        
+        if (!orderBy.isNullOrBlank()) {
+            request.orderBy = orderBy
+        }
+        
+        request.execute()
     }
 }
