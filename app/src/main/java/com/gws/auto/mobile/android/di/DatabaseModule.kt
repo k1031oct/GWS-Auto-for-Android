@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.gws.auto.mobile.android.data.local.db.AppDatabase
 import com.gws.auto.mobile.android.data.local.db.HistoryDao
+import com.gws.auto.mobile.android.data.local.db.ModuleStateDao
 import com.gws.auto.mobile.android.data.local.db.ScheduleDao
 import com.gws.auto.mobile.android.data.local.db.SearchHistoryDao
 import com.gws.auto.mobile.android.data.local.db.TagDao
@@ -30,7 +31,12 @@ object DatabaseModule {
             context,
             AppDatabase::class.java,
             AppDatabase.DATABASE_NAME
-        ).addMigrations(AppDatabase.MIGRATION_6_7, AppDatabase.MIGRATION_7_8)
+        ).addMigrations(
+            AppDatabase.MIGRATION_6_7, 
+            AppDatabase.MIGRATION_7_8, 
+            AppDatabase.MIGRATION_8_9, 
+            AppDatabase.MIGRATION_9_10
+        )
         .fallbackToDestructiveMigration().build()
     }
 
@@ -62,5 +68,10 @@ object DatabaseModule {
     @Provides
     fun provideTagDao(appDatabase: AppDatabase): TagDao {
         return appDatabase.tagDao()
+    }
+
+    @Provides
+    fun provideModuleStateDao(appDatabase: AppDatabase): ModuleStateDao {
+        return appDatabase.moduleStateDao()
     }
 }
