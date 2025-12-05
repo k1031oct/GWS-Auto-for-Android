@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "DEVELOPMENT_PLAN.md",
+                "file": "UI_VOCABULARY.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "DEVELOPMENT_PLAN"
+              "title": "UI_VOCABULARY"
             }
           }
         ]
@@ -168,11 +168,12 @@
   },
   "active": "63c41e6fad36c949",
   "lastOpenFiles": [
-    "RELEASE_PLAN.md",
     "DEVELOPMENT_PLAN.md",
-    "MANUAL_SETUP.md",
-    "UI_VOCABULARY.md",
     "DATA_FLOW.md",
+    "MANUAL_SETUP.md",
+    "PROMPT_TEMPLATE.md",
+    "RELEASE_PLAN.md",
+    "UI_VOCABULARY.md",
     "ARCHITECTURE_DIAGRAMS.md",
     "UIDESIGN_PLAN.md",
     "README.md",
