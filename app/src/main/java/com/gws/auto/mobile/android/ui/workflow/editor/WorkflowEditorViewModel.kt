@@ -30,6 +30,8 @@ class WorkflowEditorViewModel @Inject constructor(
     private val _workflow = MutableStateFlow<Workflow?>(null)
     val workflow: StateFlow<Workflow?> = _workflow.asStateFlow()
 
+    private var loadedWorkflowId: String? = null
+
     private val _modules = MutableStateFlow<List<Module>>(emptyList())
     val modules: StateFlow<List<Module>> = _modules.asStateFlow()
 
@@ -43,8 +45,14 @@ class WorkflowEditorViewModel @Inject constructor(
     val selectedTags: StateFlow<List<String>> = _selectedTags.asStateFlow()
 
     fun loadWorkflow(workflowId: String) {
+        loadedWorkflowId = workflowId
         viewModelScope.launch {
             val workflow = workflowRepository.getWorkflowById(workflowId)
+            if (workflow == null) {
+                Timber.w("Workflow not found for id: $workflowId")
+            } else {
+                Timber.d("Workflow loaded: ${workflow.name} ($workflowId)")
+            }
             _workflow.value = workflow
             workflow?.let {
                 _modules.value = it.modules
@@ -131,8 +139,9 @@ class WorkflowEditorViewModel @Inject constructor(
                 tags = _selectedTags.value
             )
         } else {
+            Timber.w("Current workflow is null, creating new one. loadedWorkflowId: $loadedWorkflowId")
             Workflow(
-                id = UUID.randomUUID().toString(),
+                id = loadedWorkflowId ?: UUID.randomUUID().toString(),
                 name = name,
                 description = description,
                 modules = _modules.value,
@@ -140,5 +149,6 @@ class WorkflowEditorViewModel @Inject constructor(
             )
         }
         workflowRepository.saveWorkflow(workflow)
+        Timber.d("Workflow saved: ${workflow.name} (${workflow.id})")
     }
 }
