@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
+import timber.log.Timber
 
 @HiltViewModel
 class WorkflowEditorViewModel @Inject constructor(
