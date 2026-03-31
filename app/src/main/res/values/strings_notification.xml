@@ -1,0 +1,4 @@
+<resources>
+    <string name="notify_in_foreground">Notify in Foreground</string>
+    <string name="notify_in_foreground_desc">Show notification even when app is open</string>
+</resources>

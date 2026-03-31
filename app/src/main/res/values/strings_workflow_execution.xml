@@ -1,0 +1,4 @@
+<resources>
+    <string name="workflow_executed_successfully">Workflow \'%1$s\' executed successfully</string>
+    <string name="workflow_execution_failed">Workflow \'%1$s\' execution failed</string>
+</resources>

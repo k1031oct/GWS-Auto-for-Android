@@ -1,0 +1,4 @@
+<resources>
+    <string name="favorites_filter_label">★ Favorites</string>
+    <string name="bookmarks_filter_label">🔖 Bookmarks</string>
+</resources>
